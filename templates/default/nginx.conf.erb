@@ -1,0 +1,113 @@
+load_module modules/ngx_stream_module.so;
+
+user www-data;
+worker_processes auto;
+pid /run/nginx.pid;
+error_log syslog:server=unix:/dev/log,facility=local3;
+
+events {
+	worker_connections 768;
+	# multi_accept on;
+}
+
+stream {
+        map $ssl_preread_alpn_protocols $proxy {
+            default 127.0.0.1:8443;
+            ~\bsmtp\b 127.0.0.1:465;
+            ~\bimap\b 127.0.0.1:993;
+        }
+
+        server {
+                listen 443;
+                <%- if not @config['disable_ipv6'] -%>
+                listen [::]:443;
+                <%- end -%>
+
+                proxy_pass $proxy;
+                ssl_preread on;
+        }
+}
+
+http {
+	sendfile on;
+	tcp_nopush on;
+
+	# Do not emit nginx version on error pages.
+	server_tokens off;
+
+	include /etc/nginx/mime.types;
+	default_type application/octet-stream;
+
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+	ssl_prefer_server_ciphers on;
+	ssl_certificate <%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem;
+	ssl_certificate_key <%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem.key;
+
+	gzip on;
+
+	server {
+  
+		listen 8443 ssl default_server;
+                <%- if not @config['disable_ipv6'] -%>
+		listen [::]:8443 ssl default_server;
+		<%- end -%>
+
+		root /var/www/html;
+
+		index index.html index.htm;
+
+		server_name _;
+
+		access_log syslog:server=unix:/dev/log,facility=local7;
+
+		location / {
+			# First attempt to serve request as file, then
+			# as directory, then fall back to displaying a 404.
+			try_files $uri $uri/ =404;
+		}
+
+		location /metrics {
+			default_type text/plain;
+		}
+
+		location /new {
+			if ($request_method = GET) {
+				# Redirect to Delta Chat,
+				# which will in turn do a POST request.
+				return 301 dcaccount:https://<%= @config['domain'] %>/new;
+			}
+
+			fastcgi_pass unix:/run/fcgiwrap.socket;
+			include /etc/nginx/fastcgi_params;
+			fastcgi_param SCRIPT_FILENAME /usr/lib/cgi-bin/newemail.py;
+		}
+
+		# Old URL for compatibility with e.g. printed QR codes.
+		#
+		# Copy-paste instead of redirect to /new
+		# because Delta Chat core does not follow redirects.
+		#
+		# Redirects are only for browsers.
+		location /cgi-bin/newemail.py {
+			if ($request_method = GET) {
+				return 301 dcaccount:https://<%= @config['domain'] %>/new;
+			}
+
+			fastcgi_pass unix:/run/fcgiwrap.socket;
+			include /etc/nginx/fastcgi_params;
+			fastcgi_param SCRIPT_FILENAME /usr/lib/cgi-bin/newemail.py;
+		}
+	}
+
+	# Redirect www. to non-www
+	server {
+		listen 8443 ssl;
+                <%- if not @config['disable_ipv6'] -%>
+		listen [::]:8443 ssl;
+		<%- end -%>
+
+		server_name www.<%= @config['domain'] %>;
+		return 301 $scheme://<%= @config['domain'] %>$request_uri;
+		access_log syslog:server=unix:/dev/log,facility=local7;
+	}
+}

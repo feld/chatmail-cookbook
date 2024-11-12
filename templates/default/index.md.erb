@@ -1,0 +1,33 @@
+<%= render 'default/page-layout.html.erb', :variables => {'config' => @config, 'pagename' => @pagename} %>
+
+<img class="banner" src="collage-top.png"/>
+
+## Dear [Delta Chat](https://get.delta.chat) users and newcomers ... 
+
+<% if @config['domain'] != "nine.testrun.org" %>
+Welcome to instant, interoperable and [privacy-preserving](privacy.html) messaging :) 
+<% else %>
+Welcome to the default onboarding server (<%= @config['domain'] %>)
+for Delta Chat users.  For details how it avoids storing personal information
+please see our [privacy policy](privacy.html). 
+<% end %>
+
+<a class="cta-button" href="DCACCOUNT:https://<%= @config['domain'] %>/new">Get a chat profile</a>
+
+If you are viewing this page on a different device
+without a Delta Chat app,
+you can also **scan this QR code** with Delta Chat:
+
+<a href="DCACCOUNT:https://<%= @config['domain'] %>/new">
+    <img width=300 style="float: none;" src="qr-chatmail-invite-<%= @config['domain'] %>.png" /></a>
+
+🐣 **Choose** your Avatar and Name
+
+💬 **Start** chatting with any Delta Chat contacts using [QR invite codes](https://delta.chat/en/help#howtoe2ee)
+
+<% if @config['webdev'] %>
+<div class="experimental">Note: this is only a temporary development chatmail service</div>
+<% end %>
+
+</body>
+</html>

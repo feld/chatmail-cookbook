@@ -1,0 +1,223 @@
+## Dovecot configuration file
+
+<% if @config['disable_ipv6'] -%>
+listen = *
+<% end -%>
+
+protocols = imap lmtp
+
+auth_mechanisms = plain
+
+<% if @config['debug'] -%>
+auth_verbose = yes
+auth_debug = yes
+auth_debug_passwords = yes
+auth_verbose_passwords = plain
+auth_cache_size = 100M
+mail_debug = yes
+<% end -%>
+
+# Prevent warnings similar to:
+#   config: Warning: service auth { client_limit=1000 } is lower than required under max. load (10200). Counted for protocol services with service_count != 1: service lmtp { process_limit=100 } + service imap-urlauth-login { process_limit=100 } + service imap-login { process_limit=10000 }
+#   config: Warning: service anvil { client_limit=1000 } is lower than required under max. load (10103). Counted with: service imap-urlauth-login { process_limit=100 } + service imap-login { process_limit=10000 } + service auth { process_limit=1 }
+#   master: Warning: service(stats): client_limit (1000) reached, client connections are being dropped
+default_client_limit = 20000
+
+# Increase number of logged in IMAP connections.
+# Each connection is handled by a separate `imap` process.
+# `imap` process should have `client_limit=1` as described in
+# <https://doc.dovecot.org/configuration_manual/service_configuration/#service-limits>
+# so each logged in IMAP session will need its own `imap` process.
+#
+# If this limit is reached,
+# users will fail to LOGIN as `imap-login` process
+# will accept them logging in but fail to transfer logged in
+# connection to `imap` process until someone logs out and
+# the following warning will be logged:
+#   Warning: service(imap): process_limit (1024) reached, client connections are being dropped
+service imap {
+  process_limit = 50000
+}
+
+mail_server_admin = mailto:root@<%= @config['domain'] %>
+mail_server_comment = Chatmail server
+
+# `zlib` enables compressing messages stored in the maildir.
+# See
+# <https://doc.dovecot.org/configuration_manual/zlib_plugin/>
+# for documentation.
+#
+# quota plugin documentation:
+# <https://doc.dovecot.org/configuration_manual/quota_plugin/>
+mail_plugins = zlib quota
+
+imap_capability = +XDELTAPUSH XCHATMAIL
+
+
+# Authentication for system users.
+passdb {
+  driver = dict
+  args = /etc/dovecot/auth.conf
+}
+userdb {
+  driver = dict
+  args = /etc/dovecot/auth.conf
+}
+##
+## Mailbox locations and namespaces
+##
+
+# Mailboxes are stored in the "mail" directory of the vmail user home.
+mail_location = maildir:<%= @config['mailboxes_dir'] %>/<%= @config['domain'] %>/%u
+
+namespace inbox {
+  inbox = yes
+
+  mailbox Drafts {
+    special_use = \Drafts
+  }
+  mailbox Junk {
+    special_use = \Junk
+  }
+  mailbox Trash {
+    special_use = \Trash
+  }
+
+  # For \Sent mailboxes there are two widely used names. We'll mark both of
+  # them as \Sent. User typically deletes one of them if duplicates are created.
+  mailbox Sent {
+    special_use = \Sent
+  }
+  mailbox "Sent Messages" {
+    special_use = \Sent
+  }
+}
+
+mail_uid = vmail
+mail_gid = vmail
+mail_privileged_group = vmail
+
+##
+## Mail processes
+##
+
+# Pass all IMAP METADATA requests to the server implementing Dovecot's dict protocol.
+mail_attribute_dict = proxy:/run/chatmail-metadata/metadata.socket:metadata
+
+# `imap_zlib` enables IMAP COMPRESS (RFC 4978).
+# <https://datatracker.ietf.org/doc/html/rfc4978.html>
+protocol imap {
+  mail_plugins = $mail_plugins imap_zlib imap_quota last_login
+  imap_metadata = yes
+}
+
+plugin {
+  last_login_dict = proxy:/run/chatmail-lastlogin/lastlogin.socket:lastlogin
+  #last_login_key = last-login/%u # default
+  last_login_precision = s
+}
+
+protocol lmtp {
+  # notify plugin is a dependency of push_notification plugin:
+  # <https://doc.dovecot.org/settings/plugin/notify-plugin/>
+  #
+  # push_notification plugin documentation:
+  # <https://doc.dovecot.org/configuration_manual/push_notification/>
+  #
+  # mail_lua and push_notification_lua are needed for Lua push notification handler.
+  # <https://doc.dovecot.org/configuration_manual/push_notification/#configuration>
+  mail_plugins = $mail_plugins mail_lua notify push_notification push_notification_lua
+}
+
+plugin {
+  zlib_save = gz
+}
+
+plugin {
+  imap_compress_deflate_level = 6
+}
+
+plugin {
+  # for now we define static quota-rules for all users 
+  quota = maildir:User quota
+  quota_rule = *:storage=<%= @config['max_mailbox_size'] %>
+  quota_max_mail_size=<%= @config['max_message_size'] %>
+  quota_grace = 0
+  # quota_over_flag_value = TRUE
+}
+
+# push_notification configuration
+plugin {
+  # <https://doc.dovecot.org/configuration_manual/push_notification/#lua-lua>
+  push_notification_driver = lua:file=/etc/dovecot/push_notification.lua
+}
+
+service lmtp {
+  user=vmail
+
+  unix_listener /var/spool/postfix/private/dovecot-lmtp {
+    group = postfix
+    mode = 0600
+    user = postfix
+  }
+}
+
+service auth {
+  unix_listener /var/spool/postfix/private/auth {
+    mode = 0660
+    user = postfix
+    group = postfix
+  }
+}
+
+service auth-worker {
+  # Default is root.
+  # Drop privileges we don't need.
+  user = vmail
+}
+
+service imap-login {
+    # High-security mode.
+    # Each process serves a single connection and exits afterwards.
+    # This is the default, but we set it explicitly to be sure.
+    # See <https://doc.dovecot.org/admin_manual/login_processes/#high-security-mode> for details.
+    service_count = 1
+
+    # Inrease the number of simultaneous connections.
+    #
+    # As of Dovecot 2.3.19.1 the default is 100 processes.
+    # Combined with `service_count = 1` it means only 100 connections
+    # can be handled simultaneously.
+    process_limit = 10000
+
+    # Avoid startup latency for new connections.
+    process_min_avail = 10
+}
+
+ssl = required
+ssl_cert = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem
+ssl_key = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem.key
+ssl_dh = </usr/share/dovecot/dh.pem
+ssl_min_protocol = TLSv1.2
+ssl_prefer_server_ciphers = yes
+
+
+<% if @config['imap_rawlog'] -%>
+service postlogin {
+  executable = script-login -d rawlog
+  unix_listener postlogin {
+ }  
+} 
+service imap {
+  executable = imap postlogin 
+} 
+  
+protocol imap { 
+  #rawlog_dir = /tmp/rawlog/%u
+  # Put .in and .out imap protocol logging files into per-user homedir 
+  # You can use a command like this to combine into one protocol stream:
+  # sort -sn <(sed 's/ / C: /' *.in) <(sed 's/ / S: /' cat *.out)
+
+  rawlog_dir = %h 
+} 
+<% end -%>
