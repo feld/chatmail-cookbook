@@ -1,0 +1,26 @@
+;
+; Please manually verify the values are correct for your deployment
+;
+; Required DNS entries for chatmail servers
+;
+<%= @config['domain'] %>.                   A     <%= node['ipaddress'] %>
+<%= @config['domain'] %>.                   AAAA  <%= node['ip6address'] %>
+<%= @config['domain'] %>.                   MX 10 <%= @config['domain'] %>.
+_mta-sts.<%= @config['domain'] %>.          TXT "v=STSv1; id=<%= @sts_id %>"
+mta-sts.<%= @config['domain'] %>.           CNAME <%= @config['domain'] %>.
+www.<%= @config['domain'] %>.               CNAME <%= @config['domain'] %>.
+opendkim._domainkey.<%= @config['domain'] %>. TXT <%= @dkim_txt %>
+
+;
+; Recommended DNS entries for interoperability and security-hardening
+;
+<%= @config['domain'] %>.                   TXT "v=spf1 a:<%= @config['domain'] %> ~all"
+_dmarc.<%= @config['domain'] %>.            TXT "v=DMARC1;p=reject;adkim=s;aspf=s"
+
+<%= @config['domain'] %>.                   CAA 0 issue "letsencrypt.org;accounturi=https://acme-v02.api.letsencrypt.org/acme/acct/YOUR_ACCOUNT_ID_HERE"
+_adsp._domainkey.<%= @config['domain'] %>.  TXT "dkim=discardable"
+
+_submission._tcp.<%= @config['domain'] %>.  SRV 0 1 587 <%= @config['domain'] %>.
+_submissions._tcp.<%= @config['domain'] %>. SRV 0 1 465 <%= @config['domain'] %>.
+_imap._tcp.<%= @config['domain'] %>.        SRV 0 1 143 <%= @config['domain'] %>.
+_imaps._tcp.<%= @config['domain'] %>.       SRV 0 1 993 <%= @config['domain'] %>.

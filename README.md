@@ -20,7 +20,7 @@ Background: my original deployment used a custom ACME plugin in Chef that I wrot
 
 The HTML templates have had a few tweaks. The QR code is generated with a different tool and doesn't embed the Deltachat logo. Otherwise it's mostly the same.
 
-It does not check or report the DNS records you're supposed to set. It's possible to get Chef to construct the values and print them out for your reference, but I didn't do that yet.
+It does not validate DNS records, but it does print out a sample zone file which should be accurate for your deployment. This file can also be found at **/tmp/chatmail.zone** on the server.
 
 ## Warranty
 
