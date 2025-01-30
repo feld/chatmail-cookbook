@@ -11,6 +11,7 @@ default['chatmail']['mailboxes_dir'] = '/home/vmail/mail'
 default['chatmail']['max_mailbox_size'] = '100M'
 default['chatmail']['max_message_size'] = 31457280
 default['chatmail']['max_user_send_per_minute'] = 60
+default['chatmail']['mtail']['address'] = '127.0.0.1'
 default['chatmail']['passthrough_recipients'] = 'xstore@testrun.org'
 default['chatmail']['passthrough_senders'] =
 default['chatmail']['password_min_length'] = 9
@@ -31,4 +32,3 @@ default['lego']['dns']['env_name'] = 'DNSIMPLE_OAUTH_TOKEN'
 default['lego']['dns']['env_value'] = 'abcd1234'
 default['lego']['email'] = 'you@example.com'
 
-default['mtail']['address'] = '127.0.0.1'

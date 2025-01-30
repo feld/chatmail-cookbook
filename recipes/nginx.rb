@@ -4,7 +4,7 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package 'nginx'
+package %w(nginx libnginx-mod-stream fcgiwrap)
 
 template '/etc/nginx/nginx.conf' do
   owner 0

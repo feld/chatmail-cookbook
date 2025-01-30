@@ -28,7 +28,7 @@ ruby_block 'print zone' do
   block do
     result = File.read('/tmp/chatmail.zone')
     text = <<~EOF
-
+    
     #{result}
     EOF
     Chef::Log.warn(text)

@@ -4,6 +4,8 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
+package %w(acl python3-virtualenv)
+
 remote_base_dir = '/usr/local/lib/chatmaild'
 remote_venv_dir = remote_base_dir + '/venv'
 chatmail_bin = remote_venv_dir + '/bin'
@@ -35,11 +37,24 @@ execute 'install chatmaild' do
     #{chatmail_bin}/pip install #{remote_base_dir}/dist/chatmaild-#{release}.tar.gz
   EOF
   not_if { ::File.exist?(chatmail_bin + '/doveauth') }
-  notifies :restart, 'systemd_unit[doveauth.service]', :immediately
-  notifies :restart, 'systemd_unit[chatmail-metadata.service]', :immediately
-  notifies :restart, 'systemd_unit[echobot.service]', :immediately
-  notifies :restart, 'systemd_unit[filtermail.service]', :immediately
-  notifies :restart, 'systemd_unit[lastlogin.service]', :immediately
+  notifies :restart, 'systemd_unit[doveauth.service]', :delayed
+  notifies :restart, 'systemd_unit[chatmail-metadata.service]', :delayed
+  notifies :restart, 'systemd_unit[echobot.service]', :delayed
+  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
+  notifies :restart, 'systemd_unit[lastlogin.service]', :delayed
+end
+
+template config_path do
+  owner 0
+  group 0
+  source 'chatmail.ini.erb'
+  mode '0644'
+  variables({ 'config' => node['chatmail'] })
+  notifies :restart, 'systemd_unit[doveauth.service]', :delayed
+  notifies :restart, 'systemd_unit[chatmail-metadata.service]', :delayed
+  notifies :restart, 'systemd_unit[echobot.service]', :delayed
+  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
+  notifies :restart, 'systemd_unit[lastlogin.service]', :delayed
 end
 
 execpath = chatmail_bin + '/doveauth'
@@ -78,6 +93,17 @@ RuntimeDirectory=chatmail-metadata
 WantedBy=multi-user.target
 EOU
   action [:create, :enable, :start]
+end
+
+group 'echobot' do
+  notifies :restart, 'systemd_unit[echobot.service]', :delayed
+end
+
+user 'echobot' do
+  gid 'echobot'
+  home '/home/echobot'
+  shell '/bin/sh'
+  notifies :restart, 'systemd_unit[echobot.service]', :delayed
 end
 
 execpath = chatmail_bin + '/echobot'
@@ -152,6 +178,17 @@ UMask=0077
 WantedBy=multi-user.target
 EOU
   action [:create, :enable, :start]
+end
+
+group 'filtermail' do
+  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
+end
+
+user 'filtermail' do
+  gid 'filtermail'
+  home '/home/filtermail'
+  shell '/bin/sh'
+  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
 end
 
 execpath = chatmail_bin + '/filtermail'

@@ -43,6 +43,13 @@ template '/etc/postfix/master.cf' do
   notifies :restart, 'service[postfix.service]', :delayed
 end
 
+group 'opendkim' do
+  append true
+  members ['postfix']
+  action :modify
+  notifies :restart, 'service[postfix.service]', :delayed
+end
+
 service 'postfix-mta-sts-resolver.service' do
   action [:enable, :start]
 end

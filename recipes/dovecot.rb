@@ -4,6 +4,17 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
+group 'vmail' do
+  notifies :restart, 'service[dovecot.service]', :delayed
+end
+
+user 'vmail' do
+  gid 'vmail'
+  home '/home/vmail'
+  shell '/bin/sh'
+  notifies :restart, 'service[dovecot.service]', :delayed
+end
+
 cookbook_file '/etc/apt/keyrings/obs-home-deltachat.gpg' do
   owner 0
   group 0
