@@ -36,3 +36,7 @@ It's assuming you're running on Debian and I expect it will work on Ubuntu. It c
 
 I didn't setup any Chef tests. It's a little hacky because it was a direct conversion of the cmdeploy logic and templates. If you would prefer to use Ansible this cookbook is probably an easier starting point as the steps and logic are a bit clearer. You'll have to convert the templates back to Jinja from ERB. Otherwise it should be very straightforward.
 
+
+## Contact
+
+You can join this [group chat](https://i.delta.chat/#BFE115F2AD580709F1CA482ACC8E93570310DD43&a=az2g6a4rm%40chat.feld.me&g=chatmail%20cookbook%20support&x=Z1oIMyytnazhEY9iZaj2YV_0&i=6-2TeXZkPPkF0kXkTkzpDkf5&s=bTG5QTGVDZOmY0NMW3jK_qrL) to discuss the cookbook.
