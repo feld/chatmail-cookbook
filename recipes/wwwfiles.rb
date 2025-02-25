@@ -21,7 +21,6 @@ directory '/var/www/html'
 
   execute "lowdown #{f}.md" do
     command "/usr/bin/lowdown --html-no-skiphtml --html-no-escapehtml -o /var/www/html/#{f}.html /var/www/src/#{f}.md"
-    action :nothing
   end
 end
 
