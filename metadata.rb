@@ -17,5 +17,3 @@ chef_version '>= 16.0'
 # a Supermarket.
 #
 # source_url 'https://github.com/<insert_org_here>/chatmail'
-
-depends 'acme'
