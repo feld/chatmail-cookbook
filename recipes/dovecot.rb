@@ -11,6 +11,7 @@ end
 user 'vmail' do
   gid 'vmail'
   home '/home/vmail'
+  manage_home true
   shell '/bin/sh'
   notifies :restart, 'service[dovecot.service]', :delayed
 end
