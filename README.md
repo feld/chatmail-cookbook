@@ -16,6 +16,40 @@ The drawback of the official Chatmail deployment is the expectation that you can
 
 Background: my original deployment used a custom ACME plugin in Chef that I wrote for my preferred DNS provider, DNSimple. That's not suitable for others to use, so I rewrote that piece to use Lego. I was originally going to just use the packaged version of lego in Debian but discovered it's slightly too old and does not support DNSimple. So instead I'm just shipping a lego binary now.
 
+## Using without a Chef Server
+
+Can you use this without a Chef server? Yes! Here's how:
+
+Install the Chef client. I prefer [CINC](https://cinc.sh), the community Chef fork:
+
+```shell
+# or go to their website and fetch the package / add their
+# package repo if you don't want to curl | bash
+curl https://omnitruck.cinc.sh/install.sh  | sudo bash
+```
+
+Make a directory structure compatible with a local chef deployment:
+
+```
+mkdir -p chef/cookbooks
+cd chef
+git clone https://github.com/feld/chatmail-cookbook cookbooks/chatmail
+cp cookbooks/chatmail/attributes.json.example ./attributes.json
+```
+
+Don't forget you need to get a `lego` binary and put it in `cookbooks/chatmail/files/default/`. You could install from your package manager and symlink it, but the latest release will have better support for DNS-01 validation with more providers. Check the [Lego DNS Providers docs](https://go-acme.github.io/lego/dns/) for details on the ENVs you need to set. 
+
+Edit the `attributes.json` file to suit your environment, including defining the ENVs you need for Lego.
+
+Now you can run the following from inside this `chef/` directory:
+
+```
+sudo chef-client -z -o chatmail -f attributes.json
+```
+
+This should successfully deploy and configure Chatmail. The full list of DNS records you should deploy for proper federation will be found in `/tmp/chatmail.zone`.
+
+
 ## Divergences
 
 The HTML templates have had a few tweaks. The QR code is generated with a different tool and doesn't embed the Deltachat logo. Otherwise it's mostly the same.
