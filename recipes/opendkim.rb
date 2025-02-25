@@ -18,12 +18,6 @@ directory '/etc/opendkim' do
   mode '0750'
 end
 
-directory '/var/spool/postfix/opendkim' do
-  owner 'opendkim'
-  group 'opendkim'
-  mode '0750'
-end
-
 cookbook_file '/etc/opendkim/screen.lua' do
   owner 0
   group 0

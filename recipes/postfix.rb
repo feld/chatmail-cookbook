@@ -50,10 +50,21 @@ group 'opendkim' do
   notifies :restart, 'service[postfix.service]', :delayed
 end
 
+directory '/var/spool/postfix/opendkim' do
+  owner 'opendkim'
+  group 'opendkim'
+  mode '0750'
+  notifies :restart, 'service[opendkim.service]', :delayed
+end
+
 service 'postfix-mta-sts-resolver.service' do
   action [:enable, :start]
 end
 
 service 'postfix.service' do
   action [:enable, :start]
+end
+
+service 'opendkim.service' do
+  action :nothing
 end
