@@ -13,12 +13,16 @@ ruby_block 'generate dkim txt value' do
   end
 end
 
-sts_id = File.stat('/var/www/html/.well-known/mta-sts.txt').mtime.to_i
+ruby_block 'read the sts_id value' do
+  block do
+    node.override['sts_id'] = File.stat('/var/www/html/.well-known/mta-sts.txt').mtime.to_i
+  end
+end
 
 template('/tmp/chatmail.zone') do
   source 'zone.erb'
   variables(lazy do
-      { 'config' => node['chatmail'], 'sts_id' => sts_id, 'dkim_txt' => node['dkim_txt_value'] }
+      { 'config' => node['chatmail'], 'sts_id' => node['sts_id'], 'dkim_txt' => node['dkim_txt_value'] }
   end
   )
   sensitive true
