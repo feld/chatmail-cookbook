@@ -44,7 +44,7 @@ Edit the `attributes.json` file to suit your environment, including defining the
 Now you can run the following from inside this `chef/` directory:
 
 ```
-sudo chef-client -z -o chatmail -f attributes.json
+sudo chef-client -z -o chatmail -j attributes.json
 ```
 
 This should successfully deploy and configure Chatmail. The full list of DNS records you should deploy for proper federation will be found in `/tmp/chatmail.zone`.
