@@ -6,7 +6,9 @@
 
 package %w(lowdown qrencode)
 
+directory '/var/www'
 directory '/var/www/src'
+directory '/var/www/html'
 
 %w(index info privacy).each do |f|
   template "/var/www/src/#{f}.md" do
