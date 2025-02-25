@@ -28,7 +28,6 @@ default['chatmail']['webdev'] = false
 default['chatmaild']['release'] = '0.2'
 
 default['lego']['path'] = '/etc/lego'
-default['lego']['dns']['provider'] = 'dnsimple'
-default['lego']['dns']['env_name'] = 'DNSIMPLE_OAUTH_TOKEN'
-default['lego']['dns']['env_value'] = 'abcd1234'
 default['lego']['email'] = 'you@example.com'
+default['lego']['envs'] = { 'DNSIMPLE_OAUTH_TOKEN' => 'abcd1234' }
+default['lego']['provider'] = 'dnsimple'

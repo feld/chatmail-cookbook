@@ -30,10 +30,9 @@
   },
   "lego": {
     "path": "/etc/lego",
-    "dns": {
-      "provider": "dnsimple",
-      "env_name": "DNSIMPLE_OAUTH_TOKEN",
-      "env_value": "abcd1234"
+    "provider": "dnsimple",
+    "envs": {
+      "DNSIMPLE_OAUTH_TOKEN": "abcd134"
     },
     "email": "you@example.com"
   }

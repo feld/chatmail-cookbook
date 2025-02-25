@@ -27,9 +27,8 @@ end
 lego_email = node['lego']['email']
 lego_domain = node['chatmail']['domain']
 lego_path = node['lego']['path']
-lego_dns_provider = node['lego']['dns']['provider']
-lego_dns_env_name = node['lego']['dns']['env_name']
-lego_dns_env_value = node['lego']['dns']['env_value']
+lego_dns_provider = node['lego']['provider']
+lego_dns_envs = node['lego']['envs']
 
 systemd_unit 'lego-renewal.service' do
   action [:create, :enable]
@@ -40,7 +39,7 @@ systemd_unit 'lego-renewal.service' do
 
   [Service]
   Type=oneshot
-  Environment="#{lego_dns_env_name}=#{lego_dns_env_value}"
+  #{lego_dns_envs.map { |key, value| "Environment=\"#{key}=#{value}\"" }.join("\n")}
   ExecStart=/usr/bin/lego -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew
 
   [Install]
@@ -67,7 +66,7 @@ end
 
 execute 'issue_cert' do
   command "/usr/bin/lego -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} run"
-  environment({ "#{lego_dns_env_name}" => "#{lego_dns_env_value}" })
+  environment(lego_dns_envs)
   not_if { ::File.exist?(certdir + '/' + lego_domain + '.pem.key') }
 end
 
