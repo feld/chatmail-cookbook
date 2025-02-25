@@ -1,3 +1,4 @@
+# Don't forget to update the attributes.json.example if attributes are changed/added
 default['chatmail']['certificates_dir'] = '/etc/lego/certificates'
 default['chatmail']['debug'] = false
 default['chatmail']['delete_inactive_users_after'] = 90
@@ -31,4 +32,3 @@ default['lego']['dns']['provider'] = 'dnsimple'
 default['lego']['dns']['env_name'] = 'DNSIMPLE_OAUTH_TOKEN'
 default['lego']['dns']['env_value'] = 'abcd1234'
 default['lego']['email'] = 'you@example.com'
-

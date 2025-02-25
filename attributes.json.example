@@ -1,0 +1,40 @@
+{
+  "chatmail": {
+    "certificates_dir": "/etc/lego/certificates",
+    "debug": false,
+    "delete_inactive_users_after": 90,
+    "delete_mails_after": 20,
+    "disable_ipv6": false,
+    "dkim_selector": "opendkim",
+    "domain": "example.com",
+    "filtermail_smtp_port": 10080,
+    "imap_rawlog": false,
+    "mailboxes_dir": "/home/vmail/mail",
+    "max_mailbox_size": "100M",
+    "max_message_size": 31457280,
+    "max_user_send_per_minute": 60,
+    "mtail": {
+      "address": "127.0.0.1"
+    },
+    "passthrough_recipients": "xstore@testrun.org",
+    "passthrough_senders": "",
+    "password_min_length": 9,
+    "postfix_reinject_port": 10025,
+    "privacy_mail": "UNDEFINED",
+    "privacy_pdo": "UNDEFINED",
+    "privacy_postal": "UNDEFINED",
+    "privacy_supervisor": "UNDEFINED",
+    "username_max_length": 9,
+    "username_min_length": 9,
+    "webdev": false
+  },
+  "lego": {
+    "path": "/etc/lego",
+    "dns": {
+      "provider": "dnsimple",
+      "env_name": "DNSIMPLE_OAUTH_TOKEN",
+      "env_value": "abcd1234"
+    },
+    "email": "you@example.com"
+  }
+}
