@@ -21,6 +21,7 @@ end
 
 template('/tmp/chatmail.zone') do
   source 'zone.erb'
+  mode '0644'
   variables(lazy do
       { 'config' => node['chatmail'], 'sts_id' => node['sts_id'], 'dkim_txt' => node['dkim_txt_value'] }
   end
