@@ -1,6 +1,6 @@
 # Chatmail
 
-This is a rough Chef cookbook for deploying Chatmail. This is what I use to deploy my server. Check the `attributes/default.rb` to see which attributes you may need to set on your target node.
+This is a rough Chef cookbook for deploying [Chatmail](https://github.com/chatmail/server). This is what I use to deploy my server. Check the `attributes/default.rb` to see which attributes you may need to set on your target node.
 
 Everything is handled: Nginx, Postfix, the patched Dovecot, DKIM, journald log retention changes, the extra Chatmail related services (echobot, etc). It's all here.
 
