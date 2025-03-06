@@ -14,7 +14,7 @@ opendkim._domainkey.<%= @config['domain'] %>. TXT <%= @dkim_txt %>
 ;
 ; Recommended DNS entries for interoperability and security-hardening
 ;
-<%= @config['domain'] %>.                   TXT "v=spf1 a:<%= @config['domain'] %> ~all"
+<%= @config['domain'] %>.                   TXT "v=spf1 a ~all"
 _dmarc.<%= @config['domain'] %>.            TXT "v=DMARC1;p=reject;adkim=s;aspf=s"
 
 <%= @config['domain'] %>.                   CAA 0 issue "letsencrypt.org;accounturi=https://acme-v02.api.letsencrypt.org/acme/acct/YOUR_ACCOUNT_ID_HERE"
