@@ -9,6 +9,7 @@
     "domain": "example.com",
     "filtermail_smtp_port": 10080,
     "imap_rawlog": false,
+    "journald_retention": "3d",
     "mailboxes_dir": "/home/vmail/mail",
     "max_mailbox_size": "100M",
     "max_message_size": 31457280,
