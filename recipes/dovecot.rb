@@ -30,7 +30,7 @@ apt_repository 'DeltaChat_OBS' do
   action :add
 end
 
-package %w(dovecot-imapd dovecot-lmtpd rsync)
+package %w(dovecot-imapd dovecot-lmtpd)
 
 cookbook_file '/etc/dovecot/push_notification.lua' do
   owner 0
