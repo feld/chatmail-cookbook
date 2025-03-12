@@ -15,3 +15,8 @@ end
 service 'systemd-journald.service' do
   action :nothing
 end
+
+directory '/var/log/journal' do
+  recursive true
+  action :delete
+end
