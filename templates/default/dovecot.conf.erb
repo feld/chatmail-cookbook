@@ -194,11 +194,22 @@ service imap-login {
     process_min_avail = 10
 }
 
+service anvil {
+    # We are disabling anvil penalty on failed login attempts
+    # because it can only detect brute forcing by IP address
+    # not by username. As the correct IP address is not handed
+    # to dovecot anyway, it is more of hindrance than of use.
+    # See <https://www.dovecot.org/list/dovecot/2012-May/135485.html> for details.
+    unix_listener anvil-auth-penalty {
+        mode = 0
+    }
+}
+
 ssl = required
 ssl_cert = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem
 ssl_key = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem.key
 ssl_dh = </usr/share/dovecot/dh.pem
-ssl_min_protocol = TLSv1.2
+ssl_min_protocol = TLSv1.3
 ssl_prefer_server_ciphers = yes
 
 
