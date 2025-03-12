@@ -69,3 +69,22 @@ end
 service 'opendkim.service' do
   action [:enable, :start]
 end
+
+directory '/etc/systemd/system/opendkim.service.d'
+
+file '/etc/systemd/system/opendkim.service.d/10-prevent-memory-leak.conf' do
+  owner 0
+  group 0
+  mode '0644'
+  content <<~EOU
+[Service]
+Restart=always
+RuntimeMaxSec=1d
+EOU
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[opendkim.service]', :delayed
+end
+
+execute 'systemctl daemon-reload' do
+  action :nothing
+end
