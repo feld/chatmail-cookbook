@@ -229,3 +229,11 @@ WantedBy=multi-user.target
 EOU
   action [:create, :enable, :start]
 end
+
+template '/etc/cron.d/chatmail-metrics' do
+  source 'metrics.cron.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables({ 'config' => node['chatmail'], 'chatmail_bin' => chatmail_bin })
+end
