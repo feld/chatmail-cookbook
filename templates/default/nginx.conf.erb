@@ -47,10 +47,7 @@ http {
 
 	server {
   
-		listen 8443 ssl default_server;
-		<%- if not @config['disable_ipv6'] -%>
-		listen [::]:8443 ssl default_server;
-		<%- end -%>
+		listen 127.0.0.1:8443 ssl default_server;
 
 		root /var/www/html;
 
@@ -121,10 +118,7 @@ http {
 
 	# Redirect www. to non-www
 	server {
-		listen 8443 ssl;
-		<%- if not @config['disable_ipv6'] -%>
-		listen [::]:8443 ssl;
-		<%- end -%>
+		listen 127.0.0.1:8443 ssl;
 		server_name www.<%= @config['domain'] %>;
 		return 301 $scheme://<%= @config['domain'] %>$request_uri;
 		access_log syslog:server=unix:/dev/log,facility=local7;
