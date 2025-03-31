@@ -158,6 +158,23 @@ service 'filtermail' do
   action [:enable, :start]
 end
 
+template '/etc/systemd/system/filtermail-incoming.service' do
+  source 'filtermail-incoming.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    execpath: execpath,
+    config_path: config_path
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[filtermail-incoming]', :delayed
+end
+
+service 'filtermail-incoming' do
+  action [:enable, :start]
+end
+
 execpath = chatmail_bin + '/lastlogin'
 template '/etc/systemd/system/lastlogin.service' do
   source 'lastlogin.service.erb'
