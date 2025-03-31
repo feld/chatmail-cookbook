@@ -43,11 +43,11 @@ execute 'install chatmaild' do
     #{chatmail_bin}/pip install #{remote_base_dir}/dist/chatmaild-#{release}.tar.gz
   EOF
   not_if { ::File.exist?(chatmail_bin + '/deltachat-rpc-server') }
-  notifies :restart, 'systemd_unit[doveauth.service]', :delayed
-  notifies :restart, 'systemd_unit[chatmail-metadata.service]', :delayed
-  notifies :restart, 'systemd_unit[echobot.service]', :delayed
-  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
-  notifies :restart, 'systemd_unit[lastlogin.service]', :delayed
+  notifies :restart, 'service[doveauth]', :delayed
+  notifies :restart, 'service[chatmail-metadata]', :delayed
+  notifies :restart, 'service[echobot]', :delayed
+  notifies :restart, 'service[filtermail]', :delayed
+  notifies :restart, 'service[lastlogin]', :delayed
 end
 
 template config_path do
@@ -56,184 +56,129 @@ template config_path do
   source 'chatmail.ini.erb'
   mode '0644'
   variables({ 'config' => node['chatmail'] })
-  notifies :restart, 'systemd_unit[doveauth.service]', :delayed
-  notifies :restart, 'systemd_unit[chatmail-metadata.service]', :delayed
-  notifies :restart, 'systemd_unit[echobot.service]', :delayed
-  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
-  notifies :restart, 'systemd_unit[lastlogin.service]', :delayed
+  notifies :restart, 'service[doveauth]', :delayed
+  notifies :restart, 'service[chatmail-metadata]', :delayed
+  notifies :restart, 'service[echobot]', :delayed
+  notifies :restart, 'service[filtermail]', :delayed
+  notifies :restart, 'service[lastlogin]', :delayed
 end
 
 execpath = chatmail_bin + '/doveauth'
-systemd_unit 'doveauth.service' do
-  content <<~EOU
-[Unit]
-Description=Chatmail dict authentication proxy for dovecot
+template '/etc/systemd/system/doveauth.service' do
+  source 'doveauth.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    execpath: execpath,
+    config_path: config_path
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[doveauth]', :delayed
+end
 
-[Service]
-ExecStart=#{execpath} /run/doveauth/doveauth.socket #{config_path}
-Restart=always
-RestartSec=30
-User=vmail
-RuntimeDirectory=doveauth
-UMask=0077
-
-[Install]
-WantedBy=multi-user.target
-EOU
-  action [:create, :enable, :start]
+service 'doveauth' do
+  action [:enable, :start]
 end
 
 execpath = chatmail_bin + '/chatmail-metadata'
-systemd_unit 'chatmail-metadata.service' do
-  content <<~EOU
-[Unit]
-Description=Chatmail dict proxy for IMAP METADATA
+template '/etc/systemd/system/chatmail-metadata.service' do
+  source 'chatmail-metadata.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    execpath: execpath,
+    config_path: config_path
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[chatmail-metadata]', :delayed
+end
 
-[Service]
-ExecStart=#{execpath} /run/chatmail-metadata/metadata.socket #{config_path}
-Restart=always
-RestartSec=30
-User=vmail
-RuntimeDirectory=chatmail-metadata
-UMask=0077
-
-[Install]
-WantedBy=multi-user.target
-EOU
-  action [:create, :enable, :start]
+service 'chatmail-metadata' do
+  action [:enable, :start]
 end
 
 group 'echobot' do
-  notifies :restart, 'systemd_unit[echobot.service]', :delayed
+  notifies :restart, 'service[echobot]', :delayed
 end
 
 user 'echobot' do
   gid 'echobot'
   home '/home/echobot'
   shell '/bin/sh'
-  notifies :restart, 'systemd_unit[echobot.service]', :delayed
+  notifies :restart, 'service[echobot]', :delayed
 end
 
 execpath = chatmail_bin + '/echobot'
-systemd_unit 'echobot.service' do
-  content <<~EOU
-[Unit]
-Description=Chatmail echo bot for testing it works
+template '/etc/systemd/system/echobot.service' do
+  source 'echobot.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    execpath: execpath,
+    config_path: config_path,
+    remote_venv_dir: remote_venv_dir
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[echobot]', :delayed
+end
 
-[Service]
-ExecStart=#{execpath} #{config_path}
-Environment="PATH=#{remote_venv_dir}:$PATH"
-Restart=always
-RestartSec=30
-
-User=echobot
-Group=echobot
-
-# Create /var/lib/echobot
-StateDirectory=echobot
-
-# Create /run/echobot
-#
-# echobot stores /run/echobot/password
-# with a password there, which doveauth then reads.
-RuntimeDirectory=echobot
-
-WorkingDirectory=/var/lib/echobot
-
-# Apply security restrictions suggested by
-#   systemd-analyze security echobot.service
-CapabilityBoundingSet=
-LockPersonality=true
-MemoryDenyWriteExecute=true
-NoNewPrivileges=true
-PrivateDevices=true
-PrivateMounts=true
-PrivateTmp=true
-
-# We need to know about doveauth user to give it access to /run/echobot/password
-PrivateUsers=false
-
-ProtectClock=true
-ProtectControlGroups=true
-ProtectHostname=true
-ProtectKernelLogs=true
-ProtectKernelModules=true
-ProtectKernelTunables=true
-ProtectProc=noaccess
-
-# Should be "strict", but we currently write /accounts folder in a protected path
-ProtectSystem=full
-
-RemoveIPC=true
-RestrictAddressFamilies=AF_INET AF_INET6
-RestrictNamespaces=true
-RestrictRealtime=true
-RestrictSUIDSGID=true
-SystemCallArchitectures=native
-SystemCallFilter=~@clock
-SystemCallFilter=~@cpu-emulation
-SystemCallFilter=~@debug
-SystemCallFilter=~@module
-SystemCallFilter=~@mount
-SystemCallFilter=~@obsolete
-SystemCallFilter=~@raw-io
-SystemCallFilter=~@reboot
-SystemCallFilter=~@resources
-SystemCallFilter=~@swap
-UMask=0077
-
-[Install]
-WantedBy=multi-user.target
-EOU
-  action [:create, :enable, :start]
+service 'echobot' do
+  action [:enable, :start]
 end
 
 group 'filtermail' do
-  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
+  notifies :restart, 'service[filtermail]', :delayed
 end
 
 user 'filtermail' do
   gid 'filtermail'
   home '/home/filtermail'
   shell '/bin/sh'
-  notifies :restart, 'systemd_unit[filtermail.service]', :delayed
+  notifies :restart, 'service[filtermail]', :delayed
 end
 
 execpath = chatmail_bin + '/filtermail'
-systemd_unit 'filtermail.service' do
-  content <<~EOU
-[Unit]
-Description=Chatmail Postfix before queue filter
+template '/etc/systemd/system/filtermail.service' do
+  source 'filtermail.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    execpath: execpath,
+    config_path: config_path
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[filtermail]', :delayed
+end
 
-[Service]
-ExecStart=#{execpath} #{config_path}
-Restart=always
-RestartSec=30
-User=filtermail
-
-[Install]
-WantedBy=multi-user.target
-EOU
-  action [:create, :enable, :start]
+service 'filtermail' do
+  action [:enable, :start]
 end
 
 execpath = chatmail_bin + '/lastlogin'
-systemd_unit 'lastlogin.service' do
-  content <<~EOU
-[Unit]
-Description=Dict proxy for last-login tracking
+template '/etc/systemd/system/lastlogin.service' do
+  source 'lastlogin.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    execpath: execpath,
+    config_path: config_path
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[lastlogin]', :delayed
+end
 
-[Service]
-ExecStart=#{execpath} /run/chatmail-lastlogin/lastlogin.socket #{config_path}
-Restart=always
-RestartSec=30
-User=vmail
-RuntimeDirectory=chatmail-lastlogin
+service 'lastlogin' do
+  action [:enable, :start]
+end
 
-[Install]
-WantedBy=multi-user.target
-EOU
-  action [:create, :enable, :start]
+execute 'systemctl daemon-reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
 end
 
 template '/etc/cron.d/chatmail-metrics' do

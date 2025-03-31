@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily LetsEncrypt certificate renewal
+
+[Timer]
+OnCalendar=daily
+Unit=lego-renewal.service
+
+[Install]
+WantedBy=timers.target 

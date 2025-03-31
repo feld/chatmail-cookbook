@@ -30,38 +30,42 @@ lego_path = node['lego']['path']
 lego_dns_provider = node['lego']['provider']
 lego_dns_envs = node['lego']['envs']
 
-systemd_unit 'lego-renewal.service' do
-  action [:create, :enable]
-  verify true
-  content <<~EOU
-  [Unit]
-  Description=LetsEncrypt certificate renewal
-
-  [Service]
-  Type=oneshot
-  #{lego_dns_envs.map { |key, value| "Environment=\"#{key}=#{value}\"" }.join("\n")}
-  ExecStart=/usr/bin/lego -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew
-
-  [Install]
-  WantedBy=multi-user.target
-  EOU
+template '/etc/systemd/system/lego-renewal.service' do
+  source 'lego-renewal.service.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables(
+    lego_email: lego_email,
+    lego_domain: lego_domain,
+    lego_path: lego_path,
+    lego_dns_provider: lego_dns_provider,
+    lego_dns_envs: lego_dns_envs
+  )
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[lego-renewal]', :delayed
 end
 
-systemd_unit 'lego-renewal.timer' do
-  action [:create, :enable, :start]
-  verify true
-  content(
-    Unit: {
-      Description: 'Daily LetsEncrypt certificate renewal',
-    },
-    Timer: {
-      OnCalendar: 'daily',
-      Unit: 'lego-renewal.service',
-    },
-    Install: {
-      WantedBy: 'timers.target',
-    }
-  )
+service 'lego-renewal' do
+  action [:enable, :start]
+end
+
+template '/etc/systemd/system/lego-renewal.timer' do
+  source 'lego-renewal.timer.erb'
+  owner 0
+  group 0
+  mode '0644'
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+  notifies :restart, 'service[lego-renewal.timer]', :delayed
+end
+
+service 'lego-renewal.timer' do
+  action [:enable, :start]
+end
+
+execute 'systemctl daemon-reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
 end
 
 execute 'issue_cert' do
