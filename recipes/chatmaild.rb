@@ -21,6 +21,12 @@ cookbook_file remote_base_dir + "/dist/chatmaild-#{release}.tar.gz" do
   group 0
   mode '0644'
   action :create
+  notifies :run, 'execute[remove old chatmaild]', :immediately
+end
+
+execute 'remove old chatmaild' do
+  command "rm -rf #{remote_venv_dir}"
+  action :nothing
 end
 
 execute 'virtualenv' do
@@ -36,7 +42,7 @@ execute 'install chatmaild' do
   command <<~EOF
     #{chatmail_bin}/pip install #{remote_base_dir}/dist/chatmaild-#{release}.tar.gz
   EOF
-  not_if { ::File.exist?(chatmail_bin + '/doveauth') }
+  not_if { ::File.exist?(chatmail_bin + '/deltachat-rpc-server') }
   notifies :restart, 'systemd_unit[doveauth.service]', :delayed
   notifies :restart, 'systemd_unit[chatmail-metadata.service]', :delayed
   notifies :restart, 'systemd_unit[echobot.service]', :delayed
