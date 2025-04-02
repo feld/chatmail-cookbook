@@ -36,20 +36,22 @@ cookbook_file '/etc/unbound/unbound.conf.d/unbound.conf' do
   notifies :restart, 'service[unbound.service]', :immediately
 end
 
-directory '/etc/systemd/resolved.conf.d'
+link '/etc/resolv.conf' do
+  action :delete
+end
 
-file '/etc/systemd/resolved.conf.d/unbound.conf' do
+file '/etc/resolv.conf' do
   owner 0
   group 0
   mode '0644'
   content <<~EOU
-[Resolve]
-DNS=127.0.0.1
-DNSSEC=yes
+search .
+nameserver 127.0.0.1
+nameserver 208.67.222.222
+nameserver 208.67.220.220
 EOU
-  notifies :restart, 'service[systemd-resolved.service]', :immediately
 end
 
-service 'systemd-resolved.service' do
-  action :nothing
+package 'systemd-resolved' do
+  action :purge
 end
