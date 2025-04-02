@@ -29,17 +29,20 @@ remote_file "/tmp/#{iroh_tarball}" do
       ::Digest::SHA256.file(iroh_relay_path).hexdigest == iroh_relay_hash
   end
   notifies :run, 'execute[extract iroh_relay]', :immediately
+  notifies :restart, 'service[iroh-relay.service]', :delayed
 end
 
 execute 'extract iroh_relay' do
   command "tar xzf /tmp/#{iroh_tarball} -C /usr/local/bin"
   action :nothing
+  notifies :restart, 'service[iroh-relay.service]', :delayed
 end
 
 file iroh_relay_path do
   owner 'root'
   group 'root'
   mode '0755'
+  notifies :restart, 'service[iroh-relay.service]', :delayed
 end
 
 cookbook_file '/etc/iroh-relay.toml' do
