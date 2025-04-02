@@ -15,3 +15,41 @@ end
 service 'unbound.service' do
   action [:enable, :start]
 end
+
+# Marking this file non-executable disables this "hook"
+# which can force Unbound to forward requests through the
+# default DNS servers
+file '/etc/resolvconf/update.d/unbound' do
+  mode '0644'
+end
+
+# Broken, ancient, unused
+# https://github.com/NLnetLabs/unbound/issues/1161
+service 'unbound-resolvconf.service' do
+  action [:disable, :stop]
+end
+
+cookbook_file '/etc/unbound/unbound.conf.d/unbound.conf' do
+  owner 0
+  group 0
+  mode '0644'
+  notifies :restart, 'service[unbound.service]', :immediately
+end
+
+directory '/etc/systemd/resolved.conf.d'
+
+file '/etc/systemd/resolved.conf.d/unbound.conf' do
+  owner 0
+  group 0
+  mode '0644'
+  content <<~EOU
+[Resolve]
+DNS=127.0.0.1
+DNSSEC=yes
+EOU
+  notifies :restart, 'service[systemd-resolved.service]', :immediately
+end
+
+service 'systemd-resolved.service' do
+  action :nothing
+end
