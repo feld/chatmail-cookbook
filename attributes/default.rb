@@ -7,6 +7,7 @@ default['chatmail']['disable_ipv6'] = false
 default['chatmail']['dkim_selector'] = 'opendkim'
 default['chatmail']['domain'] = 'example.com'
 default['chatmail']['filtermail_smtp_port'] = 10080
+default['chatmail']['filtermail_smtp_port_incoming'] = 10081
 default['chatmail']['imap_rawlog'] = false
 default['chatmail']['journald_retention'] = '3d'
 default['chatmail']['mailboxes_dir'] = '/home/vmail/mail'
@@ -18,6 +19,7 @@ default['chatmail']['passthrough_recipients'] = 'xstore@testrun.org'
 default['chatmail']['passthrough_senders'] =
 default['chatmail']['password_min_length'] = 9
 default['chatmail']['postfix_reinject_port'] = 10025
+default['chatmail']['postfix_reinject_port_incoming'] = 10026
 default['chatmail']['privacy_mail'] = 'UNDEFINED'
 default['chatmail']['privacy_pdo'] = 'UNDEFINED'
 default['chatmail']['privacy_postal'] = 'UNDEFINED'
@@ -26,7 +28,7 @@ default['chatmail']['username_max_length'] = 9
 default['chatmail']['username_min_length'] = 9
 default['chatmail']['webdev'] = false
 
-default['chatmaild']['release'] = '0.2.1'
+default['chatmaild']['release'] = '0.2.20250402'
 
 default['lego']['path'] = '/etc/lego'
 default['lego']['email'] = 'you@example.com'
