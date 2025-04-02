@@ -47,6 +47,7 @@ execute 'install chatmaild' do
   notifies :restart, 'service[chatmail-metadata]', :delayed
   notifies :restart, 'service[echobot]', :delayed
   notifies :restart, 'service[filtermail]', :delayed
+  notifies :restart, 'service[filtermail-incoming]', :delayed
   notifies :restart, 'service[lastlogin]', :delayed
 end
 
@@ -60,6 +61,7 @@ template config_path do
   notifies :restart, 'service[chatmail-metadata]', :delayed
   notifies :restart, 'service[echobot]', :delayed
   notifies :restart, 'service[filtermail]', :delayed
+  notifies :restart, 'service[filtermail-incoming]', :delayed
   notifies :restart, 'service[lastlogin]', :delayed
 end
 
