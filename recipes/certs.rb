@@ -47,7 +47,7 @@ template '/etc/systemd/system/lego-renewal.service' do
 end
 
 service 'lego-renewal' do
-  action [:enable, :start]
+  action :enable
 end
 
 template '/etc/systemd/system/lego-renewal.timer' do

@@ -62,8 +62,11 @@ execute 'Generate OpenDKIM domain keys' do
   notifies :restart, 'service[opendkim.service]', :delayed
 end
 
-execute 'OpenDKIM files ownership' do
-  command "chown opendkim:opendkim /etc/dkimkeys/*"
+directory '/etc/dkimkeys' do
+  owner 'opendkim'
+  group 'opendkim'
+  mode '0700'
+  recursive true
 end
 
 service 'opendkim.service' do
