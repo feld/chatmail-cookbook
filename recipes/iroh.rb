@@ -4,9 +4,9 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-iroh_release = 'v0.28.1'
+iroh_release = 'v0.34.0'
 iroh_tarball = "iroh-relay-#{iroh_release}-x86_64-unknown-linux-musl.tar.gz"
-iroh_relay_hash = '2ffacf7c0622c26b67a5895ee8e07388769599f60e5f52a3bd40a3258db89b2c'
+iroh_relay_hash = 'df858ef068e6e4a60bf7f4c37b525c97f0c13600a9ced82ee1bb6da08d964f07'
 iroh_relay_path = '/usr/local/bin/iroh-relay'
 
 group 'iroh'
