@@ -38,6 +38,7 @@ end
 
 link '/etc/resolv.conf' do
   action :delete
+  only_if { ::File.symlink?('/etc/resolv.conf') }
 end
 
 file '/etc/resolv.conf' do
