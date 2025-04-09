@@ -10,12 +10,23 @@ directory '/etc/dkimkeys' do
   owner 'opendkim'
   group 'opendkim'
   mode '0700'
+  notifies :restart, 'service[opendkim.service]', :delayed
+end
+
+%w(opendkim.private opendkim.txt).each do |x|
+  file "/etc/dkimkeys/#{x}" do
+    owner 'opendkim'
+    group 'opendkim'
+    mode '600'
+    notifies :restart, 'service[opendkim.service]', :delayed
+  end
 end
 
 directory '/etc/opendkim' do
   owner 'opendkim'
   group 'opendkim'
   mode '0750'
+  notifies :restart, 'service[opendkim.service]', :delayed
 end
 
 cookbook_file '/etc/opendkim/screen.lua' do
