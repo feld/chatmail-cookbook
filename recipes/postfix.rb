@@ -4,14 +4,7 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package %w(postfix postfix-mta-sts-resolver)
-
-cookbook_file '/etc/mta-sts-daemon.yml' do
-  owner 0
-  group 0
-  mode '0644'
-  notifies :restart, 'service[postfix-mta-sts-resolver.service]', :delayed
-end
+package %w(postfix)
 
 cookbook_file '/etc/postfix/login_map' do
   owner 0
@@ -55,10 +48,6 @@ directory '/var/spool/postfix/opendkim' do
   group 'opendkim'
   mode '0750'
   notifies :restart, 'service[opendkim.service]', :delayed
-end
-
-service 'postfix-mta-sts-resolver.service' do
-  action [:enable, :start]
 end
 
 service 'postfix.service' do
