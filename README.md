@@ -73,4 +73,4 @@ I didn't setup any Chef tests. It's a little hacky because it was a direct conve
 
 ## Contact
 
-You can join this [group chat](https://i.delta.chat/#BFE115F2AD580709F1CA482ACC8E93570310DD43&a=az2g6a4rm%40chat.feld.me&g=chatmail%20cookbook%20support&x=Z1oIMyytnazhEY9iZaj2YV_0&i=6-2TeXZkPPkF0kXkTkzpDkf5&s=bTG5QTGVDZOmY0NMW3jK_qrL) to discuss the cookbook.
+You can join this [group chat](https://i.delta.chat/#6FE1642916908F1AC9CC7557CC99CF5DDB92043C&a=groupsbot%40testrun.org&g=chatmail%20cookbook%20support&x=Z1oIMyytnazhEY9iZaj2YV_0&i=hnaCYJj6VGMDRu7CHi29Nmaz&s=xDCT_RglgrKaGUJM6-adzZeG) to discuss the cookbook.
