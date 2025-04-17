@@ -207,3 +207,13 @@ template '/etc/cron.d/chatmail-metrics' do
   mode '0644'
   variables({ 'config' => node['chatmail'], 'chatmail_bin' => chatmail_bin })
 end
+
+nocreate_action = if node['chatmail']['disable_registration']
+                    :create
+                  else
+                    :delete
+                  end
+
+file '/etc/chatmail-nocreate' do
+  action nocreate_action
+end

@@ -6,6 +6,7 @@
     "delete_large_after": 7,
     "delete_mails_after": 20,
     "disable_ipv6": false,
+    "disable_registration": false,
     "dkim_selector": "opendkim",
     "domain": "example.com",
     "filtermail_smtp_port": 10080,

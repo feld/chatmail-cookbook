@@ -5,6 +5,7 @@ default['chatmail']['delete_inactive_users_after'] = 90
 default['chatmail']['delete_large_after'] = 7
 default['chatmail']['delete_mails_after'] = 20
 default['chatmail']['disable_ipv6'] = false
+default['chatmail']['disable_registration'] = false
 default['chatmail']['dkim_selector'] = 'opendkim'
 default['chatmail']['domain'] = 'example.com'
 default['chatmail']['imap_rawlog'] = false
