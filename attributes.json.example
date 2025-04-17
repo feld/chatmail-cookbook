@@ -3,6 +3,7 @@
     "certificates_dir": "/etc/lego/certificates",
     "debug": false,
     "delete_inactive_users_after": 90,
+    "delete_large_after": 7,
     "delete_mails_after": 20,
     "disable_ipv6": false,
     "dkim_selector": "opendkim",

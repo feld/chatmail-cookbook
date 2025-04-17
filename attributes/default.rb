@@ -2,6 +2,7 @@
 default['chatmail']['certificates_dir'] = '/etc/lego/certificates'
 default['chatmail']['debug'] = false
 default['chatmail']['delete_inactive_users_after'] = 90
+default['chatmail']['delete_large_after'] = 7
 default['chatmail']['delete_mails_after'] = 20
 default['chatmail']['disable_ipv6'] = false
 default['chatmail']['dkim_selector'] = 'opendkim'
