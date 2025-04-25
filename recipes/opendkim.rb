@@ -6,20 +6,13 @@
 
 package %w(opendkim opendkim-tools)
 
+selector = node['chatmail']['dkim_selector']
+
 directory '/etc/dkimkeys' do
   owner 'opendkim'
   group 'opendkim'
   mode '0700'
   notifies :restart, 'service[opendkim.service]', :delayed
-end
-
-%w(opendkim.private opendkim.txt).each do |x|
-  file "/etc/dkimkeys/#{x}" do
-    owner 'opendkim'
-    group 'opendkim'
-    mode '600'
-    notifies :restart, 'service[opendkim.service]', :delayed
-  end
 end
 
 directory '/etc/opendkim' do
@@ -47,7 +40,7 @@ template '/etc/opendkim.conf' do
   owner 0
   group 0
   mode '0644'
-  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => node['chatmail']['dkim_selector'] })
+  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => selector })
   notifies :restart, 'service[opendkim.service]', :delayed
 end
 
@@ -55,7 +48,7 @@ template '/etc/dkimkeys/KeyTable' do
   owner 'opendkim'
   group 'opendkim'
   mode '0644'
-  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => node['chatmail']['dkim_selector'] })
+  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => selector })
   notifies :restart, 'service[opendkim.service]', :delayed
 end
 
@@ -63,21 +56,23 @@ template '/etc/dkimkeys/SigningTable' do
   owner 'opendkim'
   group 'opendkim'
   mode '0644'
-  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => node['chatmail']['dkim_selector'] })
+  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => selector })
   notifies :restart, 'service[opendkim.service]', :delayed
 end
 
 execute 'Generate OpenDKIM domain keys' do
-  command "opendkim-genkey -D /etc/dkimkeys -d #{node['chatmail']['domain']} -s #{node['chatmail']['dkim_selector']}"
-  not_if { ::File.exist?("/etc/dkimkeys/#{node['chatmail']['dkim_selector']}.private") }
+  command "opendkim-genkey -D /etc/dkimkeys -d #{node['chatmail']['domain']} -s #{selector}"
+  not_if { ::File.exist?("/etc/dkimkeys/#{selector}.private") }
   notifies :restart, 'service[opendkim.service]', :delayed
 end
 
-directory '/etc/dkimkeys' do
-  owner 'opendkim'
-  group 'opendkim'
-  mode '0700'
-  recursive true
+["#{selector}.private", "#{selector}.txt"].each do |x|
+  file "/etc/dkimkeys/#{x}" do
+    owner 'opendkim'
+    group 'opendkim'
+    mode '600'
+    notifies :restart, 'service[opendkim.service]', :delayed
+  end
 end
 
 service 'opendkim.service' do

@@ -9,7 +9,7 @@
 _mta-sts.<%= @config['domain'] %>.	TXT	"v=STSv1; id=<%= @sts_id %>"
 mta-sts.<%= @config['domain'] %>.	CNAME	<%= @config['domain'] %>.
 www.<%= @config['domain'] %>.	IN	CNAME	<%= @config['domain'] %>.
-opendkim._domainkey.<%= @config['domain'] %>.	IN	TXT	<%= @dkim_txt %>
+<%= @config['dkim_selector'] %>._domainkey.<%= @config['domain'] %>.	IN	TXT	<%= @dkim_txt %>
 
 ;
 ; Recommended DNS entries for interoperability and security-hardening
