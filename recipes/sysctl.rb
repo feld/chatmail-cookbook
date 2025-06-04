@@ -7,7 +7,7 @@
 inotify_sysctls = %w(max_user_instances max_user_watches)
 
 inotify_sysctls.each do |s|
-  sysctl "#{s}" do
+  sysctl "fs.inotify.#{s}" do
     value '65535'
   end
 end
