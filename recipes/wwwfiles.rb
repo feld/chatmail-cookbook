@@ -37,5 +37,5 @@ domain = node['chatmail']['domain']
 qr_file = "/var/www/html/qr-chatmail-invite-#{domain}.png"
 execute 'qrencode' do
   command "qrencode -lH -o #{qr_file} DCACCOUNT:https://#{domain}/new"
-    not_if { ::File.exist?(qr_file) }
+  not_if { ::File.exist?(qr_file) }
 end

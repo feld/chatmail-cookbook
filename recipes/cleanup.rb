@@ -18,7 +18,7 @@ end
 
 %w(/etc/mta-sts-daemon.yml).each do |x|
   file x do
-    action :delete 
+    action :delete
   end
 end
 

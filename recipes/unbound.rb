@@ -7,7 +7,7 @@
 package %w(unbound unbound-anchor dnsutils)
 
 execute 'unbound-anchor' do
-  command "unbound-anchor -a /var/lib/unbound/root.key || true"
+  command 'unbound-anchor -a /var/lib/unbound/root.key || true'
   not_if { ::File.exist?('/var/lib/unbound/root.key') }
   notifies :restart, 'service[unbound.service]', :immediately
 end
