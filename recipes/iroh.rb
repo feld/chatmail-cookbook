@@ -60,8 +60,14 @@ cookbook_file '/etc/systemd/system/iroh-relay.service' do
   notifies :restart, 'service[iroh-relay.service]', :delayed
 end
 
+iroh_actions = if node['chatmail']['iroh_relay']
+                 [:enable, :start]
+               else
+                 [:disable, :stop]
+               end
+
 service 'iroh-relay.service' do
-  action [:enable, :start]
+  action iroh_actions
 end
 
 execute 'systemctl daemon-reload' do
