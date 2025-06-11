@@ -9,6 +9,7 @@ default['chatmail']['disable_registration'] = false
 default['chatmail']['dkim_selector'] = 'opendkim'
 default['chatmail']['domain'] = 'example.com'
 default['chatmail']['imap_rawlog'] = false
+default['chatmail']['iroh_relay'] = false
 default['chatmail']['journald_retention'] = '3d'
 default['chatmail']['mailboxes_dir'] = '/home/vmail/mail'
 default['chatmail']['max_mailbox_size'] = '100M'
