@@ -4,6 +4,7 @@
 #
 # Copyright:: 2024, The Authors, All Rights Reserved.
 
+include_recipe 'chatmail::environment'
 include_recipe 'chatmail::unbound'
 include_recipe 'chatmail::journald'
 include_recipe 'chatmail::certs'
