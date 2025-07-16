@@ -15,6 +15,12 @@ cookbook_file '/usr/bin/lego' do
   mode '0555'
 end
 
+cookbook_file '/etc/lego/renew_hook.sh' do
+  owner 0
+  group 0
+  mode '0555'
+end
+
 certdir = node['chatmail']['certificates_dir']
 
 directory certdir do

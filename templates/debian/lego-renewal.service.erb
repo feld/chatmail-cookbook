@@ -6,7 +6,7 @@ Type=oneshot
 <% @lego_dns_envs.each do |key, value| %>
 Environment="<%= key %>=<%= value %>"
 <% end %>
-ExecStart=/usr/bin/lego -a -d <%= @lego_domain %> -d www.<%= @lego_domain %> -d mta-sts.<%= @lego_domain %> -m <%= @lego_email %> --path <%= @lego_path %> --dns <%= @lego_dns_provider %> renew
+ExecStart=/usr/bin/lego -a -d <%= @lego_domain %> -d www.<%= @lego_domain %> -d mta-sts.<%= @lego_domain %> -m <%= @lego_email %> --path <%= @lego_path %> --dns <%= @lego_dns_provider %> renew --renew-hook=/etc/lego/renew_hook.sh
 
 [Install]
 WantedBy=multi-user.target
