@@ -129,6 +129,8 @@ end
 
 service 'echobot' do
   action [:enable, :start]
+  subscribes :restart, 'service[dovecot.service]', :delayed
+  subscribes :restart, 'service[postfix.service]', :delayed
 end
 
 group 'filtermail' do
