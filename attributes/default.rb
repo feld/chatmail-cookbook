@@ -27,7 +27,7 @@ default['chatmail']['username_max_length'] = 9
 default['chatmail']['username_min_length'] = 9
 default['chatmail']['webdev'] = false
 
-default['chatmaild']['release'] = '0.2.20250506'
+default['chatmaild']['release'] = '0.2.20251027'
 
 default['lego']['path'] = '/etc/lego'
 default['lego']['email'] = 'you@example.com'
