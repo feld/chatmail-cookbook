@@ -14,8 +14,6 @@ property :arch_name, String, default: lazy {
     'amd64'
   when 'aarch64', 'arm64'
     'arm64'
-  when 'armv7l'
-    'arm'
   when 'i386'
     '386'
   else
