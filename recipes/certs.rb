@@ -9,10 +9,9 @@
 #
 # package 'chatmail'
 
-cookbook_file '/usr/bin/lego' do
-  owner 0
-  group 0
-  mode '0555'
+# Install the correct version of lego with automatic download, checksum verification, and version checking
+lego_binary node['lego']['release'] do
+  install_path '/usr/bin/lego'
 end
 
 cookbook_file '/etc/lego/renew_hook.sh' do

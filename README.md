@@ -10,7 +10,7 @@ Patches welcome, of course.
 
 ## ACME Certs / Lego
 
-To make this work, you'll need to put a lego binary in `files/default` which will be deployed to the server or modify the cookbook to fetch it from wherever you prefer. I used the latest from [here](https://github.com/go-acme/lego/releases).
+The correct lego binary for your OS will be automatically downloaded from GitHub, verified by checksum, and installed to `/usr/bin/lego`. The version it uses by default is declared in the attributes file.
 
 The drawback of the official Chatmail deployment is the expectation that you can do HTTP-01 validation on your server. This cookbook uses DNS-01 validation instead.
 
