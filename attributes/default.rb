@@ -33,3 +33,4 @@ default['lego']['path'] = '/etc/lego'
 default['lego']['email'] = 'you@example.com'
 default['lego']['envs'] = { 'DNSIMPLE_OAUTH_TOKEN' => 'abcd1234' }
 default['lego']['provider'] = 'dnsimple'
+default['lego']['release'] = 'v4.28.1'
