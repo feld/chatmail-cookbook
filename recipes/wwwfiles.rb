@@ -39,3 +39,13 @@ execute 'qrencode' do
   command "qrencode -lH -o #{qr_file} DCACCOUNT:https://#{domain}/new"
   not_if { ::File.exist?(qr_file) }
 end
+
+file '/var/www/html/robots.txt' do
+  owner 0
+  group 0
+  mode '0644'
+  content <<~EOU
+User-agent: *
+Disallow: /
+EOU
+end
