@@ -3,6 +3,7 @@
 
 resource_name :lego_binary
 provides :lego_binary
+unified_mode true
 
 property :version, String, name_property: true
 property :install_path, String, default: '/usr/bin/lego'
@@ -27,7 +28,7 @@ action :install do
   os_name = new_resource.os_name
   arch_name = new_resource.arch_name
   lego_version_for_checksums = lego_version.delete_prefix('v')
-  
+
   tarball_name = "lego_#{lego_version}_#{os_name}_#{arch_name}.tar.gz"
   download_url = "https://github.com/go-acme/lego/releases/download/#{lego_version}/#{tarball_name}"
 
@@ -43,7 +44,7 @@ action :install do
       end
     rescue
       # If there's an error running the command, assume version check failed
-      Chef::Log.warn("Error checking installed lego version, will proceed with installation")
+      Chef::Log.warn('Error checking installed lego version, will proceed with installation')
     end
   end
 
@@ -81,9 +82,11 @@ action :install do
       owner 0
       group 0
       mode '0644'
-      only_if { !::File.exist?("/tmp/lego_#{lego_version_for_checksums}_checksums.txt") || 
-                (::File.exist?("/tmp/lego_#{lego_version_for_checksums}_checksums.txt") && 
-                !::File.read("/tmp/lego_#{lego_version_for_checksums}_checksums.txt").include?("#{tarball_name}")) }
+      only_if do
+        !::File.exist?("/tmp/lego_#{lego_version_for_checksums}_checksums.txt") ||
+          (::File.exist?("/tmp/lego_#{lego_version_for_checksums}_checksums.txt") &&
+          !::File.read("/tmp/lego_#{lego_version_for_checksums}_checksums.txt").include?("#{tarball_name}"))
+      end
     end
 
     # Download the lego binary
@@ -92,7 +95,7 @@ action :install do
       owner 0
       group 0
       mode '0644'
-      not_if { ::File.exist?("/tmp/#{tarball_name}") }
+      action :create_if_missing
     end
 
     # Verify checksum and extract the tarball

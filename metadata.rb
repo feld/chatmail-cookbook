@@ -18,4 +18,4 @@ chef_version '>= 16.0'
 #
 # source_url 'https://github.com/<insert_org_here>/chatmail'
 
-supports 'debian', '~> 12'
+supports 'debian', '~> 12.0'

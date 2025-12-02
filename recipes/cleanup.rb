@@ -4,25 +4,33 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-%w(postfix-mta-sts-resolver.service).each do |x|
+oldservices = %w(postfix-mta-sts-resolver.service)
+
+oldservices.each do |x|
   service x do
     action [:stop, :disable]
   end
 end
 
-%w(postfix-mta-sts-resolver).each do |x|
+oldpackages = %w(postfix-mta-sts-resolver)
+
+oldpackages.each do |x|
   package x do
     action :purge
   end
 end
 
-%w(/etc/mta-sts-daemon.yml).each do |x|
+oldfiles = %w(/etc/mta-sts-daemon.yml /etc/cron.d/chatmail-metrics /etc/cron.d/expunge)
+
+oldfiles.each do |x|
   file x do
     action :delete
   end
 end
 
-%w(/usr/local/lib/postfix-mta-sts-resolver).each do |x|
+olddirs = %w(/usr/local/lib/postfix-mta-sts-resolver)
+
+olddirs.each do |x|
   directory x do
     action :delete
     recursive true

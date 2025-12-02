@@ -202,14 +202,6 @@ execute 'systemctl daemon-reload' do
   action :nothing
 end
 
-template '/etc/cron.d/chatmail-metrics' do
-  source 'metrics.cron.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables({ 'config' => node['chatmail'], 'chatmail_bin' => chatmail_bin })
-end
-
 nocreate_action = if node['chatmail']['disable_registration']
                     :create
                   else
@@ -218,4 +210,12 @@ nocreate_action = if node['chatmail']['disable_registration']
 
 file '/etc/chatmail-nocreate' do
   action nocreate_action
+end
+
+template '/etc/cron.d/chatmail' do
+  source 'chatmail.cron.erb'
+  owner 0
+  group 0
+  mode '0644'
+  variables({ 'chatmail_bin' => chatmail_bin, 'config_file' => config_path, 'config' => node['chatmail'] })
 end
