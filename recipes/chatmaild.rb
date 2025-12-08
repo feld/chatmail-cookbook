@@ -45,7 +45,6 @@ execute 'install chatmaild' do
   not_if { ::File.exist?(chatmail_bin + '/deltachat-rpc-server') }
   notifies :restart, 'service[doveauth]', :delayed
   notifies :restart, 'service[chatmail-metadata]', :delayed
-  notifies :restart, 'service[echobot]', :delayed
   notifies :restart, 'service[filtermail]', :delayed
   notifies :restart, 'service[filtermail-incoming]', :delayed
   notifies :restart, 'service[lastlogin]', :delayed
@@ -59,7 +58,6 @@ template config_path do
   variables({ 'config' => node['chatmail'] })
   notifies :restart, 'service[doveauth]', :delayed
   notifies :restart, 'service[chatmail-metadata]', :delayed
-  notifies :restart, 'service[echobot]', :delayed
   notifies :restart, 'service[filtermail]', :delayed
   notifies :restart, 'service[filtermail-incoming]', :delayed
   notifies :restart, 'service[lastlogin]', :delayed
@@ -99,38 +97,6 @@ end
 
 service 'chatmail-metadata' do
   action [:enable, :start]
-end
-
-group 'echobot' do
-  notifies :restart, 'service[echobot]', :delayed
-end
-
-user 'echobot' do
-  gid 'echobot'
-  home '/home/echobot'
-  shell '/bin/sh'
-  notifies :restart, 'service[echobot]', :delayed
-end
-
-execpath = chatmail_bin + '/echobot'
-template '/etc/systemd/system/echobot.service' do
-  source 'echobot.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    execpath: execpath,
-    config_path: config_path,
-    remote_venv_dir: remote_venv_dir
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[echobot]', :delayed
-end
-
-service 'echobot' do
-  action [:enable, :start]
-  subscribes :restart, 'service[dovecot.service]', :delayed
-  subscribes :restart, 'service[postfix.service]', :delayed
 end
 
 group 'filtermail' do

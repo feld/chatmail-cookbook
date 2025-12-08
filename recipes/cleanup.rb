@@ -36,3 +36,22 @@ olddirs.each do |x|
     recursive true
   end
 end
+
+# Remove Echobot
+service 'echobot' do
+  action [:disable, :stop]
+end
+
+user 'echobot' do
+  action :remove
+end
+
+file '/etc/systemd/system/echobot.service' do
+  action :delete
+  notifies :run, 'execute[systemctl daemon-reload]', :immediately
+end
+
+execute 'systemctl daemon-reload' do
+  command 'systemctl daemon-reload'
+  action :nothing
+end
