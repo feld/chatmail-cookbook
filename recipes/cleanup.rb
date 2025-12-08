@@ -20,7 +20,7 @@ oldpackages.each do |x|
   end
 end
 
-oldfiles = %w(/etc/mta-sts-daemon.yml /etc/cron.d/chatmail-metrics /etc/cron.d/expunge)
+oldfiles = %w(/etc/mta-sts-daemon.yml /etc/cron.d/chatmail-metrics /etc/cron.d/expunge /var/www/html/metrics)
 
 oldfiles.each do |x|
   file x do
