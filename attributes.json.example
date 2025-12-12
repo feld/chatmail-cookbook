@@ -19,10 +19,9 @@
     "mtail": {
       "address": "127.0.0.1"
     },
-    "passthrough_recipients": "xstore@testrun.org",
+    "passthrough_recipients": "",
     "passthrough_senders": "",
     "password_min_length": 9,
-    "postfix_reinject_port": 10025,
     "privacy_mail": "UNDEFINED",
     "privacy_pdo": "UNDEFINED",
     "privacy_postal": "UNDEFINED",

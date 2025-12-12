@@ -1,0 +1,36 @@
+# newsyslog configuration for chatmail services
+# Configuration format:
+# /path/to/logfile [owner:group] mode count size when flags [/pid_file] [sig_num]
+
+# Mail log rotation - configured to match <%= @config['log_retention'] %> log_retention setting
+# The configuration rotates logs based on the retention interval and overwrites rather than archiving
+<%
+# Convert lowercase time unit to uppercase newsyslog format
+# e.g., '3d' becomes '3D', '8h' becomes '8H'
+log_retention_for_newsyslog = @config['log_retention'].gsub(/([a-z])$/, &:upcase)
+
+# Extract just the time unit for the 'when' field
+when_match = log_retention_for_newsyslog.match(/(\d+)([A-Z])/)
+if when_match
+  num = when_match[1].to_i
+  unit = when_match[2]
+
+  # Convert to newsyslog's time period format
+  case unit
+  when 'H', 'h'  # hours
+    when_condition = "$H"  # Rotate hourly
+  when 'D', 'd'  # days
+    when_condition = "$D"  # Rotate daily
+  when 'W', 'w'  # weeks
+    when_condition = "$W0"  # Rotate weekly (on Sunday)
+  else
+    when_condition = "$D"  # Default to daily
+  end
+else
+  when_condition = "$D"  # Default to daily if parsing fails
+end
+%>
+/var/log/maillog                            640  1  100000 <%= when_condition %> B /var/run/syslog.pid 15
+
+# Various other logs that might be relevant
+/var/log/messages                           644  1  100000 $D B /var/run/syslog.pid 15

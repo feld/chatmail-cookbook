@@ -1,6 +1,6 @@
 myorigin = <%= @config['domain'] %>
 
-smtpd_banner = $myhostname ESMTP $mail_name (Debian/GNU)
+smtpd_banner = $myhostname ESMTP $mail_name
 biff = no
 
 # appending .domain is the MUA's job.
@@ -83,7 +83,7 @@ mua_sender_restrictions = reject_sender_login_mismatch, permit_sasl_authenticate
 mua_helo_restrictions = permit_mynetworks, reject_invalid_helo_hostname, reject_non_fqdn_helo_hostname, permit
 
 # 1:1 map MAIL FROM to SASL login name.
-smtpd_sender_login_maps = regexp:/etc/postfix/login_map
+smtpd_sender_login_maps = regexp:<%= @postfix_config_dir %>/login_map
 
 # Do not lookup SMTP client hostnames to reduce delays
 # and avoid unnecessary DNS requests.

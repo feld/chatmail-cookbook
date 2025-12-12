@@ -4,7 +4,18 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-oldservices = %w(postfix-mta-sts-resolver.service)
+oldpackages = node['chatmail']['oldpackages']
+oldservices = node['chatmail']['oldservices']
+oldfiles = node['chatmail']['oldfiles']
+olddirs = node['chatmail']['olddirs']
+oldusers = node['chatmail']['oldusers']
+
+oldpackages.each do |x|
+  package x do
+    action :remove
+    ignore_failure true
+  end
+end
 
 oldservices.each do |x|
   service x do
@@ -12,23 +23,11 @@ oldservices.each do |x|
   end
 end
 
-oldpackages = %w(postfix-mta-sts-resolver)
-
-oldpackages.each do |x|
-  package x do
-    action :purge
-  end
-end
-
-oldfiles = %w(/etc/mta-sts-daemon.yml /etc/cron.d/chatmail-metrics /etc/cron.d/expunge /var/www/html/metrics)
-
 oldfiles.each do |x|
   file x do
     action :delete
   end
 end
-
-olddirs = %w(/usr/local/lib/postfix-mta-sts-resolver)
 
 olddirs.each do |x|
   directory x do
@@ -37,21 +36,13 @@ olddirs.each do |x|
   end
 end
 
-# Remove Echobot
-service 'echobot' do
-  action [:disable, :stop]
+oldusers.each do |x|
+  user x do
+    action :remove
+  end
 end
 
-user 'echobot' do
-  action :remove
-end
-
-file '/etc/systemd/system/echobot.service' do
-  action :delete
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-end
-
-execute 'systemctl daemon-reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
+# Just in case on Debian
+if platform_family?('debian')
+  execute 'systemctl daemon-reload'
 end

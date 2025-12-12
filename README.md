@@ -1,3 +1,5 @@
+Synced with [upstream](https://github.com/chatmail/relay) as of commit [b000213c68bb91e80a217ea96c33033a373638d4](https://github.com/chatmail/relay/commit/b000213c68bb91e80a217ea96c33033a373638d4)
+
 # Chatmail
 
 This is a rough Chef cookbook for deploying [Chatmail](https://github.com/chatmail/relay). This is what I use to deploy my server. Check the `attributes/default.rb` to see which attributes you may need to set on your target node.
@@ -56,6 +58,18 @@ The HTML templates have had a few tweaks. The QR code is generated with a differ
 
 It does not validate DNS records, but it does print out a sample zone file which should be accurate for your deployment. This file can also be found at **/tmp/chatmail.zone** on the server.
 
+### Debian
+
+We still use cron to execute the housekeeping instead of a systemd timer as cron is cross-platform
+
+### FreeBSD
+
+We do not have journald to use as a circular buffer for memory-backed logging, so instead we enforce a strict newsyslog configuration to rotate logs and not keep archives based on the configured retention interval.
+
+As we use ZFS on FreeBSD, we leverage ZFS instead of Dovecot to compress the mails. Also, you can define a quota for the ZFS dataset the mails are stored on to protect your server from running out of disk space from abuse of thestorage.
+
+We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot, iroh-relay, chatmail-turn, and mtail. The chatmaild Python implementation may also be packaged in the future.
+
 ## Warranty
 
 There is none. :)
@@ -64,7 +78,8 @@ Also storing your OAuth token or whatever for your DNS provider in the node attr
 
 ## OS Support
 
-It's assuming you're running on Debian and I expect it will work on Ubuntu. It could likely support RHEL as a target easily. I hope to support FreeBSD in the future as that's my preferred server OS.
+Debian 12 (bookworm) as we need Dovecot 2.3
+FreeBSD 14/15 (expects ZFS)
 
 ## Final notes
 

@@ -1,5 +1,4 @@
 # Don't forget to update the attributes.json.example if attributes are changed/added
-default['chatmail']['certificates_dir'] = '/etc/lego/certificates'
 default['chatmail']['debug'] = false
 default['chatmail']['delete_inactive_users_after'] = 90
 default['chatmail']['delete_large_after'] = 7
@@ -10,7 +9,7 @@ default['chatmail']['dkim_selector'] = 'opendkim'
 default['chatmail']['domain'] = 'example.com'
 default['chatmail']['imap_rawlog'] = false
 default['chatmail']['iroh_relay'] = false
-default['chatmail']['journald_retention'] = '3d'
+default['chatmail']['log_retention'] = '3d'
 default['chatmail']['mailboxes_dir'] = '/home/vmail/mail'
 default['chatmail']['max_mailbox_size'] = '100M'
 default['chatmail']['max_message_size'] = 31457280
@@ -29,7 +28,6 @@ default['chatmail']['webdev'] = false
 
 default['chatmaild']['release'] = '0.2.20251027'
 
-default['lego']['path'] = '/etc/lego'
 default['lego']['email'] = 'you@example.com'
 default['lego']['envs'] = { 'DNSIMPLE_OAUTH_TOKEN' => 'abcd1234' }
 default['lego']['provider'] = 'dnsimple'

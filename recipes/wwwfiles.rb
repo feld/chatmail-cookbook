@@ -4,14 +4,17 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package %w(lowdown qrencode)
+platform_www = node['wwwdir']
+bindir = node['bindir']
+lowdown_path = bindir + '/lowdown'
+qrencode_path = bindir + '/qrencode'
 
-directory '/var/www'
-directory '/var/www/src'
-directory '/var/www/html'
+directory platform_www
+directory "#{platform_www}/src"
+directory "#{platform_www}/html"
 
 %w(index info privacy).each do |f|
-  template "/var/www/src/#{f}.md" do
+  template "#{platform_www}/src/#{f}.md" do
     owner 0
     group 0
     mode '0644'
@@ -21,12 +24,12 @@ directory '/var/www/html'
 
   execute "lowdown #{f}.md" do
     action :nothing
-    command "/usr/bin/lowdown --html-no-skiphtml --html-no-escapehtml -o /var/www/html/#{f}.html /var/www/src/#{f}.md"
+    command "#{lowdown_path} --html-no-skiphtml --html-no-escapehtml -o #{platform_www}/html/#{f}.html #{platform_www}/src/#{f}.md"
   end
 end
 
 %w(collage-info.png collage-privacy.png collage-top.png logo.svg main.css).each do |f|
-  cookbook_file "/var/www/html/#{f}" do
+  cookbook_file "#{platform_www}/html/#{f}" do
     owner 0
     group 0
     mode '0644'
@@ -34,13 +37,13 @@ end
 end
 
 domain = node['chatmail']['domain']
-qr_file = "/var/www/html/qr-chatmail-invite-#{domain}.png"
+qr_file = "#{platform_www}/html/qr-chatmail-invite-#{domain}.png"
 execute 'qrencode' do
-  command "qrencode -lH -o #{qr_file} DCACCOUNT:https://#{domain}/new"
+  command "#{qrencode_path} -lH -o #{qr_file} DCACCOUNT:https://#{domain}/new"
   not_if { ::File.exist?(qr_file) }
 end
 
-file '/var/www/html/robots.txt' do
+file "#{platform_www}/html/robots.txt" do
   owner 0
   group 0
   mode '0644'

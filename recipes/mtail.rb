@@ -1,38 +1,68 @@
 #
 # Cookbook:: chatmail
-# Recipe:: chatmaild
+# Recipe:: mtail
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package 'mtail'
+platform_etc = node['etcdir']
 
-cookbook_file '/etc/mtail/delivered_mail.mtail' do
+if platform?('freebsd')
+  mtail_path = '/usr/local/bin/mtail'
+  service_name = 'mtail'
+else
+  mtail_path = '/usr/bin/mtail'
+  service_name = 'mtail.service'
+end
+
+directory "#{platform_etc}/mtail"
+
+cookbook_file "#{platform_etc}/mtail/delivered_mail.mtail" do
   user 0
   group 0
   mode '0644'
-  notifies :restart, 'service[mtail.service]', :delayed
+  notifies :restart, "service[#{service_name}]", :delayed
 end
 
-directory '/etc/systemd/system/mtail.service.d'
+if platform_family?('freebsd')
+  directory '/etc/rc.conf.d' do
+    owner 0
+    group 0
+    mode '0755'
+    action :create
+  end
 
-file '/etc/systemd/system/mtail.service.d/override.conf' do
-  owner 0
-  group 0
-  mode '0644'
-  content <<~EOU
-[Service]
-ExecCondition=
-ExecStart=
-ExecStart=/bin/sh -c 'journalctl -f -o short-iso -n 0 | /usr/bin/mtail $${HOST:+--address $$HOST} $${PORT:+--port $$PORT} --progs /etc/mtail --logtostderr --logs -'
-EOU
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[mtail.service]', :delayed
+  file '/etc/rc.conf.d/mtail' do
+    owner 0
+    group 0
+    mode '0644'
+    content <<~EOU
+    mtail_enable="YES"
+    mtail_program_args="-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
+    EOU
+    notifies :restart, 'service[mtail]', :delayed
+  end
+else
+  directory '/etc/systemd/system/mtail.service.d'
+
+  file '/etc/systemd/system/mtail.service.d/override.conf' do
+    owner 0
+    group 0
+    mode '0644'
+    content <<~EOU
+    [Service]
+    ExecCondition=
+    ExecStart=
+    ExecStart=/bin/sh -c 'journalctl -f -o short-iso -n 0 | #{mtail_path} $${HOST:+--address $$HOST} $${PORT:+--port $$PORT} --progs #{platform_etc}/mtail --logtostderr --logs -'
+    EOU
+    notifies :run, 'execute[systemctl daemon-reload]', :immediately
+    notifies :restart, 'service[mtail]', :delayed
+  end
+
+  execute 'systemctl daemon-reload' do
+    action :nothing
+  end
 end
 
-service 'mtail.service' do
+service 'mtail' do
   action [:enable, :start]
-end
-
-execute 'systemctl daemon-reload' do
-  action :nothing
 end

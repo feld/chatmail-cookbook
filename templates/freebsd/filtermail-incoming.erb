@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# PROVIDE: filtermail_incoming
+# REQUIRE: NETWORKING SERVERS
+# BEFORE: DAEMON
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="filtermail_incoming"
+rcvar="filtermail_incoming_enable"
+
+load_rc_config $name
+
+: ${filtermail_incoming_enable:="NO"}
+: ${filtermail_user:="vmail"}
+: ${filtermail_incoming_user:="filtermail"}
+
+pidfile="/var/run/${name}.pid"
+command="/usr/sbin/daemon"
+command_args=" -T ${name} -P ${pidfile} -u ${filtermail_incoming_user} -r -f <%= @execpath %> <%= @config_path %> incoming"
+
+start_precmd="filtermail_incoming_prestart"
+start_cmd="filtermail_incoming_start"
+stop_cmd="filtermail_incoming_stop"
+
+filtermail_incoming_prestart()
+{
+    if [ ! -f "<%= @config_path %>" ]; then
+        echo "Config file <%= @config_path %> does not exist!"
+        return 1
+    fi
+}
+
+filtermail_incoming_start()
+{
+    echo "Starting filtermail incoming service."
+    eval ${command} ${command_args}
+}
+
+filtermail_incoming_stop()
+{
+    echo "Stopping filtermail incoming service."
+    pkill -f "<%= @execpath %>"
+}
+
+run_rc_command "$1"

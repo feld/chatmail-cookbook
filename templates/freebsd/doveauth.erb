@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# PROVIDE: doveauth
+# REQUIRE: NETWORKING SERVERS
+# BEFORE: DAEMON
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="doveauth"
+rcvar="doveauth_enable"
+pidfile="/var/run/doveauth.pid"
+
+load_rc_config $name
+
+: ${doveauth_enable:="NO"}
+: ${doveauth_user:="vmail"}
+: ${doveauth_execpath:="<%= @execpath %>"}
+: ${doveauth_config_path:="<%= @config_path %>"}
+
+pidfile="/var/run/${name}.pid"
+command="/usr/sbin/daemon"
+command_args=" -T ${name} -P ${pidfile} -u ${doveauth_user} -r -f ${doveauth_execpath} /var/run/${name}/${name}.sock ${doveauth_config_path}"
+
+start_precmd="doveauth_prestart"
+start_cmd="doveauth_start"
+stop_cmd="doveauth_stop"
+
+doveauth_prestart()
+{
+    if [ ! -f "${doveauth_config_path}" ]; then
+        echo "Config file ${doveauth_config_path} does not exist!"
+        return 1
+    fi
+
+    # Create runtime directory
+    install -d -o ${doveauth_user} -g ${doveauth_user} -m 755 /var/run/${name}
+}
+
+doveauth_start()
+{
+    echo "Starting doveauth service."
+    eval ${command} ${command_args}
+}
+
+doveauth_stop()
+{
+    echo "Stopping doveauth service."
+    pkill -f "${doveauth_execpath}"
+}
+
+run_rc_command "$1"

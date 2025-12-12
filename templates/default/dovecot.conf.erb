@@ -57,11 +57,11 @@ imap_capability = +XDELTAPUSH XCHATMAIL
 # Authentication for system users.
 passdb {
   driver = dict
-  args = /etc/dovecot/auth.conf
+  args = <%= @dovecot_config_dir %>/auth.conf
 }
 userdb {
   driver = dict
-  args = /etc/dovecot/auth.conf
+  args = <%= @dovecot_config_dir %>/auth.conf
 }
 ##
 ## Mailbox locations and namespaces
@@ -108,7 +108,7 @@ mail_privileged_group = vmail
 ##
 
 # Pass all IMAP METADATA requests to the server implementing Dovecot's dict protocol.
-mail_attribute_dict = proxy:/run/chatmail-metadata/metadata.socket:metadata
+mail_attribute_dict = proxy:<%= @chatmail_metadata_sock %>:metadata
 
 # `imap_zlib` enables IMAP COMPRESS (RFC 4978).
 # <https://datatracker.ietf.org/doc/html/rfc4978.html>
@@ -118,7 +118,7 @@ protocol imap {
 }
 
 plugin {
-  last_login_dict = proxy:/run/chatmail-lastlogin/lastlogin.socket:lastlogin
+  last_login_dict = proxy:<%= @chatmail_lastlogin_sock %>:lastlogin
   #last_login_key = last-login/%u # default
   last_login_precision = s
 }
@@ -135,9 +135,14 @@ protocol lmtp {
   mail_plugins = $mail_plugins mail_lua notify push_notification push_notification_lua
 }
 
+<%# On FreeBSD we can skip zlib_save due to ZFS %>
+<%# but we otherwise leave the plugins enabled so we can read %>
+<%# the compressed maildir files if we have any %>
+<% if node['platform'] == 'debian' %>
 plugin {
   zlib_save = gz
 }
+<% end %>
 
 plugin {
   imap_compress_deflate_level = 6
@@ -155,7 +160,7 @@ plugin {
 # push_notification configuration
 plugin {
   # <https://doc.dovecot.org/configuration_manual/push_notification/#lua-lua>
-  push_notification_driver = lua:file=/etc/dovecot/push_notification.lua
+  push_notification_driver = lua:file=<%= @dovecot_config_dir %>/push_notification.lua
 }
 
 service lmtp {
@@ -225,7 +230,7 @@ service anvil {
 ssl = required
 ssl_cert = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem
 ssl_key = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem.key
-ssl_dh = </usr/share/dovecot/dh.pem
+ssl_dh = <%= @ssl_dh_path %>
 ssl_min_protocol = TLSv1.3
 ssl_prefer_server_ciphers = yes
 

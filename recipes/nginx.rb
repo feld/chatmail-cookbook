@@ -4,40 +4,73 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package %w(nginx libnginx-mod-stream fcgiwrap)
+platform_etc = node['etcdir']
+platform_www = node['wwwdir']
+fcgiwrap_sock = node['fcgiwrap_sock']
+stream_module_path = node['stream_module_path']
+nginx_user = node['nginx_user']
+nginx_config_dir = platform_etc + '/nginx'
+pid_file = node['nginx_pidfile']
 
-template '/etc/nginx/nginx.conf' do
+template "#{platform_etc}/nginx/nginx.conf" do
   owner 0
   group 0
   mode '0644'
-  variables({ 'config' => node['chatmail'] })
-  notifies :restart, 'service[nginx.service]', :delayed
+  variables(
+    'config' => node['chatmail'],
+    'stream_module_path' => stream_module_path,
+    'nginx_user' => nginx_user,
+    'nginx_config_dir' => nginx_config_dir,
+    'pid_file' => pid_file,
+    'platform_www' => platform_www,
+    'fcgiwrap_sock' => fcgiwrap_sock
+  )
+  notifies :restart, 'service[nginx]', :delayed
 end
 
-service 'nginx.service' do
+service 'nginx' do
   action [:enable, :start]
 end
 
-directory '/usr/lib/cgi-bin'
-
-cookbook_file '/usr/lib/cgi-bin/newemail.py' do
-  owner 0
-  group 0
-  mode '0755'
+if platform_family?('freebsd')
+# This hack because setting vars in /etc/rc.conf
+# is ugly, haven't imported the custom Chef resource
+# for it, and FreeBSD rc does not play nice if
+# enable is in one file and the extra options in
+# another...
+  file '/etc/rc.conf.d/fcgiwrap' do
+    content content <<~EOU
+fcgiwrap_enable="YES"
+fcgiwrap_socket_owner="#{nginx_user}"
+EOU
+    mode '0644'
+    owner 0
+    group 0
+  end
 end
 
-directory '/var/www/html/.well-known/autoconfig/mail' do
+if platform_family?('debian')
+  service 'fcgiwrap.socket' do
+    action [:enable, :start]
+  end
+end
+
+service 'fcgiwrap' do
+  action [:enable, :start]
+end
+
+directory "#{platform_www}/.well-known/autoconfig/mail" do
   recursive true
 end
 
-template '/var/www/html/.well-known/mta-sts.txt' do
+template "#{platform_www}/.well-known/mta-sts.txt" do
   owner 0
   group 0
   mode '0644'
   variables({ 'config' => node['chatmail'] })
 end
 
-template '/var/www/html/.well-known/autoconfig/mail/config-v1.1.xml' do
+template "#{platform_www}/.well-known/autoconfig/mail/config-v1.1.xml" do
   owner 0
   group 0
   source 'autoconfig.xml.erb'
