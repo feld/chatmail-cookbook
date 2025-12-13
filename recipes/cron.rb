@@ -4,8 +4,6 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package 'cron'
-
-service 'cron.service' do
+service 'cron' do
   action [:enable, :start]
 end

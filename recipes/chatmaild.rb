@@ -4,45 +4,48 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-package %w(acl python3-virtualenv)
+platform_etc = node['etcdir']
+node['lego']['bin']
+virtualenv_cmd = node['virtualenv']
 
-remote_base_dir = '/usr/local/lib/chatmaild'
-remote_venv_dir = remote_base_dir + '/venv'
-chatmail_bin = remote_venv_dir + '/bin'
-config_path = remote_base_dir + '/chatmail.ini'
+chatmail_bin = node['chatmail']['bin_dir']
+config_path = node['chatmail']['config_path']
+chatmail_root = node['chatmail']['base_dir']
 release = node['chatmaild']['release']
+venv_dir = node['chatmail']['venv_dir']
 
-directory remote_base_dir + '/dist' do
+directory chatmail_root + '/dist' do
   recursive true
 end
 
-cookbook_file remote_base_dir + "/dist/chatmaild-#{release}.tar.gz" do
+cookbook_file chatmail_root + "/dist/chatmaild-#{release}.tar.gz" do
   owner 0
   group 0
   mode '0644'
   action :create
   notifies :run, 'execute[remove old chatmaild]', :immediately
+  notifies :run, 'execute[virtualenv]', :immediately
+  notifies :run, 'execute[install chatmaild]', :immediately
 end
 
 execute 'remove old chatmaild' do
-  command "rm -rf #{remote_venv_dir}"
+  command "rm -rf #{venv_dir}"
   action :nothing
 end
 
 execute 'virtualenv' do
-  cwd Chef::Config[:file_cache_path]
   command <<~EOF
-    /usr/bin/virtualenv #{remote_venv_dir}
+    #{virtualenv_cmd} #{venv_dir}
   EOF
-  not_if { Dir.exist?(remote_venv_dir) }
+  action :nothing
 end
 
 execute 'install chatmaild' do
-  environment({ 'VIRTUAL_ENV' => remote_venv_dir })
+  environment({ 'VIRTUAL_ENV' => venv_dir })
   command <<~EOF
-    #{chatmail_bin}/pip install #{remote_base_dir}/dist/chatmaild-#{release}.tar.gz
+    #{chatmail_bin}/pip install #{chatmail_root}/dist/chatmaild-#{release}.tar.gz
   EOF
-  not_if { ::File.exist?(chatmail_bin + '/deltachat-rpc-server') }
+  action :nothing
   notifies :restart, 'service[doveauth]', :delayed
   notifies :restart, 'service[chatmail-metadata]', :delayed
   notifies :restart, 'service[filtermail]', :delayed
@@ -63,109 +66,36 @@ template config_path do
   notifies :restart, 'service[lastlogin]', :delayed
 end
 
-execpath = chatmail_bin + '/doveauth'
-template '/etc/systemd/system/doveauth.service' do
-  source 'doveauth.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    execpath: execpath,
-    config_path: config_path
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[doveauth]', :delayed
+if platform_family?('freebsd')
+  include_recipe 'chatmail::_chatmaild_freebsd'
 end
 
-service 'doveauth' do
-  action [:enable, :start]
-end
-
-execpath = chatmail_bin + '/chatmail-metadata'
-template '/etc/systemd/system/chatmail-metadata.service' do
-  source 'chatmail-metadata.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    execpath: execpath,
-    config_path: config_path
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[chatmail-metadata]', :delayed
+if platform_family?('debian')
+  include_recipe 'chatmail::_chatmaild_debian'
 end
 
 service 'chatmail-metadata' do
   action [:enable, :start]
 end
 
-group 'filtermail' do
-  notifies :restart, 'service[filtermail]', :delayed
-end
-
-user 'filtermail' do
-  gid 'filtermail'
-  home '/home/filtermail'
-  shell '/bin/sh'
-  notifies :restart, 'service[filtermail]', :delayed
-end
-
-execpath = chatmail_bin + '/filtermail'
-template '/etc/systemd/system/filtermail.service' do
-  source 'filtermail.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    execpath: execpath,
-    config_path: config_path
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[filtermail]', :delayed
+service 'doveauth' do
+  action [:enable, :start]
 end
 
 service 'filtermail' do
   action [:enable, :start]
 end
 
-template '/etc/systemd/system/filtermail-incoming.service' do
-  source 'filtermail-incoming.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    execpath: execpath,
-    config_path: config_path
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[filtermail-incoming]', :delayed
+service 'filtermail' do
+  action [:enable, :start]
 end
 
 service 'filtermail-incoming' do
   action [:enable, :start]
 end
 
-execpath = chatmail_bin + '/lastlogin'
-template '/etc/systemd/system/lastlogin.service' do
-  source 'lastlogin.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    execpath: execpath,
-    config_path: config_path
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[lastlogin]', :delayed
-end
-
 service 'lastlogin' do
   action [:enable, :start]
-end
-
-execute 'systemctl daemon-reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
 end
 
 nocreate_action = if node['chatmail']['disable_registration']
@@ -174,7 +104,7 @@ nocreate_action = if node['chatmail']['disable_registration']
                     :delete
                   end
 
-file '/etc/chatmail-nocreate' do
+file "#{platform_etc}/chatmail-nocreate" do
   action nocreate_action
 end
 
@@ -184,4 +114,19 @@ template '/etc/cron.d/chatmail' do
   group 0
   mode '0644'
   variables({ 'chatmail_bin' => chatmail_bin, 'config_file' => config_path, 'config' => node['chatmail'] })
+end
+
+cgi_bin_path = node['chatmail']['cgi-bin']
+
+directory cgi_bin_path do
+  recursive true
+end
+
+pyver = node['chatmail']['python_version_string']
+
+remote_file "#{cgi_bin_path}/newemail.py" do
+  source "file://#{venv_dir}/lib/python#{pyver}/site-packages/chatmaild/newemail.py"
+  owner 0
+  group 0
+  mode '0555'
 end

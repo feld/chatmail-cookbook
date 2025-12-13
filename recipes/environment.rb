@@ -4,8 +4,8 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
+# Environment file is Linux-specific (systemd-related), so only create on Linux systems
 if platform_family?('debian')
-
   file '/etc/environment' do
     owner 0
     group 0

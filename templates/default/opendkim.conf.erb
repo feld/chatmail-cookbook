@@ -21,9 +21,9 @@ DNSTimeout          60
 # setup options can be found in /usr/share/doc/opendkim/README.opendkim.
 Domain			<%= @domain %>
 Selector		<%= @dkim_selector %>
-KeyFile		  /etc/dkimkeys/<%= @dkim_selector %>.private
-KeyTable          /etc/dkimkeys/KeyTable
-SigningTable      refile:/etc/dkimkeys/SigningTable
+KeyFile		  <%= @key_file_path %>
+KeyTable          <%= @key_table_path %>
+SigningTable      refile:<%= @signing_table_path %>
 
 # Sign Autocrypt header in addition to the default specified in RFC 6376.
 #
@@ -46,22 +46,18 @@ SignHeaders *,+autocrypt,+content-type
 OversignHeaders from,reply-to,subject,date,to,cc,resent-date,resent-from,resent-sender,resent-to,resent-cc,in-reply-to,references,list-id,list-help,list-unsubscribe,list-subscribe,list-post,list-owner,list-archive,autocrypt
 
 # Script to ignore signatures that do not correspond to the From: domain.
-ScreenPolicyScript /etc/opendkim/screen.lua
+ScreenPolicyScript <%= @screen_policy_script_path %>
 
 # Script to reject mails without a valid DKIM signature.
-FinalPolicyScript /etc/opendkim/final.lua
+FinalPolicyScript <%= @final_policy_script_path %>
 
-# In Debian, opendkim runs as user "opendkim". A umask of 007 is required when
-# using a local socket with MTAs that access the socket as a non-privileged
-# user (for example, Postfix). You may need to add user "postfix" to group
-# "opendkim" in that case.
-UserID			opendkim
+UserID			<%= @user_id %>
 UMask			007
 
 Socket			local:/var/spool/postfix/opendkim/opendkim.sock
 
-PidFile			/run/opendkim/opendkim.pid
+PidFile			<%= @pidfile %>
 
 # The trust anchor enables DNSSEC. In Debian, the trust anchor file is provided
 # by the package dns-root-data.
-TrustAnchorFile		/usr/share/dns/root.key
+TrustAnchorFile		<%= @trust_anchor_path %>

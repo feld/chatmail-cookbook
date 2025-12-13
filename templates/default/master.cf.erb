@@ -102,4 +102,4 @@ filter    unix -        n       n       -       -       lmtp
 # to make sure the users
 # cannot send unprotected Subject.
 authclean unix  n       -       -       -       0       cleanup
-  -o header_checks=regexp:/etc/postfix/submission_header_cleanup
+  -o header_checks=regexp:<%= @postfix_config_dir %>/submission_header_cleanup

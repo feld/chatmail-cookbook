@@ -4,56 +4,59 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-group 'vmail' do
-  notifies :restart, 'service[dovecot.service]', :delayed
-end
+platform_etc = node['etcdir']
+chatmail_metadata_sock = node['chatmail']['metadata_sock']
+chatmail_lastlogin_sock = node['chatmail']['lastlogin_sock']
+doveauth_sock = node['chatmail']['doveauth_sock']
 
-user 'vmail' do
-  gid 'vmail'
-  home '/home/vmail'
-  manage_home true
-  shell '/bin/sh'
-  notifies :restart, 'service[dovecot.service]', :delayed
-end
-
-cookbook_file '/etc/apt/keyrings/obs-home-deltachat.gpg' do
-  owner 0
-  group 0
-  mode '0444'
-end
-
-apt_repository 'DeltaChat_OBS' do
-  components ['./']
-  distribution ''
-  uri 'https://download.opensuse.org/repositories/home:/deltachat/Debian_12/'
-  options ['signed-by=/etc/apt/keyrings/obs-home-deltachat.gpg']
-  action :add
-end
-
-package %w(dovecot-imapd dovecot-lmtpd)
-
-cookbook_file '/etc/dovecot/push_notification.lua' do
+cookbook_file "#{platform_etc}/dovecot/push_notification.lua" do
   owner 0
   group 0
   mode '0644'
-  notifies :restart, 'service[dovecot.service]', :delayed
 end
 
-template '/etc/dovecot/dovecot.conf' do
+# Generate DH parameters file if it doesn't exist
+# On FreeBSD we'll put it in platform_etc, on Debian it can stay in share
+dh_params_file = if platform?('freebsd')
+                   "#{platform_etc}/dovecot/dh.pem"
+                 else
+                   '/usr/share/dovecot/dh.pem'
+                 end
+
+# Create directory for DH params if needed
+directory ::File.dirname(dh_params_file) do
+  owner 0
+  group 0
+  mode '0755'
+  recursive true
+  action :create
+end
+
+# Generate DH parameters if the file doesn't exist
+execute 'generate dhparams' do
+  command "openssl dhparam -out #{dh_params_file} 2048"
+  creates dh_params_file
+  not_if { ::File.exist?(dh_params_file) }
+end
+
+template "#{platform_etc}/dovecot/dovecot.conf" do
   owner 0
   group 0
   mode '0644'
-  variables({ 'config' => node['chatmail'] })
-  notifies :restart, 'service[dovecot.service]', :delayed
+  variables(
+    'config' => node['chatmail'],
+    'ssl_dh_path' => "<#{dh_params_file}",
+    'dovecot_config_dir' => "#{platform_etc}/dovecot",
+    'chatmail_metadata_sock' => chatmail_metadata_sock,
+    'chatmail_lastlogin_sock' => chatmail_lastlogin_sock
+  )
 end
 
-cookbook_file '/etc/dovecot/auth.conf' do
+template "#{platform_etc}/dovecot/auth.conf" do
   owner 0
   group 0
   mode '0644'
-  notifies :restart, 'service[dovecot.service]', :delayed
-end
-
-service 'dovecot.service' do
-  action [:enable, :start]
+  variables(
+    'doveauth_sock' => doveauth_sock
+  )
 end

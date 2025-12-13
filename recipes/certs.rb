@@ -4,17 +4,10 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-# You could use the debian package, but it is older and has fewer
-# supported DNS providers.
-#
-# package 'chatmail'
+platform_etc = node['etcdir']
+lego_bin_path = node['lego']['bin']
 
-# Install the correct version of lego with automatic download, checksum verification, and version checking
-lego_binary node['lego']['release'] do
-  install_path '/usr/bin/lego'
-end
-
-cookbook_file '/etc/lego/renew_hook.sh' do
+cookbook_file "#{platform_etc}/lego/renew_hook.sh" do
   owner 0
   group 0
   mode '0555'
@@ -35,46 +28,56 @@ lego_path = node['lego']['path']
 lego_dns_provider = node['lego']['provider']
 lego_dns_envs = node['lego']['envs']
 
-template '/etc/systemd/system/lego-renewal.service' do
-  source 'lego-renewal.service.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables(
-    lego_email: lego_email,
-    lego_domain: lego_domain,
-    lego_path: lego_path,
-    lego_dns_provider: lego_dns_provider,
-    lego_dns_envs: lego_dns_envs
-  )
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[lego-renewal]', :delayed
-end
+if platform_family?('freebsd')
+  cron 'lego_renewal' do
+    minute '30'
+    hour '2'
+    command "cd / && #{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew --renew-hook=#{platform_etc}/lego/renew_hook.sh"
+    user 'root'
+    environment lego_dns_envs
+  end
+else
+  template '/etc/systemd/system/lego-renewal.service' do
+    source 'lego-renewal.service.erb'
+    owner 0
+    group 0
+    mode '0644'
+    variables(
+      lego_email: lego_email,
+      lego_domain: lego_domain,
+      lego_path: lego_path,
+      lego_dns_provider: lego_dns_provider,
+      lego_dns_envs: lego_dns_envs
+    )
+    notifies :run, 'execute[systemctl daemon-reload]', :immediately
+    notifies :restart, 'service[lego-renewal]', :delayed
+  end
 
-service 'lego-renewal' do
-  action :enable
-end
+  service 'lego-renewal' do
+    action :enable
+  end
 
-template '/etc/systemd/system/lego-renewal.timer' do
-  source 'lego-renewal.timer.erb'
-  owner 0
-  group 0
-  mode '0644'
-  notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[lego-renewal.timer]', :delayed
-end
+  template '/etc/systemd/system/lego-renewal.timer' do
+    source 'lego-renewal.timer.erb'
+    owner 0
+    group 0
+    mode '0644'
+    notifies :run, 'execute[systemctl daemon-reload]', :immediately
+    notifies :restart, 'service[lego-renewal.timer]', :delayed
+  end
 
-service 'lego-renewal.timer' do
-  action [:enable, :start]
-end
+  service 'lego-renewal.timer' do
+    action [:enable, :start]
+  end
 
-execute 'systemctl daemon-reload' do
-  command 'systemctl daemon-reload'
-  action :nothing
+  execute 'systemctl daemon-reload' do
+    command 'systemctl daemon-reload'
+    action :nothing
+  end
 end
 
 execute 'issue_cert' do
-  command "/usr/bin/lego -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} run"
+  command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} run"
   environment(lego_dns_envs)
   not_if { ::File.exist?(certdir + '/' + lego_domain + '.pem.key') }
 end

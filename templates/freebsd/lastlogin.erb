@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# PROVIDE: lastlogin
+# REQUIRE: NETWORKING SERVERS
+# BEFORE: DAEMON
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="lastlogin"
+rcvar="lastlogin_enable"
+
+load_rc_config $name
+
+: ${lastlogin_enable:="NO"}
+: ${lastlogin_user:="vmail"}
+: ${lastlogin_execpath:="<%= @execpath %>"}
+: ${lastlogin_config_path:="<%= @config_path %>"}
+
+pidfile="/var/run/${name}.pid"
+command="/usr/sbin/daemon"
+command_args=" -T ${name} -P ${pidfile} -u ${lastlogin_user} -r -f ${lastlogin_execpath} /var/run/${name}/lastlogin.sock ${lastlogin_config_path}"
+
+start_precmd="lastlogin_prestart"
+start_cmd="lastlogin_start"
+stop_cmd="lastlogin_stop"
+
+lastlogin_prestart()
+{
+    if [ ! -f "${lastlogin_config_path}" ]; then
+        echo "Config file ${lastlogin_config_path} does not exist!"
+        return 1
+    fi
+
+    # Create runtime directory
+    install -d -o ${lastlogin_user} -g ${lastlogin_user} -m 755 /var/run/${name}
+}
+
+lastlogin_start()
+{
+    echo "Starting lastlogin service."
+    eval ${command} ${command_args}
+}
+
+lastlogin_stop()
+{
+    echo "Stopping lastlogin service."
+    pkill -f "${lastlogin_execpath}"
+}
+
+run_rc_command "$1"

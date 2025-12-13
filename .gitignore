@@ -24,3 +24,5 @@ Policyfile.lock.json
 .idea/
 
 files/*/lego
+
+attributes.json

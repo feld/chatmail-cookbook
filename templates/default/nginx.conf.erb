@@ -1,6 +1,6 @@
-load_module modules/ngx_stream_module.so;
+load_module <%= @stream_module_path %>;
 
-user www-data;
+user <%= @nginx_user %>;
 worker_processes auto;
 
 # Increase the number of connections
@@ -12,7 +12,7 @@ worker_processes auto;
 # in the logs.
 # <https://nginx.org/en/docs/ngx_core_module.html#worker_rlimit_nofile>
 worker_rlimit_nofile 2048;
-pid /run/nginx.pid;
+pid <%= @pid_file %>;
 error_log syslog:server=unix:/dev/log,facility=local3;
 
 events {
@@ -49,7 +49,7 @@ http {
 	# Do not emit nginx version on error pages.
 	server_tokens off;
 
-	include /etc/nginx/mime.types;
+	include <%= @nginx_config_dir %>/mime.types;
 	default_type application/octet-stream;
 
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
@@ -63,7 +63,7 @@ http {
   
 		listen 127.0.0.1:8443 ssl default_server;
 
-		root /var/www/html;
+		root <%= @platform_www %>;
 
 		index index.html index.htm;
 
@@ -88,8 +88,8 @@ http {
 				return 301 dcaccount:https://<%= @config['domain'] %>/new;
 			}
 
-			fastcgi_pass unix:/run/fcgiwrap.socket;
-			include /etc/nginx/fastcgi_params;
+			fastcgi_pass unix:<%= @fcgiwrap_sock %>;
+			include <%= @nginx_config_dir %>/fastcgi_params;
 			fastcgi_param SCRIPT_FILENAME /usr/lib/cgi-bin/newemail.py;
 		}
 
@@ -104,8 +104,8 @@ http {
 				return 301 dcaccount:https://<%= @config['domain'] %>/new;
 			}
 
-			fastcgi_pass unix:/run/fcgiwrap.socket;
-			include /etc/nginx/fastcgi_params;
+			fastcgi_pass unix:<%= @fcgiwrap_sock %>;
+			include <%= @nginx_config_dir %>/fastcgi_params;
 			fastcgi_param SCRIPT_FILENAME /usr/lib/cgi-bin/newemail.py;
 		}
 

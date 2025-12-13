@@ -1,0 +1,61 @@
+#!/bin/sh
+#
+# PROVIDE: chatmail_metadata
+# REQUIRE: NETWORKING SERVERS DAEMON
+# BEFORE: LOGIN
+# KEYWORD: shutdown
+
+. /etc/rc.subr
+
+name="chatmail_metadata"
+rcvar="chatmail_metadata_enable"
+pidfile="/var/run/chatmail_metadata.pid"
+
+load_rc_config $name
+
+: ${chatmail_metadata_enable:="YES"}
+: ${chatmail_metadata_user:="vmail"}
+: ${chatmail_metadata_execpath:="<%= @execpath %>"}
+: ${chatmail_metadata_config_path:="<%= @config_path %>"}
+
+pidfile="/var/run/${name}/${name}.pid"
+command="/usr/sbin/daemon"
+command_args=" -T ${name} -P ${pidfile} -u ${chatmail_metadata_user} -r -f ${chatmail_metadata_execpath} /var/run/${name}/metadata.sock ${chatmail_metadata_config_path}"
+
+start_precmd="chatmail_metadata_prestart"
+start_cmd="chatmail_metadata_start"
+reload_cmd="chatmail_metadata_reload"
+stop_cmd="chatmail_metadata_stop"
+
+chatmail_metadata_prestart()
+{
+    if [ ! -f "${chatmail_metadata_config_path}" ]; then
+        echo "Config file ${chatmail_metadata_config_path} does not exist!"
+        return 1
+    fi
+    
+    # Create runtime directory
+    install -d -o ${chatmail_metadata_user} -g ${chatmail_metadata_user} -m 755 /var/run/${name}
+}
+
+chatmail_metadata_start()
+{
+    echo "Starting chatmail metadata service."
+    eval ${command} ${command_args}
+}
+
+chatmail_metadata_reload()
+{
+    echo "Reloading chatmail metadata service not supported, restarting instead."
+    chatmail_metadata_stop
+    sleep 2
+    chatmail_metadata_start
+}
+
+chatmail_metadata_stop()
+{
+    echo "Stopping chatmail metadata service."
+    pkill -f "${chatmail_metadata_execpath}"
+}
+
+run_rc_command "$1"
