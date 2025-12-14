@@ -39,5 +39,5 @@ if platform?('debian')
   default['unbound']['trust_anchor'] = '/usr/share/dns/root.key'
   default['unbound']['anchor_bin'] = '/sbin/unbound-anchor'
   default['unbound']['config_dir'] = lazy { "#{node['etcdir']}/unbound" }
-  default['unbound']['config_file'] = lazy { "#{node['unbound']['config_dir']}/conf.d/unbound.conf" }
+  default['unbound']['config_file'] = lazy { "#{node['unbound']['config_dir']}/unbound.conf.d/unbound.conf" }
 end

@@ -5,7 +5,7 @@
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
 platform_etc = node['etcdir']
-platform_www = node['wwwdir']
+platform_www = node['wwwdir'] + '/html'
 fcgiwrap_sock = node['fcgiwrap_sock']
 stream_module_path = node['stream_module_path']
 nginx_user = node['nginx_user']

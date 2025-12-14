@@ -4,7 +4,7 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-platform_www = node['wwwdir']
+platform_www = node['wwwdir'] + '/html'
 bindir = node['bindir']
 lowdown_path = bindir + '/lowdown'
 qrencode_path = bindir + '/qrencode'

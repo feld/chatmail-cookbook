@@ -17,7 +17,7 @@ template '/etc/systemd/system/doveauth.service' do
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[doveauth.service]', :delayed
+  notifies :restart, 'service[doveauth]', :delayed
 end
 
 template '/etc/systemd/system/chatmail-metadata.service' do
@@ -30,7 +30,7 @@ template '/etc/systemd/system/chatmail-metadata.service' do
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[chatmail-metadata.service]', :delayed
+  notifies :restart, 'service[chatmail-metadata]', :delayed
 end
 
 template '/etc/systemd/system/filtermail.service' do
@@ -43,7 +43,7 @@ template '/etc/systemd/system/filtermail.service' do
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[filtermail.service]', :delayed
+  notifies :restart, 'service[filtermail]', :delayed
 end
 
 template '/etc/systemd/system/filtermail-incoming.service' do
@@ -56,7 +56,7 @@ template '/etc/systemd/system/filtermail-incoming.service' do
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[filtermail-incoming.service]', :delayed
+  notifies :restart, 'service[filtermail-incoming]', :delayed
 end
 
 template '/etc/systemd/system/lastlogin.service' do
@@ -69,7 +69,7 @@ template '/etc/systemd/system/lastlogin.service' do
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
-  notifies :restart, 'service[lastlogin.service]', :delayed
+  notifies :restart, 'service[lastlogin]', :delayed
 end
 
 execute 'systemctl daemon-reload' do
