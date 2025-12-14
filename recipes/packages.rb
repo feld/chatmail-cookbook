@@ -41,7 +41,7 @@ if platform?('freebsd')
     group 0
     mode '0644'
     content 'FreeBSD-base: { enabled: no }'
-    notifies :run, 'execute[pkg ugprade]', :immediately
+    notifies :run, 'execute[pkg upgrade]', :immediately
   end
 
   # Upgrade what we can to the Chatmail repo's packages
