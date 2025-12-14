@@ -40,7 +40,7 @@ if platform?('freebsd')
     owner 0
     group 0
     mode '0644'
-    content 'FreeBSD-base: { enabled: no }'
+    content 'FreeBSD-ports: { enabled: no }'
     notifies :run, 'execute[pkg upgrade]', :immediately
   end
 
