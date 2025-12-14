@@ -5,14 +5,8 @@
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
 platform_etc = node['etcdir']
-
-if platform?('freebsd')
-  mtail_path = '/usr/local/bin/mtail'
-  service_name = 'mtail'
-else
-  mtail_path = '/usr/bin/mtail'
-  service_name = 'mtail.service'
-end
+platform_bin = node['bindir']
+mtail_path = "#{platform_bin}/mtail"
 
 directory "#{platform_etc}/mtail"
 
@@ -20,7 +14,7 @@ cookbook_file "#{platform_etc}/mtail/delivered_mail.mtail" do
   user 0
   group 0
   mode '0644'
-  notifies :restart, "service[#{service_name}]", :delayed
+  notifies :restart, 'service[mtail]', :delayed
 end
 
 if platform_family?('freebsd')

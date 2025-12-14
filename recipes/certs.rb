@@ -32,7 +32,7 @@ if platform_family?('freebsd')
   cron 'lego_renewal' do
     minute '30'
     hour '2'
-    command "cd / && #{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew --renew-hook=#{platform_etc}/lego/renew_hook.sh"
+    command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew --renew-hook=#{platform_etc}/lego/renew_hook.sh"
     user 'root'
     environment lego_dns_envs
   end

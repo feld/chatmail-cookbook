@@ -33,11 +33,11 @@ service 'nginx' do
 end
 
 if platform_family?('freebsd')
-# This hack because setting vars in /etc/rc.conf
-# is ugly, haven't imported the custom Chef resource
-# for it, and FreeBSD rc does not play nice if
-# enable is in one file and the extra options in
-# another...
+  # This hack because setting vars in /etc/rc.conf
+  # is ugly, haven't imported the custom Chef resource
+  # for it, and FreeBSD rc does not play nice if
+  # enable is in one file and the extra options in
+  # another...
   file '/etc/rc.conf.d/fcgiwrap' do
     content content <<~EOU
 fcgiwrap_enable="YES"
