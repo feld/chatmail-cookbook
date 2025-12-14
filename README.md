@@ -2,9 +2,9 @@ Synced with [upstream](https://github.com/chatmail/relay) as of commit [b000213c
 
 # Chatmail
 
-This is a rough Chef cookbook for deploying [Chatmail](https://github.com/chatmail/relay). This is what I use to deploy my server. Check the `attributes/default.rb` to see which attributes you may need to set on your target node.
+This is a Chef cookbook for deploying [Chatmail](https://github.com/chatmail/relay). This is what I use to deploy my server. Check the `attributes/default.rb` to see which attributes you may need to set on your target node.
 
-Everything is handled: Nginx, Postfix, the patched Dovecot, DKIM, journald log retention changes, the extra Chatmail related services (echobot, etc). It's all here.
+Everything is handled: Nginx, Postfix, the patched Dovecot, DKIM, log retention changes, the extra Chatmail related services (filtermail, etc). It's all here.
 
 Future changes to Chatmail will need to be synced into this cookbook but it is only a minor inconvenience.
 
