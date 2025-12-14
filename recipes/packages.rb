@@ -29,6 +29,26 @@ if platform?('freebsd')
     priority 10
     url 'http://pkg.radiks.org/${ABI}-chatmail'
   end
+
+  # Disable the FreeBSD-ports package repo due
+  # to it using the quarterly branch by default
+  # which can have older packages and cause library
+  # conclicts. e.g., install git on a new server,
+  # try to deploy chatmail, Nginx installs but with
+  # the wrong pcre2 library
+  file '/usr/local/etc/pkg/repo/FreeBSD-ports.conf' do
+    owner 0
+    group 0
+    mode '0644'
+    content 'FreeBSD-base: { enabled: no }'
+    notifies :run, 'execute[pkg ugprade]', :immediately
+  end
+
+  # Upgrade what we can to the Chatmail repo's packages
+  execute 'pkg upgrade' do
+    command 'pkg upgrade -y'
+    action :nothing
+  end
 end
 
 # Install packages only - this ensures users/groups exist for service configuration
