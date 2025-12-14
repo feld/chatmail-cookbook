@@ -36,7 +36,7 @@ if platform?('freebsd')
   # conclicts. e.g., install git on a new server,
   # try to deploy chatmail, Nginx installs but with
   # the wrong pcre2 library
-  file '/usr/local/etc/pkg/repo/FreeBSD-ports.conf' do
+  file '/usr/local/etc/pkg/repos/FreeBSD-ports.conf' do
     owner 0
     group 0
     mode '0644'
