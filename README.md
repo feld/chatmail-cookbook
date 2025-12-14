@@ -39,8 +39,6 @@ git clone https://github.com/feld/chatmail-cookbook cookbooks/chatmail
 cp cookbooks/chatmail/attributes.json.example ./attributes.json
 ```
 
-Don't forget you need to get a `lego` binary and put it in `cookbooks/chatmail/files/debian/`. You could install from your package manager and symlink it, but the latest release will have better support for DNS-01 validation with more providers. Check the [Lego DNS Providers docs](https://go-acme.github.io/lego/dns/) for details on the ENVs you need to set. 
-
 Edit the `attributes.json` file to suit your environment, including defining the ENVs you need for Lego.
 
 Now you can run the following from inside this `chef/` directory:
@@ -83,7 +81,7 @@ Also storing your OAuth token or whatever for your DNS provider in the node attr
 
 ## Final notes
 
-I didn't setup any Chef tests. It's a little hacky because it was a direct conversion of the cmdeploy logic and templates. If you would prefer to use Ansible this cookbook is probably an easier starting point as the steps and logic are a bit clearer. You'll have to convert the templates back to Jinja from ERB. Otherwise it should be very straightforward.
+I didn't setup any Chef tests. If you would prefer to use Ansible this cookbook is probably an easier starting point as the steps and logic are a bit clearer. You'll have to convert the templates back to Jinja from ERB. Otherwise it should be very straightforward.
 
 
 ## Contact
