@@ -6,20 +6,26 @@
 
 platform_etc = node['etcdir']
 lego_bin_path = node['lego']['bin']
+certdir = node['chatmail']['certificates_dir']
 
-cookbook_file "#{platform_etc}/lego/renew_hook.sh" do
+directory "#{platform_etc}/lego" do
   owner 0
   group 0
-  mode '0555'
+  mode '0755'
+  recursive true
 end
-
-certdir = node['chatmail']['certificates_dir']
 
 directory certdir do
   owner 0
   group 0
   mode '0755'
   recursive true
+end
+
+cookbook_file "#{platform_etc}/lego/renew_hook.sh" do
+  owner 0
+  group 0
+  mode '0555'
 end
 
 lego_email = node['lego']['email']
