@@ -33,5 +33,11 @@ end
 
 # Install packages only - this ensures users/groups exist for service configuration
 node['chatmail']['packages'].each do |i|
-  package i
+  if platform_family?('freebsd')
+    package i do
+      repository 'chatmail'
+    end
+  else
+    package i
+  end
 end
