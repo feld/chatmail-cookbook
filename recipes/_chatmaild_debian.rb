@@ -39,7 +39,7 @@ template '/etc/systemd/system/filtermail.service' do
   group 0
   mode '0644'
   variables(
-    execpath: chatmail_bin + '/chatmail-metadata',
+    execpath: chatmail_bin + '/filtermail',
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
