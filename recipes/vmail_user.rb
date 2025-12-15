@@ -4,7 +4,7 @@
 #
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
-vmail_home = '/home/vmail'
+vmail_home = node['chatmail']['vmail_home']
 
 # On FreeBSD, create a dedicated ZFS filesystem for mail storage before creating the user
 if platform?('freebsd')

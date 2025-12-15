@@ -6,3 +6,4 @@ default['chatmail']['base_dir'] = '/usr/local/lib/chatmaild'
 default['chatmail']['venv_dir'] = lazy { "#{node['chatmail']['base_dir']}/venv" }
 default['chatmail']['bin_dir'] = lazy { "#{node['chatmail']['venv_dir']}/bin" }
 default['chatmail']['config_path'] = lazy { "#{node['chatmail']['base_dir']}/chatmail.ini" }
+default['chatmail']['vmail_home'] = '/home/vmail'

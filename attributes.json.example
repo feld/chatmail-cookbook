@@ -1,6 +1,5 @@
 {
   "chatmail": {
-    "certificates_dir": "/etc/lego/certificates",
     "debug": false,
     "delete_inactive_users_after": 90,
     "delete_large_after": 7,
@@ -12,7 +11,6 @@
     "filtermail_smtp_port": 10080,
     "imap_rawlog": false,
     "log_retention": "3d",
-    "mailboxes_dir": "/home/vmail/mail",
     "max_mailbox_size": "100M",
     "max_message_size": 31457280,
     "max_user_send_per_minute": 60,
