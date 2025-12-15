@@ -53,7 +53,7 @@ template "#{dkim_keys_dir}/KeyTable" do
   owner opendkim_user
   group opendkim_group
   mode '0644'
-  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => selector })
+  variables({ 'domain' => node['chatmail']['domain'], 'dkim_selector' => selector, 'etcdir' => platform_etc })
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
