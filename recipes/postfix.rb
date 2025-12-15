@@ -70,7 +70,7 @@ end
 
 if platform_family?('freebsd')
   remote_file '/usr/local/etc/mail/mailer.conf' do
-    source '/usr/local/share/postfix/mailer.conf.postfix'
+    source 'file:///usr/local/share/postfix/mailer.conf.postfix'
     owner 0
     group 0
     mode '0644'
