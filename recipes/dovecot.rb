@@ -50,6 +50,7 @@ template "#{platform_etc}/dovecot/dovecot.conf" do
     'chatmail_metadata_sock' => chatmail_metadata_sock,
     'chatmail_lastlogin_sock' => chatmail_lastlogin_sock
   )
+  notifies :restart, 'service[dovecot]', :delayed
 end
 
 template "#{platform_etc}/dovecot/auth.conf" do
@@ -59,4 +60,9 @@ template "#{platform_etc}/dovecot/auth.conf" do
   variables(
     'doveauth_sock' => doveauth_sock
   )
+  notifies :restart, 'service[dovecot]', :delayed
+end
+
+service 'dovecot' do
+  action [:enable, :start]
 end
