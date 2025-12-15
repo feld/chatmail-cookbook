@@ -84,6 +84,6 @@ if platform_family?('freebsd')
   end
 end
 
-execute 'newliases' do
+execute 'newaliases' do
   not_if { ::File.exist?('/etc/aliases.db') }
 end
