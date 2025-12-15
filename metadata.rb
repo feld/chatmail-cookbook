@@ -3,7 +3,7 @@ maintainer 'feld'
 maintainer_email 'feld@feld.me'
 license 'All Rights Reserved'
 description 'Installs/Configures chatmail'
-version '0.2.0'
+version '0.2.1'
 chef_version '>= 16.0'
 
 # The `issues_url` points to the location where issues for this cookbook are
