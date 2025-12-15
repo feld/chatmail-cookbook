@@ -69,11 +69,12 @@ service opendkim_service do
 end
 
 if platform_family?('freebsd')
-  remote_file '/usr/local/etc/mail/mailer.conf'
-  source '/usr/local/share/postfix/mailer.conf.postfix'
-  owner 0
-  group 0
-  mode '0644'
+  remote_file '/usr/local/etc/mail/mailer.conf' do
+    source '/usr/local/share/postfix/mailer.conf.postfix'
+    owner 0
+    group 0
+    mode '0644'
+  end
 
   file '/etc/rc.conf.d/sendmail' do
     owner 0
