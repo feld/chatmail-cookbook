@@ -28,6 +28,13 @@
     "username_min_length": 9,
     "webdev": false
   },
+  "freebsd": {
+    "zfs": {
+      "enable": false,
+      "vmail_dataset": "zroot/home/vmail",
+      "vmail_quota": "none"
+    }
+  },
   "lego": {
     "path": "/etc/lego",
     "provider": "dnsimple",

@@ -38,8 +38,6 @@ if platform?('freebsd')
   default['opendkim']['config_dir'] = lazy { "#{node['etcdir']}/mail" }
   default['opendkim']['pidfile'] = '/var/run/milteropendkim/pid'
   default['chatmail']['turnservice'] = 'chatmail_turn'
-  default['zfs']['vmail_dataset'] = 'zroot/home/vmail'
-  default['zfs']['vmail_quota'] = 'none'
   default['unbound']['trust_anchor'] = lazy { "#{node['etcdir']}/unbound/root.key" }
   default['unbound']['anchor_bin'] = '/usr/local/sbin/unbound-anchor'
   default['unbound']['config_dir'] = lazy { "#{node['etcdir']}/unbound" }
