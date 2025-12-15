@@ -13,8 +13,7 @@ rcvar="filtermail_incoming_enable"
 load_rc_config $name
 
 : ${filtermail_incoming_enable:="NO"}
-: ${filtermail_user:="vmail"}
-: ${filtermail_incoming_user:="filtermail"}
+: ${filtermail_incoming_user:="vmail"}
 
 pidfile="/var/run/${name}.pid"
 command="/usr/sbin/daemon"
