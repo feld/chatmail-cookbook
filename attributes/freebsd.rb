@@ -25,6 +25,7 @@ if platform?('freebsd')
                                         graphics/py-qrencode
                                         unbound
                                         lego
+                                        ca_root_nss
 )
   default['chatmail']['metadata_sock'] = '/var/run/chatmail_metadata/metadata.sock'
   default['chatmail']['lastlogin_sock'] = '/var/run/lastlogin/lastlogin.sock'

@@ -67,3 +67,22 @@ end
 service opendkim_service do
   action :nothing
 end
+
+if platform_family?('freebsd')
+  remote_file '/usr/local/etc/mail/mailer.conf'
+  source '/usr/local/share/postfix/mailer.conf.postfix'
+  owner 0
+  group 0
+  mode '0644'
+
+  file '/etc/rc.conf.d/sendmail' do
+    owner 0
+    group 0
+    mode '0644'
+    content 'sendmail_enable="NONE"'
+  end
+end
+
+execute 'newliases' do
+  not_if { ::File.exist?('/etc/aliases.db') }
+end
