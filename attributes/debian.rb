@@ -2,6 +2,7 @@ if platform?('debian')
   default['etcdir'] = '/etc'
   default['wwwdir'] = '/var/www'
   default['bindir'] = '/usr/bin'
+  default['syslog_sock'] = '/dev/log'
   default['lego']['bin'] = '/usr/bin/lego'
   default['lego']['path'] = lazy { "#{node['etcdir']}/lego" }
   default['chatmail']['python_version_string'] = '3.11'

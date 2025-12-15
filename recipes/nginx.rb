@@ -11,6 +11,7 @@ stream_module_path = node['stream_module_path']
 nginx_user = node['nginx_user']
 nginx_config_dir = platform_etc + '/nginx'
 pid_file = node['nginx_pidfile']
+syslog_sock = node['syslog_sock']
 
 template "#{platform_etc}/nginx/nginx.conf" do
   owner 0
@@ -23,7 +24,8 @@ template "#{platform_etc}/nginx/nginx.conf" do
     'nginx_config_dir' => nginx_config_dir,
     'pid_file' => pid_file,
     'platform_www' => platform_www,
-    'fcgiwrap_sock' => fcgiwrap_sock
+    'fcgiwrap_sock' => fcgiwrap_sock,
+    'syslog_sock' => syslog_sock
   )
   notifies :restart, 'service[nginx]', :delayed
 end

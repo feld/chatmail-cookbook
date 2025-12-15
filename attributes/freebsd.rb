@@ -2,6 +2,7 @@ if platform?('freebsd')
   default['etcdir'] = '/usr/local/etc'
   default['wwwdir'] = '/usr/local/www'
   default['bindir'] = '/usr/local/bin'
+  default['syslog_sock'] = '/var/run/log'
   default['lego']['bin'] = '/usr/local/bin/lego'
   default['lego']['path'] = "#{node['etcdir']}/lego"
   default['chatmail']['certificates_dir'] = "#{node['etcdir']}/lego/certificates"

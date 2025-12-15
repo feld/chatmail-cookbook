@@ -13,7 +13,7 @@ worker_processes auto;
 # <https://nginx.org/en/docs/ngx_core_module.html#worker_rlimit_nofile>
 worker_rlimit_nofile 2048;
 pid <%= @pid_file %>;
-error_log syslog:server=unix:/dev/log,facility=local3;
+error_log syslog:server=unix:<%= @syslog_sock %>,facility=local3;
 
 events {
         # Increase to avoid errors such as
@@ -69,7 +69,7 @@ http {
 
 		server_name _;
 
-		access_log syslog:server=unix:/dev/log,facility=local7;
+		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
 
 		location / {
 			# First attempt to serve request as file, then
@@ -135,6 +135,6 @@ http {
 		listen 127.0.0.1:8443 ssl;
 		server_name www.<%= @config['domain'] %>;
 		return 301 $scheme://<%= @config['domain'] %>$request_uri;
-		access_log syslog:server=unix:/dev/log,facility=local7;
+		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
 	}
 }
