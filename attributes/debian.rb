@@ -6,7 +6,7 @@ if platform?('debian')
   default['lego']['bin'] = '/usr/bin/lego'
   default['lego']['path'] = lazy { "#{node['etcdir']}/lego" }
   default['chatmail']['python_version_string'] = '3.11'
-  default['chatmail']['certificates_dir'] = lazy { "#{node['etcdir']}/lego/certificates" }
+  default['chatmail']['certificates_dir'] = lazy { "#{node['lego']['path']}/certificates" }
   default['virtualenv'] = '/usr/bin/virtualenv'
   default['chatmail']['packages'] = %w( python3-virtualenv
                                         postfix
