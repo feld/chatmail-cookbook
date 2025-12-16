@@ -64,9 +64,9 @@ We still use cron to execute the housekeeping instead of a systemd timer as cron
 
 We do not have journald to use as a circular buffer for memory-backed logging, so instead we enforce a strict newsyslog configuration to rotate logs and not keep archives based on the configured retention interval.
 
-As we use ZFS on FreeBSD, we leverage ZFS instead of Dovecot to compress the mails. Also, you can define a quota for the ZFS dataset the mails are stored on to protect your server from running out of disk space from abuse of thestorage.
+If you use ZFS on FreeBSD and declare `['freebsd']['zfs']['enable'] = true', we leverage ZFS instead of Dovecot to compress the mails. Also, you can define a quota for the ZFS dataset the mails are stored on to protect your server from running out of disk space from abuse of thestorage.
 
-We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot, iroh-relay, chatmail-turn, and mtail. The chatmaild Python implementation may also be packaged in the future.
+We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot and Lua support enabled, iroh-relay, chatmail-turn, and mtail. The chatmaild Python services may also be packaged in the future.
 
 ## Warranty
 
@@ -77,7 +77,11 @@ Also storing your OAuth token or whatever for your DNS provider in the node attr
 ## OS Support
 
 * Debian 12 (bookworm) as we need Dovecot 2.3
-* FreeBSD 14/15 (expects ZFS)
+* FreeBSD 14/15
+
+## Ongoing Maintenance
+
+Currently it is up to you to update, harden, secure, firewall, etc your server as you see fit just like a normal relay deployed with the official `cmdeploy` tool. Additional functionality is being evaluated for inclusion in the Cookbook.
 
 ## Final notes
 
