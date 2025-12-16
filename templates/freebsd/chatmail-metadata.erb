@@ -19,7 +19,7 @@ required_files="${chatmail_config}"
 procname="*python*"
 pidfile="/var/run/${name}/${name}.pid"
 command="/usr/sbin/daemon"
-command_args=" -T ${name} -P ${pidfile} -u ${chatmail_svc_user} -r -f <%= @execpath %> /var/run/${name}/metadata.sock ${chatmail_config}"
+command_args=" -T ${name} -p ${pidfile} -u ${chatmail_svc_user} -r -f <%= @execpath %> /var/run/${name}/metadata.sock ${chatmail_config}"
 
 start_precmd="install -d -o ${chatmail_svc_user} -g ${chatmail_svc_user} -m 755 /var/run/${name}"
 
