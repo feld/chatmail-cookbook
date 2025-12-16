@@ -255,7 +255,7 @@ protocol imap {
 } 
 <% end -%>
 
-<% if @config['imap_compress'] && @node['platform_family'] == 'debian' %>
+<% if !@config['imap_compress'] && @node['platform_family'] == 'debian' %>
 # Hibernate IDLE users to save memory and CPU resources
 # NOTE: this will have no effect if imap_zlib plugin is used
 imap_hibernate_timeout = 30s
