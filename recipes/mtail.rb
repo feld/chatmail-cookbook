@@ -31,7 +31,7 @@ if platform_family?('freebsd')
     mode '0644'
     content <<~EOU
     mtail_enable="YES"
-    mtail_program_args="-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
+    mtail_args="-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
     EOU
     notifies :restart, 'service[mtail]', :delayed
   end
