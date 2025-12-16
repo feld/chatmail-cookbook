@@ -19,7 +19,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: Fix dovecot service not actually getting enabled/started after some refactoring
 - FreeBSD: Postfix was not able to verify certificates when federating (outbound) emails with `smtp_tls_CApath=/etc/ssl/certs`; switched to `smtp_tls_CApath=/etc/ssl/cert.pem`.
 - Dovecot: enable IMAP hibernation on Debian to sync with upstream's configuration. This does not work on FreeBSD right now [b78283c](https://github.com/dovecot/core/commit/b78283cf9748e4c4fed8a5ec09cdba7b9bf18228). Only benefit is lowered memory usage for many idle connections.
-- FreeBSD: patched dictproxy, part of chatmaild, which had a hardcoded socket path meant for Debian.
+- FreeBSD: patched turnserver, part of chatmaild, which had a hardcoded socket path meant for Debian.
 
 ## 0.2.1
 
