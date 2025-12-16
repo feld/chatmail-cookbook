@@ -10,8 +10,8 @@ class Chef
           current_resource.service_name(new_resource.service_name)
 
           # Set default supports for FreeBSD rc.d scripts which universally support status and restart
-          supports[:status] = true if supports[:status].nil?
-          supports[:restart] = true if supports[:restart].nil?
+          supports[:status]
+          supports[:restart]
 
           @status_load_success = true
           determine_current_status! # Check running status
