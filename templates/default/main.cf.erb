@@ -20,10 +20,10 @@ smtpd_tls_key_file=<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.p
 smtpd_tls_security_level=may
 
 <% if platform_family?('debian') %>
-<%= smtp_tls_CApath=/etc/ssl/certs %>
+smtp_tls_CApath=/etc/ssl/certs
 <% else %>
 <%# Verification not working in FreeBSD via the certs dir?? %>
-<%= smtp_tls_CAfile=/etc/ssl/cert.pem %>
+smtp_tls_CAfile=/etc/ssl/cert.pem
 <% endif %>
 smtp_tls_security_level=verify
 # Send SNI extension when connecting to other servers.
