@@ -6,9 +6,10 @@
 
 platform_etc = node['etcdir']
 lego_bin_path = node['lego']['bin']
+lego_path = platform_etc + '/lego'
 certdir = node['chatmail']['certificates_dir']
 
-directory "#{platform_etc}/lego" do
+directory lego_path do
   owner 0
   group 0
   mode '0755'
@@ -30,7 +31,6 @@ end
 
 lego_email = node['lego']['email']
 lego_domain = node['chatmail']['domain']
-lego_path = node['lego']['path']
 lego_dns_provider = node['lego']['provider']
 lego_dns_envs = node['lego']['envs']
 

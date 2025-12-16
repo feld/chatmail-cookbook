@@ -36,7 +36,6 @@
     }
   },
   "lego": {
-    "path": "/etc/lego",
     "provider": "dnsimple",
     "envs": {
       "DNSIMPLE_OAUTH_TOKEN": "abcd134"
