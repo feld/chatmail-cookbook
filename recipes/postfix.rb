@@ -24,13 +24,26 @@ cookbook_file "#{platform_etc}/postfix/submission_header_cleanup" do
   notifies :restart, 'service[postfix]', :delayed
 end
 
+# FreeBSD doesn't want to work verifying using the
+# /etc/ssl/certs dir for some reason. It errors like
+# postfix/smtp[53908]: certificate verification failed for e2ee.wang[139.84.233.161]:25: untrusted issuer /C=US/O=Internet Security Research Group/CN=ISRG Root X1
+# even though curl etc are ok with it
+
+case node['platform_family']
+  when 'freebsd'
+   smtp_tls_trust_source = 'smtp_tls_CAfile=/etc/ssl/cert.pem'
+else
+   smtp_tls_trust_source = 'smtp_tls_CApath=/etc/ssl/certs'
+end
+
 template "#{platform_etc}/postfix/main.cf" do
   owner 0
   group 0
   mode '0644'
   variables(
     'config' => node['chatmail'],
-    'postfix_config_dir' => "#{platform_etc}/postfix"
+    'postfix_config_dir' => "#{platform_etc}/postfix",
+    'smtp_tls_trust_source' => smtp_tls_trust_source
   )
   notifies :restart, 'service[postfix]', :delayed
 end
