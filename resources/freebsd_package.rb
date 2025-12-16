@@ -17,7 +17,7 @@ property :vital, [TrueClass, FalseClass, nil],
          description: 'Whether the package should be marked as vital (critical to system operation).',
          default: nil
 
-property :update_repository, [true, false],
+property :update_repository, [TrueClass, FalseClass, nil],
          description: 'Whether to update the package repository before querying/packaging. Overrides default behavior.',
          default: nil
 
