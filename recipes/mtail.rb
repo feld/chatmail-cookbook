@@ -18,21 +18,10 @@ cookbook_file "#{platform_etc}/mtail/delivered_mail.mtail" do
 end
 
 if platform_family?('freebsd')
-  directory '/etc/rc.conf.d' do
-    owner 0
-    group 0
-    mode '0755'
-    action :create
-  end
-
-  file '/etc/rc.conf.d/mtail' do
-    owner 0
-    group 0
-    mode '0644'
-    content <<~EOU
-    mtail_enable="YES"
-    mtail_args="-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
-    EOU
+  mtail_sysrc = 'mtail_args="-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"'
+  execute 'configure mtail' do
+    command "sysrc #{mtail_sysrc}"
+    not_if "sysrc -c #{mtail_sysrc}"
     notifies :restart, 'service[mtail]', :delayed
   end
 else

@@ -88,11 +88,10 @@ if platform_family?('freebsd')
     mode '0644'
   end
 
-  file '/etc/rc.conf.d/sendmail' do
-    owner 0
-    group 0
-    mode '0644'
-    content 'sendmail_enable="NONE"'
+  # Just in case... but this is default in modern FreeBSD
+  execute 'disabling sendmail' do
+    command 'sysrc sendmail_enable="NONE"'
+    not_if 'sysrc -c sendmail_enable="NONE"'
   end
 end
 
