@@ -29,12 +29,11 @@ end
 # postfix/smtp[53908]: certificate verification failed for e2ee.wang[139.84.233.161]:25: untrusted issuer /C=US/O=Internet Security Research Group/CN=ISRG Root X1
 # even though curl etc are ok with it
 
-case node['platform_family']
-  when 'freebsd'
-   smtp_tls_trust_source = 'smtp_tls_CAfile=/etc/ssl/cert.pem'
-else
-   smtp_tls_trust_source = 'smtp_tls_CApath=/etc/ssl/certs'
-end
+smtp_tls_trust_source = if platform_family?('freebsd')
+                          'smtp_tls_CAfile=/etc/ssl/cert.pem'
+                        else
+                          'smtp_tls_CApath=/etc/ssl/certs'
+                        end
 
 template "#{platform_etc}/postfix/main.cf" do
   owner 0
