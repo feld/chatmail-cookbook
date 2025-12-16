@@ -17,6 +17,10 @@ property :vital, [TrueClass, FalseClass, nil],
          description: 'Whether the package should be marked as vital (critical to system operation).',
          default: nil
 
+property :update_repository, [true, false],
+         description: 'Whether to update the package repository before querying/packaging. Overrides default behavior.',
+         default: nil
+
 action :install do
   provider = Chef::Provider::Package::Freebsd::Pkgng.new(new_resource, run_context)
   provider.run_action(:install)

@@ -9,6 +9,10 @@ class Chef::Resource::Package
 
   property :repository, String,
     description: 'The name of the repository to install the package from. FreeBSD only.'
+
+  property :update_repository, [true, false],
+    description: 'Whether to update the package repository before querying/packaging. Overrides default behavior. FreeBSD only.',
+    default: nil
 end
 
 class Chef
@@ -77,10 +81,12 @@ class Chef
               if new_resource.repository && current_repo && new_resource.repository != current_repo
                 logger.info("#{new_resource} package #{name} already installed but from different repository (#{current_repo}), switching to #{new_resource.repository}")
                 repo_option = ['-r', new_resource.repository]
+                # Apply repository update options
+                effective_options = determine_repo_update_options([*repo_option, *options])
                 if version
-                  shell_out!('pkg', 'install', '-y', '-f', *repo_option, options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', '-f', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
                 else
-                  shell_out!('pkg', 'install', '-y', '-f', *repo_option, options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', '-f', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
                 end
               else
                 logger.trace("#{new_resource} package #{name} already installed#{current_repo ? ' from correct repository' : ', no repository switching needed'}, skipping install")
@@ -94,19 +100,24 @@ class Chef
                 # Check if repository is explicitly set in resource or in options
                 if new_resource.repository
                   repo_option = ['-r', new_resource.repository]
+                  # Apply repository update options
+                  effective_options = determine_repo_update_options([*repo_option, *options])
                   logger.trace("#{new_resource} installing package #{name}#{version ? ' version ' + version : ''} from repository #{new_resource.repository}")
                   if version
-                    shell_out!('pkg', 'install', '-y', *repo_option, options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                    shell_out!('pkg', 'install', '-y', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
                   else
-                    shell_out!('pkg', 'install', '-y', *repo_option, options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
+                    shell_out!('pkg', 'install', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
                   end
                 elsif version
-                  # Use options which may contain repository flag from options
+                  # Apply repository update options to version-based installs too
+                  effective_options = determine_repo_update_options(options)
                   logger.trace("#{new_resource} installing package #{name} version #{version}")
-                  shell_out!('pkg', 'install', '-y', options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
                 else
+                  # Apply repository update options to general installs too
+                  effective_options = determine_repo_update_options(options)
                   logger.trace("#{new_resource} installing package #{name}")
-                  shell_out!('pkg', 'install', '-y', options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
                 end
               end
             end
@@ -119,27 +130,34 @@ class Chef
               if new_resource.repository && current_repo && new_resource.repository != current_repo
                 logger.info("#{new_resource} package #{name} already installed but from different repository (#{current_repo}), switching to #{new_resource.repository}")
                 repo_option = ['-r', new_resource.repository]
+                # Apply repository update options
+                effective_options = determine_repo_update_options([*repo_option, *options])
                 if version
-                  shell_out!('pkg', 'install', '-y', '-f', *repo_option, options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', '-f', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
                 else
-                  shell_out!('pkg', 'install', '-y', '-f', *repo_option, options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', '-f', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
                 end
               elsif new_resource.repository
                 # Upgrade specific package
                 repo_option = ['-r', new_resource.repository]
+                # Apply repository update options
+                effective_options = determine_repo_update_options([*repo_option, *options])
                 logger.trace("#{new_resource} upgrading package #{name}#{version ? ' to version ' + version : ''} from repository #{new_resource.repository}")
                 if version
-                  shell_out!('pkg', 'install', '-y', *repo_option, options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'install', '-y', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
                 else
-                  shell_out!('pkg', 'upgrade', '-y', *repo_option, options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
+                  shell_out!('pkg', 'upgrade', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
                 end
               elsif version
-                # Use options which may contain repository flag from options
+                # Apply repository update options
+                effective_options = determine_repo_update_options(options)
                 logger.trace("#{new_resource} upgrading package #{name} to version #{version}")
-                shell_out!('pkg', 'install', '-y', options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                shell_out!('pkg', 'install', '-y', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
               else
+                # Apply repository update options
+                effective_options = determine_repo_update_options(options)
                 logger.trace("#{new_resource} upgrading package #{name}")
-                shell_out!('pkg', 'upgrade', '-y', options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
+                shell_out!('pkg', 'upgrade', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
               end
             else
               # Install if not currently installed
@@ -263,15 +281,17 @@ class Chef
           def repo_candidate_version
             if new_resource.repository
               repo_option = ['-r', new_resource.repository]
+              # Determine if we should update the repository based on the update_repository property
+              effective_options = determine_repo_update_options([*repo_option, *options])
               logger.trace("#{new_resource} querying candidate version from repository #{new_resource.repository}")
-              pkg_query = shell_out!('pkg', 'rquery', *repo_option, options, '%v', new_resource.package_name, env: nil)
+              pkg_query = shell_out!('pkg', 'rquery', *effective_options, '%v', new_resource.package_name, env: nil)
               pkg_query.exitstatus == 0 ? pkg_query.stdout.strip.split("\n").last : nil
             else
               # Handle repository specified in options
               effective_options = if options && options.join(' ').match(repo_regex)
-                                    ::Regexp.last_match(1).split(' ')
+                                    determine_repo_update_options(options)
                                   else
-                                    ['-U'] # Default to update repo before querying if no repo options specified
+                                    determine_repo_update_options([])
                                   end
 
               pkg_query = shell_out!('pkg', 'rquery', *effective_options, '%v', new_resource.package_name, env: nil)
@@ -281,6 +301,14 @@ class Chef
 
           def repo_regex
             /(-r\s?\S+)\b/
+          end
+
+          def determine_repo_update_options(current_options)
+            if new_resource.update_repository == true
+              current_options
+            else
+              ['--no-repo-update', *current_options]
+            end
           end
 
           def handle_vital_flag(name)
