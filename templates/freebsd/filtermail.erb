@@ -20,6 +20,6 @@ required_files="${chatmail_config}"
 procname="*python*"
 pidfile="/var/run/${name}.pid"
 command="/usr/sbin/daemon"
-command_args=" -T ${name} -p ${pidfile} -u ${filtermail_svc_user} -r -f <%= @execpath %> ${chatmail_config} outgoing"
+command_args=" -T ${name} -p ${pidfile} -u ${filtermail_svc_user} -f <%= @execpath %> ${chatmail_config} outgoing"
 
 run_rc_command "$1"
