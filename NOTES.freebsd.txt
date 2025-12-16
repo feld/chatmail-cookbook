@@ -1,0 +1,28 @@
+Currently we need some packages that do not exist in the ports tree or
+need changes (patches, build settings). The Cookbook will disable the
+normal FreeBSD-ports package repo to ensure only the one with the known
+working packages is used. Treat this as an appliance, not simple
+addition to your existing FreeBSD server. If you don't want to dedicate
+a whole server/VM for this, run it all in a jail.
+
+If you want to run in a FreeBSD jail you will need a fat/thick jail
+instead of a thin jail as the Chef/CINC client does not obey hier(7) and
+will attempt to write into readonly locations.
+
+When running in a jail you will need to enable `allow.raw_sockets;` for
+the Chatmail TURN server to work.
+
+If you are not running in a VNET jail you should set
+`ip6 = inherit;` or some other ip6 related value to ensure there is some
+IPv6 configuration passed to the jail even if you do not intend to use
+IPv6 as some socket binds will fail with an IPv4-only jail.
+
+The FreeBSD chatmaild services (and all other services) are not running
+under a supervisor so they could crash and not restart. This is not a
+common issue, but it's one thing that systemd attempted to solve in the
+Linux world. If we get reports that processes are crashing and failing
+under load we will revisit this as we can change the services to run
+under something like runit instead.
+
+FreeBSD does not get the benefit of the Dovecot IMAP hibernation
+functionality which can lower memory requirements for idle connections.
