@@ -30,6 +30,9 @@ if platform?('freebsd')
     url 'http://pkg.radiks.org/${ABI}-chatmail'
   end
 
+  # Update the repo once as we won't do it later
+  execute 'pkg update'
+
   # Disable the FreeBSD-ports package repo due
   # to it using the quarterly branch by default
   # which can have older packages and cause library
@@ -46,7 +49,7 @@ if platform?('freebsd')
 
   # Upgrade what we can to the Chatmail repo's packages
   execute 'pkg upgrade' do
-    command 'pkg upgrade -y'
+    command 'pkg upgrade -y --no-repo-update'
     action :nothing
   end
 end
