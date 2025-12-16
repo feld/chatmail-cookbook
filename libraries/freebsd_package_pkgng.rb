@@ -10,7 +10,7 @@ class Chef::Resource::Package
   property :repository, String,
     description: 'The name of the repository to install the package from. FreeBSD only.'
 
-  property :update_repository, [true, false],
+  property :update_repository, [TrueClass, FalseClass, nil],
     description: 'Whether to update the package repository before querying/packaging. Overrides default behavior. FreeBSD only.',
     default: nil
 end
