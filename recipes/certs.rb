@@ -85,6 +85,7 @@ end
 execute 'issue_cert' do
   command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} run"
   environment(lego_dns_envs)
+  live_stream true
   not_if { ::File.exist?(certdir + '/' + lego_domain + '.key') }
 end
 
