@@ -1,8 +1,8 @@
 #!/bin/sh
 #
 # PROVIDE: filtermail
-# REQUIRE: NETWORKING SERVERS
-# BEFORE: DAEMON
+# REQUIRE: LOGIN
+# BEFORE: postfix
 # KEYWORD: shutdown
 
 . /etc/rc.subr
@@ -13,36 +13,13 @@ rcvar="filtermail_enable"
 load_rc_config $name
 
 : ${filtermail_enable:="NO"}
-: ${filtermail_user:="vmail"}
-: ${filtermail_execpath:="<%= @execpath %>"}
-: ${filtermail_config_path:="<%= @config_path %>"}
+: ${filtermail_svc_user:="vmail"}
+: ${chatmail_config:="<%= @config_path %>"}
 
+required_files="${chatmail_config}"
+procname="*python*"
 pidfile="/var/run/${name}.pid"
 command="/usr/sbin/daemon"
-command_args=" -T ${name} -P ${pidfile} -u ${filtermail_user} -r -f ${filtermail_execpath} ${filtermail_config_path} outgoing"
-
-start_precmd="filtermail_prestart"
-start_cmd="filtermail_start"
-stop_cmd="filtermail_stop"
-
-filtermail_prestart()
-{
-    if [ ! -f "${filtermail_config_path}" ]; then
-        echo "Config file ${filtermail_config_path} does not exist!"
-        return 1
-    fi
-}
-
-filtermail_start()
-{
-    echo "Starting filtermail service."
-    eval ${command} ${command_args}
-}
-
-filtermail_stop()
-{
-    echo "Stopping filtermail service."
-    pkill -f "${filtermail_execpath}"
-}
+command_args=" -T ${name} -P ${pidfile} -u ${filtermail_svc_user} -r -f <%= @execpath %> ${chatmail_config} outgoing"
 
 run_rc_command "$1"
