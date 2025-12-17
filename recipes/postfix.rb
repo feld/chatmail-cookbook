@@ -96,5 +96,8 @@ if platform_family?('freebsd')
 end
 
 execute 'newaliases' do
-  not_if { ::File.exist?('/etc/aliases.db') }
+  only_if do
+    !::File.exist?('/etc/aliases.db') ||
+      (::File.mtime('/etc/aliases') > ::File.mtime('/etc/aliases.db'))
+  end
 end
