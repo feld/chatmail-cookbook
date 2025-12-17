@@ -4,7 +4,9 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 ## 0.2.3
 
+### Changes
 - Automatically update /etc/aliases.db if it is out of date
+- Update chatmaild to 0.3-9bf99cc8a9fa97358ca63fc7e23531b482e0d610
 
 ## 0.2.2
 
