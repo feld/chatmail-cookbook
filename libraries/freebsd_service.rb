@@ -9,9 +9,11 @@ class Chef
           @current_resource = Chef::Resource::Service.new(new_resource.name)
           current_resource.service_name(new_resource.service_name)
 
-          # Set default supports for FreeBSD rc.d scripts which universally support status and restart
-          supports[:status]
-          supports[:restart]
+          # Set default supports for FreeBSD rc.d scripts
+          supports[:status] = true
+          supports[:restart] = true
+          supports[:start] = true
+          supports[:stop] = true
 
           @status_load_success = true
           determine_current_status! # Check running status
@@ -24,7 +26,13 @@ class Chef
           if new_resource.start_command
             super
           else
+            # Execute the start command but don't trust the exit status
             shell_out!("/usr/sbin/service #{new_resource.service_name} start", default_env: false)
+
+            determine_current_status!
+            unless current_resource.running
+              raise "Failed to start service #{new_resource.service_name} - service is not running after start command"
+            end
           end
         end
 
@@ -41,6 +49,11 @@ class Chef
             super
           else
             shell_out!("/usr/sbin/service #{new_resource.service_name} restart", default_env: false)
+
+            determine_current_status!
+            unless current_resource.running
+              raise "Failed to restart service #{new_resource.service_name} - service is not running after restart command"
+            end
           end
         end
 
