@@ -19,10 +19,5 @@ if platform_family?('freebsd')
     mode '0644'
     source 'freebsd/newsyslog.conf.erb'
     variables({ 'config' => node['chatmail'] })
-    notifies :restart, 'service[newsyslog]', :delayed
-  end
-
-  service 'newsyslog' do
-    action [:enable, :start]
   end
 end
