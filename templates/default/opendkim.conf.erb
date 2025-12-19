@@ -61,3 +61,9 @@ PidFile			<%= @pidfile %>
 # The trust anchor enables DNSSEC. In Debian, the trust anchor file is provided
 # by the package dns-root-data.
 TrustAnchorFile		<%= @trust_anchor_path %>
+
+# Sign messages when `-o milter_macro_daemon_name=ORIGINATING` is set.
+MTA csl:ORIGINATING
+
+# No hosts are treated as internal, ORIGINATING daemon name should be set explicitly.
+InternalHosts -

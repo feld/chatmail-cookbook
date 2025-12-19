@@ -9,6 +9,8 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Update chatmaild to 0.3-9bf99cc8a9fa97358ca63fc7e23531b482e0d610
 - FreeBSD: Fix mtail service arguments
 - FreeBSD: More robust service management by raising an error if service did not [re]start successfully
+- FreeBSD: Fix OpenDKIM verification. This was broken, but technically harmless for Chatmail to Chatmail communication
+- FreeBSD: Generate 2048bit DKIM keys. Debian does this by default as they patched their OpenDKIM packages.
 
 ## 0.2.2
 
