@@ -30,7 +30,6 @@ submission inet n       -       y       -       5000    smtpd
   -o smtpd_sender_restrictions=$mua_sender_restrictions
   -o smtpd_recipient_restrictions=
   -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
-  -o milter_macro_daemon_name=ORIGINATING
   -o smtpd_client_connection_count_limit=1000
   -o smtpd_proxy_options=speed_adjust
   -o smtpd_proxy_filter=127.0.0.1:10080
@@ -49,7 +48,6 @@ smtps     inet  n       -       y       -       5000    smtpd
   -o smtpd_recipient_restrictions=
   -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
   -o smtpd_client_connection_count_limit=1000
-  -o milter_macro_daemon_name=ORIGINATING
   -o smtpd_proxy_options=speed_adjust
   -o smtpd_proxy_filter=127.0.0.1:10080
 #628       inet  n       -       y       -       -       qmqpd
@@ -90,7 +88,6 @@ filter    unix -        n       n       -       -       lmtp
 127.0.0.1:10026 inet  n       -       n       -       100      smtpd
    -o syslog_name=postfix/reinject_incoming
    -o smtpd_milters=unix:opendkim/opendkim.sock
-  -o milter_macro_daemon_name=VERIFYING
 
 # Cleanup `Received` headers for authenticated mail
 # to avoid leaking client IP.
