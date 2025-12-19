@@ -84,11 +84,13 @@ filter    unix -        n       n       -       -       lmtp
   -o syslog_name=postfix/reinject
   -o smtpd_milters=unix:opendkim/opendkim.sock
   -o cleanup_service_name=authclean
+  -o milter_macro_daemon_name=ORIGINATING
 
 # Local SMTP server for reinjecting incoming filtered mail
 127.0.0.1:10026 inet  n       -       n       -       100      smtpd
    -o syslog_name=postfix/reinject_incoming
    -o smtpd_milters=unix:opendkim/opendkim.sock
+  -o milter_macro_daemon_name=VERIFYING
 
 # Cleanup `Received` headers for authenticated mail
 # to avoid leaking client IP.
