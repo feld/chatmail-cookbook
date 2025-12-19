@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
-## HEAD
+## 0.2.3
 
 ### Changes
 - Automatically update /etc/aliases.db if it is out of date
