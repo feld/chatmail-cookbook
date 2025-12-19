@@ -35,7 +35,7 @@ Make a directory structure compatible with a local chef deployment:
 ```
 mkdir -p chef/cookbooks
 cd chef
-git clone https://github.com/feld/chatmail-cookbook cookbooks/chatmail
+git clone --depth 1 https://github.com/feld/chatmail-cookbook cookbooks/chatmail
 cp cookbooks/chatmail/attributes.json.example ./attributes.json
 ```
 
