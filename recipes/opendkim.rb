@@ -66,7 +66,7 @@ template "#{dkim_keys_dir}/SigningTable" do
 end
 
 execute 'Generate OpenDKIM domain keys' do
-  command "opendkim-genkey -D #{dkim_keys_dir} -d #{node['chatmail']['domain']} -s #{selector}"
+  command "opendkim-genkey --bits=2048 -D #{dkim_keys_dir} -d #{node['chatmail']['domain']} -s #{selector}"
   not_if { ::File.exist?(key_file_path.to_s) }
   notifies :restart, "service[#{service_name}]", :delayed
 end
