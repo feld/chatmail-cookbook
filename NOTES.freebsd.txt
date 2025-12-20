@@ -26,3 +26,6 @@ under something like runit instead.
 
 FreeBSD does not get the benefit of the Dovecot IMAP hibernation
 functionality which can lower memory requirements for idle connections.
+
+Debian mounts /tmp as tmpfs and OpenDKIM does use /tmp. There may be a
+performance benefit to ensuring that your /tmp is mounted as a tmpfs.
