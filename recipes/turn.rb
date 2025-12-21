@@ -42,5 +42,5 @@ if platform_family?('debian')
 end
 
 service service_name do
-  action [:enable, :start]
+  action :enable
 end

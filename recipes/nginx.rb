@@ -31,7 +31,7 @@ template "#{platform_etc}/nginx/nginx.conf" do
 end
 
 service 'nginx' do
-  action [:enable, :start]
+  action :enable
 end
 
 if platform_family?('freebsd')
@@ -44,12 +44,12 @@ end
 
 if platform_family?('debian')
   service 'fcgiwrap.socket' do
-    action [:enable, :start]
+    action :enable
   end
 end
 
 service 'fcgiwrap' do
-  action [:enable, :start]
+  action :enable
 end
 
 directory "#{platform_www}/.well-known/autoconfig/mail" do

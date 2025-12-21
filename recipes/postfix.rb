@@ -73,7 +73,7 @@ directory "#{spool_dir}/opendkim" do
 end
 
 service 'postfix' do
-  action [:enable, :start]
+  action :enable
 end
 
 service opendkim_service do

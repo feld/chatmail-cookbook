@@ -100,7 +100,7 @@ template config_file do
 end
 
 service service_name do
-  action [:enable, :start]
+  action :enable
 end
 
 if platform_family?('debian')

@@ -7,7 +7,7 @@
 vmail_home = node['chatmail']['vmail_home']
 
 # On FreeBSD, create a dedicated ZFS filesystem for mail storage before creating the user
-if platform?('freebsd') and node['freebsd']['zfs']['enable']
+if platform?('freebsd') && node['freebsd']['zfs']['enable']
   dataset = node['freebsd']['zfs']['vmail_dataset']
   quota = node['freebsd']['zfs']['vmail_quota']
 
