@@ -74,28 +74,10 @@ if platform_family?('debian')
   include_recipe 'chatmail::_chatmaild_debian'
 end
 
-service 'chatmail-metadata' do
-  action [:enable, :start]
-end
-
-service 'doveauth' do
-  action [:enable, :start]
-end
-
-service 'filtermail' do
-  action [:enable, :start]
-end
-
-service 'filtermail' do
-  action [:enable, :start]
-end
-
-service 'filtermail-incoming' do
-  action [:enable, :start]
-end
-
-service 'lastlogin' do
-  action [:enable, :start]
+%w(chatmail-metadata doveauth filtermail filtermail-incoming lastlogin).each do |s|
+  service s do
+    action :enable
+  end
 end
 
 nocreate_action = if node['chatmail']['disable_registration']

@@ -24,7 +24,7 @@ execute unbound_anchor_bin do
 end
 
 service 'unbound' do
-  action [:enable, :start]
+  action :enable
 end
 
 if platform?('freebsd')

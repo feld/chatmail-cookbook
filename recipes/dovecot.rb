@@ -64,5 +64,5 @@ template "#{platform_etc}/dovecot/auth.conf" do
 end
 
 service 'dovecot' do
-  action [:enable, :start]
+  action :enable
 end

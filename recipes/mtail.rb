@@ -49,5 +49,5 @@ else
 end
 
 service 'mtail' do
-  action [:enable, :start]
+  action :enable
 end

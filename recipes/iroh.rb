@@ -28,13 +28,6 @@ if platform_family?('freebsd')
     mode '0644'
     notifies :restart, 'service[iroh-relay]', :delayed
   end
-
-  service 'iroh-relay' do
-    service_name 'iroh_relay'
-    action [:enable, :start]
-    only_if { node['chatmail']['iroh_relay'] }
-    supports status: true, restart: true, reload: true
-  end
 else
   # On Linux, continue with the download approach
   iroh_release = 'v0.35.0'
@@ -83,17 +76,12 @@ else
     notifies :restart, 'service[iroh-relay.service]', :delayed
   end
 
-  iroh_actions = if node['chatmail']['iroh_relay']
-                   [:enable, :start]
-                 else
-                   [:disable, :stop]
-                 end
-
-  service 'iroh-relay.service' do
-    action iroh_actions
-  end
-
   execute 'systemctl daemon-reload' do
     action :nothing
   end
+end
+
+service 'iroh-relay' do
+  action :enable
+  only_if { node['chatmail']['iroh_relay'] }
 end
