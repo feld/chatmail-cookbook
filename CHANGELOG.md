@@ -2,6 +2,10 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## HEAD
+
+- Change Unbound restart signalling to :delayed instead of :immediately
+
 ## 0.2.3
 
 ### Changes

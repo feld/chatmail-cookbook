@@ -14,13 +14,13 @@ cookbook_file config_file do
   owner 0
   group 0
   mode '0644'
-  notifies :restart, 'service[unbound]', :immediately
+  notifies :restart, 'service[unbound]', :delayed
 end
 
 execute unbound_anchor_bin do
   command "#{unbound_anchor_bin} -a #{trust_anchor} || true"
   not_if { ::File.exist?(trust_anchor.to_s) }
-  notifies :restart, 'service[unbound]', :immediately
+  notifies :restart, 'service[unbound]', :delayed
 end
 
 service 'unbound' do
