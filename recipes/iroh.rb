@@ -45,27 +45,27 @@ else
         ::Digest::SHA256.file(iroh_relay_path).hexdigest == iroh_relay_hash
     end
     notifies :run, 'execute[extract iroh_relay]', :immediately
-    notifies :restart, 'service[iroh-relay.service]', :delayed
+    notifies :restart, 'service[iroh-relay]', :delayed
   end
 
   execute 'extract iroh_relay' do
     command "tar xzf /tmp/#{iroh_tarball} -C /usr/local/bin"
     action :nothing
-    notifies :restart, 'service[iroh-relay.service]', :delayed
+    notifies :restart, 'service[iroh-relay]', :delayed
   end
 
   file iroh_relay_path do
     owner 0
     group 0
     mode '0755'
-    notifies :restart, 'service[iroh-relay.service]', :delayed
+    notifies :restart, 'service[iroh-relay]', :delayed
   end
 
   cookbook_file "#{platform_etc}/iroh-relay.toml" do
     owner 0
     group 0
     mode '0644'
-    notifies :restart, 'service[iroh-relay.service]', :delayed
+    notifies :restart, 'service[iroh-relay]', :delayed
   end
 
   cookbook_file '/etc/systemd/system/iroh-relay.service' do
@@ -73,7 +73,7 @@ else
     group 0
     mode '0644'
     notifies :run, 'execute[systemctl daemon-reload]', :immediately
-    notifies :restart, 'service[iroh-relay.service]', :delayed
+    notifies :restart, 'service[iroh-relay]', :delayed
   end
 
   execute 'systemctl daemon-reload' do
