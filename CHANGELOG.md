@@ -6,6 +6,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 - Change Unbound restart signalling to :delayed instead of :immediately
 - Move all services to start at the end to avoid order of operations issues during initial deployment
+- Unbound: disable negative cache entries to help improve reliability of certificate issuance and DKIM validation
 
 ## 0.2.3
 
