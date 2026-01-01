@@ -21,12 +21,12 @@ end
 action :delete do
   # Check if the key exists before attempting to delete it
   check_command = "sysrc -c"
-  check_command += " -f #{new_resource.rc_conf_file}" if new_resource.rc_conf_file'
+  check_command += " -f #{new_resource.rc_conf_file}" if new_resource.rc_conf_file
   check_command += " #{new_resource.key}"
 
   execute "delete #{new_resource.key} from #{new_resource.rc_conf_file}" do
     cmd = "sysrc -x #{new_resource.key}"
-    cmd += " -f #{new_resource.rc_conf_file}" if new_resource.rc_conf_file'
+    cmd += " -f #{new_resource.rc_conf_file}" if new_resource.rc_conf_file
     command cmd
     # Run only if the key exists (sysrc -c succeeds with exit code 0 when key exists)
     only_if { shell_out(check_command, returns: [0, 1]).exitstatus == 0 }
