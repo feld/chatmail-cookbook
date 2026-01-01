@@ -8,6 +8,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Move all services to start at the end to avoid order of operations issues during initial deployment
 - Unbound: disable negative cache entries to help improve reliability of certificate issuance and DKIM validation
 - Debian: Fix cookbook compilation issue
+- FreeBSD: Add freebsd_sysrc resource to simplify controlling FreeBSD rc.conf values
 
 ## 0.2.3
 
