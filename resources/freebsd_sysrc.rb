@@ -2,9 +2,8 @@ resource_name :freebsd_sysrc
 provides :freebsd_sysrc
 
 property :key,          String, name_property: true
-property :value,        String
-property :rc_conf_file, String, desired_state: false, default: '/etc/rc.conf'
-
+property :value,        String, required: true
+property :rc_conf_file, String
 
 action :create do
   # Check if a change is needed using sysrc -c with the full value we want to set
