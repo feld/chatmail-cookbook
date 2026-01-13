@@ -24,6 +24,13 @@ cookbook_file "#{platform_etc}/postfix/submission_header_cleanup" do
   notifies :restart, 'service[postfix]', :delayed
 end
 
+cookbook_file "#{platform_etc}/postfix/lmtp_header_cleanup" do
+  owner 0
+  group 0
+  mode '0644'
+  notifies :restart, 'service[postfix]', :delayed
+end
+
 # FreeBSD doesn't want to work verifying using the
 # /etc/ssl/certs dir for some reason. It errors like
 # postfix/smtp[53908]: certificate verification failed for e2ee.wang[139.84.233.161]:25: untrusted issuer /C=US/O=Internet Security Research Group/CN=ISRG Root X1
