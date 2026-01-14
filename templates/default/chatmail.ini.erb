@@ -57,7 +57,7 @@ postfix_reinject_port_incoming = 10026
 # if set to "True" IPv6 is disabled
 disable_ipv6 = <%= @config['disable_ipv6'] %>
 
-# Defaults to https://iroh.{{mail_domain}} and running `iroh-relay` on the chatmail
+# Defaults to https://iroh.<%= @config['domain'] %> and running `iroh-relay` on the chatmail
 # service.
 # If you set it to anything else, the service will be disabled
 # and users will be directed to use the given iroh relay URL.
@@ -70,7 +70,7 @@ disable_ipv6 = <%= @config['disable_ipv6'] %>
 # You can point Prometheus
 # or some other OpenMetrics-compatible
 # collector to
-# http://{{mtail_address}}:3903/metrics
+# http://<%= @config['mtail']['address'] %>:3903/metrics
 # and display collected metrics with Grafana.
 #
 # WARNING: do not expose this service
