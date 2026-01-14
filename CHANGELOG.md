@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: Add freebsd_sysrc resource to simplify controlling FreeBSD rc.conf values
 - FreeBSD: apply a patch to chatmaild before building instead of shipping a separate tarball
 - Update chatmaild to 0.3-c2acbad802a71406fe58892a5a233750382b916d
+- Fix message expiration cron only executing in dry-run mode
 
 ## 0.2.3
 
