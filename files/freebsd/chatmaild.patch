@@ -1,0 +1,38 @@
+diff -ruN debian/chatmaild-0.3/pyproject.toml freebsd/chatmaild-0.3/pyproject.toml
+--- debian/chatmaild-0.3/pyproject.toml	2025-12-14 09:50:11.000000000 -0800
++++ freebsd/chatmaild-0.3/pyproject.toml	2025-12-16 15:09:04.000000000 -0800
+@@ -8,11 +8,9 @@
+ dependencies = [
+   "aiosmtpd",
+   "iniconfig",
+-  "deltachat-rpc-server",
+   "deltachat-rpc-client",
+   "filelock",
+   "requests",
+-  "crypt-r >= 3.13.1 ; python_version >= '3.11'",
+ ]
+ 
+ [tool.setuptools]
+diff -ruN debian/chatmaild-0.3/src/chatmaild/filtermail.py freebsd/chatmaild-0.3/src/chatmaild/filtermail.py
+--- debian/chatmaild-0.3/src/chatmaild/filtermail.py	2025-12-16 14:51:51.000000000 -0800
++++ freebsd/chatmaild-0.3/src/chatmaild/filtermail.py	2025-12-16 15:09:33.000000000 -0800
+@@ -312,7 +312,7 @@
+         client = SMTPClient(
+             "localhost",
+             self.config.postfix_reinject_port_incoming,
+-            source_address=("127.0.0.2", 0),
++            source_address=("127.0.0.1", 0),
+         )
+         client.sendmail(
+             envelope.mail_from, envelope.rcpt_tos, envelope.original_content
+diff -ruN debian/chatmaild-0.3/src/chatmaild/turnserver.py freebsd/chatmaild-0.3/src/chatmaild/turnserver.py
+--- debian/chatmaild-0.3/src/chatmaild/turnserver.py	2025-12-16 14:57:26.000000000 -0800
++++ freebsd/chatmaild-0.3/src/chatmaild/turnserver.py	2025-12-16 15:10:14.000000000 -0800
+@@ -4,6 +4,6 @@
+ 
+ def turn_credentials() -> str:
+     with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as client_socket:
+-        client_socket.connect("/run/chatmail-turn/turn.socket")
++        client_socket.connect("/var/run/chatmail-turn.socket")
+         with client_socket.makefile("rb") as file:
+             return file.readline().decode("utf-8").strip()

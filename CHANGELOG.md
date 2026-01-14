@@ -2,13 +2,18 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
-## HEAD
+## 0.2.4
+
+### Changes
 
 - Change Unbound restart signalling to :delayed instead of :immediately
 - Move all services to start at the end to avoid order of operations issues during initial deployment
 - Unbound: disable negative cache entries to help improve reliability of certificate issuance and DKIM validation
 - Debian: Fix cookbook compilation issue
 - FreeBSD: Add freebsd_sysrc resource to simplify controlling FreeBSD rc.conf values
+- FreeBSD: apply a patch to chatmaild before building instead of shipping a separate tarball
+- Update chatmaild to 0.3-c2acbad802a71406fe58892a5a233750382b916d
+- Fix message expiration cron only executing in dry-run mode
 
 ## 0.2.3
 
