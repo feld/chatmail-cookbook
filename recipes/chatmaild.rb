@@ -12,25 +12,37 @@ chatmail_bin = node['chatmail']['bin_dir']
 config_path = node['chatmail']['config_path']
 chatmail_root = node['chatmail']['base_dir']
 release = node['chatmaild']['release']
+githash = node['chatmaild']['githash']
 venv_dir = node['chatmail']['venv_dir']
 
 directory chatmail_root + '/dist' do
   recursive true
 end
 
-cookbook_file chatmail_root + "/dist/chatmaild-#{release}.tar.gz" do
+if platform_family?('freebsd')
+  # Copy the FreeBSD patch first (before tarball)
+  cookbook_file chatmail_root + '/dist/chatmaild.patch' do
+    source 'freebsd/chatmaild.patch'
+    owner 0
+    group 0
+    mode '0644'
+    action :create
+  end
+end
+
+cookbook_file chatmail_root + "/dist/chatmaild-#{release}-#{githash}.tar.gz" do
   owner 0
   group 0
   mode '0644'
   action :create
   notifies :run, 'execute[remove old chatmaild]', :immediately
-  notifies :run, 'execute[virtualenv]', :immediately
-  notifies :run, 'execute[install chatmaild]', :immediately
 end
 
 execute 'remove old chatmaild' do
   command "rm -rf #{venv_dir}"
   action :nothing
+  subscribes :run, "cookbook_file[#{chatmail_root}/dist/chatmaild.patch]", :delayed if platform_family?('freebsd')
+  notifies :run, 'execute[virtualenv]', :immediately
 end
 
 execute 'virtualenv' do
@@ -38,19 +50,43 @@ execute 'virtualenv' do
     #{virtualenv_cmd} #{venv_dir}
   EOF
   action :nothing
+  notifies :run, 'execute[install chatmaild]', :immediately
 end
 
-execute 'install chatmaild' do
-  environment({ 'VIRTUAL_ENV' => venv_dir })
-  command <<~EOF
-    #{chatmail_bin}/pip install #{chatmail_root}/dist/chatmaild-#{release}.tar.gz
-  EOF
-  action :nothing
-  notifies :restart, 'service[doveauth]', :delayed
-  notifies :restart, 'service[chatmail-metadata]', :delayed
-  notifies :restart, 'service[filtermail]', :delayed
-  notifies :restart, 'service[filtermail-incoming]', :delayed
-  notifies :restart, 'service[lastlogin]', :delayed
+if platform_family?('freebsd')
+
+  # FreeBSD install: extract, patch, and install
+  execute 'install chatmaild' do
+    environment({ 'VIRTUAL_ENV' => venv_dir })
+    command <<~EOF
+      cd #{chatmail_root}/dist
+      rm -rf chatmaild-#{release}
+      tar -xzf chatmaild-#{release}-#{githash}.tar.gz
+      cd chatmaild-#{release}
+      patch -p2 < /usr/local/lib/chatmaild/dist/chatmaild.patch
+      #{chatmail_bin}/pip install .
+    EOF
+    action :nothing
+    notifies :restart, 'service[doveauth]', :delayed
+    notifies :restart, 'service[chatmail-metadata]', :delayed
+    notifies :restart, 'service[filtermail]', :delayed
+    notifies :restart, 'service[filtermail-incoming]', :delayed
+    notifies :restart, 'service[lastlogin]', :delayed
+  end
+else
+  # Standard install for non-FreeBSD platforms
+  execute 'install chatmaild' do
+    environment({ 'VIRTUAL_ENV' => venv_dir })
+    command <<~EOF
+      #{chatmail_bin}/pip install #{chatmail_root}/dist/chatmaild-#{release}-#{githash}.tar.gz
+    EOF
+    action :nothing
+    notifies :restart, 'service[doveauth]', :delayed
+    notifies :restart, 'service[chatmail-metadata]', :delayed
+    notifies :restart, 'service[filtermail]', :delayed
+    notifies :restart, 'service[filtermail-incoming]', :delayed
+    notifies :restart, 'service[lastlogin]', :delayed
+  end
 end
 
 template config_path do
