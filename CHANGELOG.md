@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## HEAD
+
+### Changes
+
+- Strip DKIM-Signature headers before delivering via LMTP (merged upstream)
+
 ## 0.2.4
 
 ### Changes
