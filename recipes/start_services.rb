@@ -6,6 +6,13 @@
 
 # Safe to start services now
 
+# syslogd is normally enabled, except in a jail
+if platform_family?('freebsd')
+  service 'syslogd' do
+    action [:enable, :start]
+  end
+end
+
 service 'unbound' do
   action :start
 end
