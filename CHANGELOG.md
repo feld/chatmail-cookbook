@@ -7,6 +7,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - Strip DKIM-Signature headers before delivering via LMTP (merged upstream)
+- FreeBSD: explicitly enable/start syslogd
 
 ## 0.2.4
 
