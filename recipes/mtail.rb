@@ -21,13 +21,13 @@ if platform_family?('freebsd')
   # FreeBSD /var/log/maillog is root:wheel 640
   # and we are not changing that (yet)
   freebsd_sysrc 'mtail_user' do
-     value 'root'
-     notifies :restart, 'service[mtail]', :delayed
+    value 'root'
+    notifies :restart, 'service[mtail]', :delayed
   end
 
   freebsd_sysrc 'mtail_args' do
-     value "-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
-     notifies :restart, 'service[mtail]', :delayed
+    value "-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
+    notifies :restart, 'service[mtail]', :delayed
   end
 else
   directory '/etc/systemd/system/mtail.service.d'
