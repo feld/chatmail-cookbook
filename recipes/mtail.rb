@@ -40,7 +40,7 @@ else
     [Service]
     ExecCondition=
     ExecStart=
-    ExecStart=/bin/sh -c 'journalctl -f -o short-iso -n 0 | #{mtail_path} $${HOST:+--address $$HOST} $${PORT:+--port $$PORT} --progs #{platform_etc}/mtail --logtostderr --logs -'
+    ExecStart=/bin/sh -c "journalctl -f -o short-iso -n 0 | #{mtail_path} $${HOST:+--address $$HOST} $${PORT:+--port $$PORT} --progs #{platform_etc}/mtail --logtostderr --logs /dev/stdin"
     EOU
     notifies :run, 'execute[systemctl daemon-reload]', :immediately
     notifies :restart, 'service[mtail]', :delayed
