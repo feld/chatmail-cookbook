@@ -135,6 +135,8 @@ protocol lmtp {
   mail_plugins = $mail_plugins mail_lua notify push_notification push_notification_lua
 }
 
+lmtp_add_received_header = no
+
 <%# On FreeBSD we can skip zlib_save due to ZFS %>
 <%# but we otherwise leave the plugins enabled so we can read %>
 <%# the compressed maildir files if we have any %>
