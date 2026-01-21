@@ -12,6 +12,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: Replace the Python filtermail with the new Rust version
 - Suppress an LMTP Received header from being appended to messages (upstream)
 - FreeBSD: Fix package install when version in repo changes
+- Upgrade packages during cookbook run and restart affected services
 
 ## 0.2.4
 

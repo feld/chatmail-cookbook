@@ -59,8 +59,11 @@ node['chatmail']['packages'].each do |i|
   if platform_family?('freebsd')
     package i do
       repository 'chatmail'
+      action [:install, :upgrade]
     end
   else
-    package i
+    package i do
+      action [:install, :upgrade]
+    end
   end
 end
