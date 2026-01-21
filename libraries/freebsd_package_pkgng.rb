@@ -66,12 +66,10 @@ class Chef
           end
 
           def install_from_repository
-            # Call install_package with the current version to trigger repository switch
-            if current_installed_version
-              install_package(new_resource.package_name, current_installed_version)
-            else
-              install_package(new_resource.package_name, nil)
-            end
+            # Call install_package without version to install latest from new repository
+            # When switching repositories, we want whatever version is available there,
+            # not the specific version that was installed from the old repository
+            install_package(new_resource.package_name, nil)
           end
 
           def install_package(name, version)
