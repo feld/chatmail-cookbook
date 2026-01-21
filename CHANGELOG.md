@@ -10,6 +10,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: explicitly enable/start syslogd
 - Debian: Fix mtail service which was not correctly processing logs
 - FreeBSD: Replace the Python filtermail with the new Rust version
+- Suppress an LMTP Received header from being appended to messages (upstream)
 
 ## 0.2.4
 
