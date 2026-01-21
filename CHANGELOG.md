@@ -9,6 +9,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Strip DKIM-Signature headers before delivering via LMTP (merged upstream)
 - FreeBSD: explicitly enable/start syslogd
 - Debian: Fix mtail service which was not correctly processing logs
+- FreeBSD: Replace the Python filtermail with the new Rust version
 
 ## 0.2.4
 

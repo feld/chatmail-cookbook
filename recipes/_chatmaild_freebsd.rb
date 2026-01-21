@@ -34,7 +34,7 @@ template '/usr/local/etc/rc.d/filtermail' do
   group 0
   mode '0555'
   variables(
-    execpath: chatmail_bin + '/filtermail',
+    execpath: '/usr/local/bin/filtermail',
     config_path: config_path
   )
   notifies :restart, 'service[filtermail]', :delayed
@@ -45,7 +45,7 @@ template '/usr/local/etc/rc.d/filtermail-incoming' do
   group 0
   mode '0555'
   variables(
-    execpath: chatmail_bin + '/filtermail',
+    execpath: '/usr/local/bin/filtermail',
     config_path: config_path
   )
   notifies :restart, 'service[filtermail-incoming]', :delayed

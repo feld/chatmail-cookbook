@@ -20,6 +20,7 @@ if platform?('freebsd')
                                         mtail
                                         nginx
                                         fcgiwrap
+                                        filtermail
                                         chatmail-turn
                                         lowdown
                                         graphics/py-qrencode

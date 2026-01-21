@@ -24,7 +24,7 @@ if platform?('debian')
 end
 
 if platform?('freebsd')
-  # Custom pkg repo required for patched Dovecot, mtail, chatmail-turn, and iroh-relay
+  # Custom pkg repo required for patched Dovecot, mtail, filtermail, chatmail-turn, and iroh-relay
   pkg_repository 'chatmail' do
     priority 10
     url 'http://pkg.radiks.org/${ABI}-chatmail'
