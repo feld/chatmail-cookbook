@@ -1,5 +1,6 @@
 resource_name :freebsd_sysrc
 provides :freebsd_sysrc
+unified_mode true
 
 property :key,          String, name_property: true
 property :value,        String, required: true
@@ -7,7 +8,7 @@ property :rc_conf_file, String
 
 action :create do
   # Check if a change is needed using sysrc -c with the full value we want to set
-  check_command = "sysrc -c"
+  check_command = 'sysrc -c'
   check_command += " -f #{new_resource.rc_conf_file}" if new_resource.rc_conf_file
   check_command += " #{new_resource.key}=\"#{new_resource.value}\""
 
@@ -20,7 +21,7 @@ end
 
 action :delete do
   # Check if the key exists before attempting to delete it
-  check_command = "sysrc -c"
+  check_command = 'sysrc -c'
   check_command += " -f #{new_resource.rc_conf_file}" if new_resource.rc_conf_file
   check_command += " #{new_resource.key}"
 
