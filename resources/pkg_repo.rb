@@ -17,7 +17,7 @@ property :url, String, required: true
 property :signature_type, String
 property :pubkey_source, String
 property :pubkey_cookbook, String
-property :mode, [Integer, String], default: 0o0755
+property :mode, [Integer, String], default: 0o0644
 property :priority, Integer, default: 0
 
 def after_created
@@ -53,7 +53,7 @@ action_class do
     # ensure pkg repos directory exists
     %w(pubkeys repos).each do |dir|
       directory ::File.join('/usr/local/etc/pkg', dir) do
-        mode '755'
+        mode '0755'
         action :create
         owner node['root_user']
         group node['root_group']
@@ -67,7 +67,7 @@ action_class do
         source new_resource.pubkey_source
         cookbook new_resource.pubkey_cookbook
         sensitive true
-        mode '444'
+        mode '0444'
         owner node['root_user']
         group node['root_group']
       end
