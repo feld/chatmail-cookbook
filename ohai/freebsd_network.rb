@@ -132,5 +132,11 @@ Ohai.plugin(:Network) do
     end
 
     counters[:network][:interfaces] = net_counters
+
+    # Set ip6address to the first non-loopback, non-link-local IPv6 address
+    network[:ip6address] = iface.values
+      .flat_map { |i| i[:addresses]&.select { |addr, data| data['family'] == 'inet6' }&.keys }
+      .compact
+      .first
   end
 end
