@@ -15,6 +15,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Upgrade packages during cookbook run and restart affected services
 - FreeBSD: Switch Lego renewal from a root crontab entry to a cron.d file
 - Sample zone file has real CAA record
+- FreeBSD: import my fix for IPv6 address detection
 
 ## 0.2.4
 
