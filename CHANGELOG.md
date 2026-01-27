@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Suppress an LMTP Received header from being appended to messages (upstream)
 - FreeBSD: Fix package install when version in repo changes
 - Upgrade packages during cookbook run and restart affected services
+- FreeBSD: Switch Lego renewal from a root crontab entry to a cron.d file
 
 ## 0.2.4
 

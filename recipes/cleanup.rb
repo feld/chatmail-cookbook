@@ -46,3 +46,9 @@ end
 if platform_family?('debian')
   execute 'systemctl daemon-reload'
 end
+
+# Used crontab, was problematic parsing
+# for some lego ENVs
+cron 'lego_renewal' do
+  action :delete
+end
