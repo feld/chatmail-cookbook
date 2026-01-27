@@ -24,11 +24,24 @@ ruby_block 'generate dkim txt value and sts_id' do
   end
 end
 
+require 'json'
+
+begin
+  account_file = node['lego']['path'] + '/accounts/acme-v02.api.letsencrypt.org/' + node['lego']['email'] + '/' + 'account.json'
+
+  if File.exist?(account_file)
+    account_data = JSON.parse(File.read(account_file))
+    account_uri = account_data.dig('registration', 'uri')
+  else
+    'error_reading_uri'
+  end
+end
+
 template('/tmp/chatmail.zone') do
   source 'zone.erb'
   mode '0644'
   variables(lazy do
-    { 'config' => node['chatmail'], 'sts_id' => node['sts_id'], 'dkim_txt' => node['dkim_txt_value'] }
+    { 'config' => node['chatmail'], 'sts_id' => node['sts_id'], 'dkim_txt' => node['dkim_txt_value'], 'account_uri' => account_uri }
   end
            )
   sensitive true
