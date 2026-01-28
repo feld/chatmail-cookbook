@@ -62,14 +62,14 @@ turn_service = node['chatmail']['turnservice']
 
 service turn_service do
   action :start
-  subscribes :stop, 'package[chatmail-turn]', :before if platform_family?('freebsd')
+  subscribes :stop, 'package[chatmail-turn]', :before
   retries 2
 end
 
 service 'iroh-relay' do
   action :start
   only_if { node['chatmail']['iroh_relay'] }
-  subscribes :stop, 'package[iroh-relay]', :before if platform_family?('freebsd')
+  subscribes :stop, 'package[iroh-relay]', :before
   retries 2
 end
 
