@@ -10,19 +10,22 @@
 if platform_family?('freebsd')
   service 'syslogd' do
     action [:enable, :start]
+    retries 2
   end
 end
 
 service 'unbound' do
   action :start
-  subscribes :restart, 'package[unbound]', :delayed
+  subscribes :stop, 'package[unbound]', :before
+  retries 2
 end
 
 # Chatmaild services
 %w(chatmail-metadata doveauth lastlogin).each do |s|
   service s do
     action :start
-    subscribes :restart, 'execute[install chatmaild]', :delayed
+    subscribes :stop, 'execute[install chatmaild]', :before
+    retries 2
   end
 end
 
@@ -30,54 +33,63 @@ end
 %w(filtermail filtermail-incoming).each do |s|
   service s do
     action :start
-    subscribes :restart, 'package[filtermail]', :delayed if platform_family?('freebsd')
+    subscribes :stop, 'package[filtermail]', :before if platform_family?('freebsd')
+    retries 2
   end
 end
 
 if platform_family?('debian')
   service 'fcgiwrap.socket' do
     action :start
-    subscribes :restart, 'package[fcgiwrap]', :delayed
+    subscribes :stop, 'package[fcgiwrap]', :before
+    retries 2
   end
 end
 
 service 'fcgiwrap' do
   action :start
-  subscribes :restart, 'package[fcgiwrap]', :delayed
+  subscribes :stop, 'package[fcgiwrap]', :before
+  retries 2
 end
 
 service 'mtail' do
   action :start
-  subscribes :restart, 'package[mtail]', :delayed
+  subscribes :stop, 'package[mtail]', :before
+  retries 2
 end
 
 turn_service = node['chatmail']['turnservice']
 
 service turn_service do
   action :start
-  subscribes :restart, 'package[chatmail-turn]', :delayed if platform_family?('freebsd')
+  subscribes :stop, 'package[chatmail-turn]', :before if platform_family?('freebsd')
+  retries 2
 end
 
 service 'iroh-relay' do
   action :start
   only_if { node['chatmail']['iroh_relay'] }
-  subscribes :restart, 'package[iroh-relay]', :delayed if platform_family?('freebsd')
+  subscribes :stop, 'package[iroh-relay]', :before if platform_family?('freebsd')
+  retries 2
 end
 
 opendkim_service = node['opendkim']['service']
 
 service opendkim_service do
   action :start
-  subscribes :restart, 'package[opendkim-devel]', :delayed if platform_family?('freebsd')
-  subscribes :restart, 'package[opendkim]', :delayed if platform_family?('debian')
+  subscribes :stop, 'package[opendkim-devel]', :before if platform_family?('freebsd')
+  subscribes :stop, 'package[opendkim]', :before if platform_family?('debian')
+  retries 2
 end
 
 service 'dovecot' do
   action :start
-  subscribes :restart, 'package[dovecot]', :delayed
+  subscribes :stop, 'package[dovecot]', :before
+  retries 2
 end
 
 service 'postfix' do
   action :start
-  subscribes :restart, 'package[postfix]', :delayed
+  subscribes :stop, 'package[postfix]', :before
+  retries 2
 end
