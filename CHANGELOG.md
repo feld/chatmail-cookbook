@@ -16,6 +16,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: Switch Lego renewal from a root crontab entry to a cron.d file
 - Sample zone file has real CAA record
 - Cleanly stop services before upgrading packages, then start after
+- FreeBSD: Fix chatmail-turn socket file location so it can run as non-root
 
 ## 0.2.4
 
