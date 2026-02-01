@@ -5,6 +5,7 @@ if platform?('debian')
   default['syslog_sock'] = '/dev/log'
   default['lego']['bin'] = '/usr/bin/lego'
   default['lego']['path'] = lazy { "#{node['etcdir']}/lego" }
+  default['filtermail']['bin'] = '/usr/bin/filtermail'
   default['chatmail']['python_version_string'] = '3.11'
   default['chatmail']['certificates_dir'] = lazy { "#{node['lego']['path']}/certificates" }
   default['virtualenv'] = '/usr/bin/virtualenv'

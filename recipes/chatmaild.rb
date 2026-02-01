@@ -87,6 +87,13 @@ else
     notifies :restart, 'service[filtermail-incoming]', :delayed
     notifies :restart, 'service[lastlogin]', :delayed
   end
+
+  # Install standalone filtermail binary on Debian
+  filtermail_binary node['filtermail']['release'] do
+    action :install
+    notifies :restart, 'service[filtermail]', :delayed
+    notifies :restart, 'service[filtermail-incoming]', :delayed
+  end
 end
 
 template config_path do

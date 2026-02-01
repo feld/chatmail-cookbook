@@ -32,6 +32,8 @@ default['lego']['envs'] = { 'DNSIMPLE_OAUTH_TOKEN' => 'abcd1234' }
 default['lego']['provider'] = 'dnsimple'
 default['lego']['release'] = 'v4.28.1'
 
+default['filtermail']['release'] = 'v0.2.0'
+
 default['freebsd']['zfs']['enable'] = false
 # The ZFS dataset name, but by default it will use the mailboxes_dir
 # for the mountpoint
