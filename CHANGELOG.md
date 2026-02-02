@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## HEAD
+
+### Changes
+
+- FreeBSD: Improve the newsyslog template for more accurate log retention
+
 ## 0.2.5
 
 ### Changes

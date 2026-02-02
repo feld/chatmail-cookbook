@@ -13,11 +13,16 @@ if platform_family?('freebsd')
     action :create
   end
 
-  template '/etc/newsyslog.conf.d/chatmail.conf' do
+  template '/etc/newsyslog.conf' do
     owner 0
     group 0
     mode '0644'
     source 'freebsd/newsyslog.conf.erb'
     variables({ 'config' => node['chatmail'] })
+  end
+
+  execute 'newsyslog -CC' do
+    action :nothing
+    subscribes :run, 'template[/etc/newsyslog.conf]', :immediately
   end
 end
