@@ -14,5 +14,6 @@ default['chatmail']['oldfiles'] = [
   '/etc/cron.d/expunge',
   "#{node['wwwdir']}/html/metrics",
   '/etc/systemd/system/echobot.service',
+  '/etc/newsyslog.conf.d/chatmail.conf',
 ]
 default['chatmail']['olddirs'] = []

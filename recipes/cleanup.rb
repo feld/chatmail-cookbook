@@ -52,3 +52,8 @@ end
 cron 'lego_renewal' do
   action :delete
 end
+
+# Clean up possibly old log files that were rotated but should not have been
+execute 'rm -f /var/log/maillog*bz2 /var/log/messages*bz2 /var/log/daemon.log*bz2' do
+  only_if { platform_family?('freebsd') }
+end
