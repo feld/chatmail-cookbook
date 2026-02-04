@@ -1,7 +1,7 @@
 ## Dovecot configuration file
 
 <% if @config['disable_ipv6'] -%>
-listen = *
+listen = 0.0.0.0
 <% end -%>
 
 protocols = imap lmtp
