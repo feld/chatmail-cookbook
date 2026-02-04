@@ -9,6 +9,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: Improve the newsyslog template for more accurate log retention
 - Dovecot: Fix bind if ipv6 is disabled
 - Postfix: Fix mynetworks if ipv6 is disabled
+- Unbound: Fix bind if ipv6 is disabled
 
 ## 0.2.5
 

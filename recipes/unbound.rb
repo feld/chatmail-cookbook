@@ -10,10 +10,11 @@ unbound_anchor_bin = node['unbound']['anchor_bin']
 config_file = node['unbound']['config_file']
 trust_anchor = node['unbound']['trust_anchor']
 
-cookbook_file config_file do
+template config_file do
   owner 0
   group 0
   mode '0644'
+  variables('config' => node['chatmail'])
   notifies :restart, 'service[unbound]', :delayed
 end
 
