@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Postfix: Fix mynetworks if ipv6 is disabled
 - Unbound: Fix bind if ipv6 is disabled
 - Mtail: sync with upstream config which exposes separate metrics for incoming and outgoing messages now
+- Debian: Replace the Python filtermail with the new Rust version
 
 ## 0.2.5
 

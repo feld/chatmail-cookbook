@@ -6,13 +6,7 @@ provides :filtermail_binary
 unified_mode true
 
 property :version, String, name_property: true
-property :install_path, String, default: lazy {
-  if platform?('freebsd')
-    '/usr/local/bin/filtermail'
-  else
-    '/usr/bin/filtermail'
-  end
-}
+property :install_path, String, required: true
 property :os_name, String, default: lazy { node['os'] }
 property :arch_name, String, default: lazy {
   case node['kernel']['machine']
@@ -27,14 +21,7 @@ property :arch_name, String, default: lazy {
   end
 }
 property :use_musl, [true, false], default: false
-property :checksums, Hash, default: lazy {
-  {
-    'x86_64' => '0918f596e1f218fb96fc3d9bff7e205c79ef6bf074cf70dbfc0e2522d4072574',
-    'x86_64-musl' => '1e5bbb646582cb16740c6dfbbca39edba492b78cc96ec9fa2528c612bb504edd',
-    'aarch64' => 'e96914f96a5288981f01147d1d1591d68dd2e78d8d9250242c5249718e07a341',
-    'aarch64-musl' => '3564fba8605f8f9adfeefff3f4580533205da043f47c5968d0d10db17e50f44e'
-  }
-}
+property :checksums, Hash, default: lazy { node['filtermail']['checksums'] }
 
 action :install do
   # Handle based on platform

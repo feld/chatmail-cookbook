@@ -5,6 +5,7 @@ if platform?('freebsd')
   default['syslog_sock'] = '/var/run/log'
   default['lego']['bin'] = '/usr/local/bin/lego'
   default['lego']['path'] = lazy { "#{node['etcdir']}/lego" }
+  default['filtermail']['bin'] = '/usr/local/bin/filtermail'
   default['chatmail']['certificates_dir'] = lazy { "#{node['lego']['path']}/certificates" }
   default['virtualenv'] = '/usr/local/bin/virtualenv'
   default['chatmail']['python_version_string'] = '3.11'

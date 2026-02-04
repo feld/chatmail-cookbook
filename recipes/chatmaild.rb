@@ -90,6 +90,7 @@ else
 
   # Install standalone filtermail binary on Debian
   filtermail_binary node['filtermail']['release'] do
+    install_path node['filtermail']['bin']
     action :install
     notifies :restart, 'service[filtermail]', :delayed
     notifies :restart, 'service[filtermail-incoming]', :delayed
