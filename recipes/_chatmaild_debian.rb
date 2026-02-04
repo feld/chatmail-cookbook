@@ -5,6 +5,7 @@
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
 chatmail_bin = node['chatmail']['bin_dir']
+filtermail_bin = node['filtermail']['bin']
 config_path = node['chatmail']['config_path']
 
 template '/etc/systemd/system/doveauth.service' do
@@ -39,7 +40,7 @@ template '/etc/systemd/system/filtermail.service' do
   group 0
   mode '0644'
   variables(
-    execpath: chatmail_bin + '/filtermail',
+    execpath: filtermail_bin,
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
@@ -52,7 +53,7 @@ template '/etc/systemd/system/filtermail-incoming.service' do
   group 0
   mode '0644'
   variables(
-    execpath: chatmail_bin + '/filtermail',
+    execpath: filtermail_bin,
     config_path: config_path
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
