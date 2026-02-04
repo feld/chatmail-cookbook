@@ -1,4 +1,4 @@
-Synced with [upstream](https://github.com/chatmail/relay) as of commit [c2acbad802a71406fe58892a5a233750382b916d](https://github.com/chatmail/relay/commit/c2acbad802a71406fe58892a5a233750382b916d)
+Synced with [upstream](https://github.com/chatmail/relay) as of commit [dfcaf415b17187355a3a9a00e030065df5f55bd4](https://github.com/chatmail/relay/commit/dfcaf415b17187355a3a9a00e030065df5f55bd4)
 
 # Chatmail
 
