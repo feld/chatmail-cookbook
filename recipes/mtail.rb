@@ -26,7 +26,7 @@ if platform_family?('freebsd')
   end
 
   freebsd_sysrc 'mtail_args' do
-    value "-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog"
+    value "-address 127.0.0.1 -port 3903 -progs #{platform_etc}/mtail -logs /var/log/maillog,/var/log/daemon.log"
     notifies :restart, 'service[mtail]', :delayed
   end
 else
