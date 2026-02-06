@@ -1,3 +1,4 @@
+MAILTO=""
 # Switch to the new chatmail-expire tool
 2 0 * * * vmail <%= @chatmail_bin %>/chatmail-expire --remove <%= @config_file %>
 2 8 * * * vmail <%= @chatmail_bin %>/chatmail-fsreport <%= @config_file %>

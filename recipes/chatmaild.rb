@@ -134,14 +134,6 @@ file "#{platform_etc}/chatmail-nocreate" do
   action nocreate_action
 end
 
-template '/etc/cron.d/chatmail' do
-  source 'chatmail.cron.erb'
-  owner 0
-  group 0
-  mode '0644'
-  variables({ 'chatmail_bin' => chatmail_bin, 'config_file' => config_path, 'config' => node['chatmail'] })
-end
-
 cgi_bin_path = node['chatmail']['cgi-bin']
 
 directory cgi_bin_path do
