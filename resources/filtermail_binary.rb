@@ -37,7 +37,7 @@ action :install do
     download_url = "https://github.com/chatmail/filtermail/releases/download/#{filtermail_version}/#{binary_name}"
 
     # Get the expected checksum
-    expected_checksum = checksums[binary_suffix]
+    expected_checksum = checksums[arch_name]
 
     # Check if the correct version is already installed
     correct_version_installed = false
