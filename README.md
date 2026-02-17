@@ -90,4 +90,4 @@ I didn't setup any Chef tests. If you would prefer to use Ansible this cookbook 
 
 ## Contact
 
-You can join this [group chat](https://i.delta.chat/#6FE1642916908F1AC9CC7557CC99CF5DDB92043C&a=groupsbot%40testrun.org&g=chatmail%20cookbook%20support&x=Z1oIMyytnazhEY9iZaj2YV_0&i=hnaCYJj6VGMDRu7CHi29Nmaz&s=xDCT_RglgrKaGUJM6-adzZeG) to discuss the cookbook.
+You can join this [group chat](https://i.delta.chat/#6FE1642916908F1AC9CC7557CC99CF5DDB92043C&a=groupsbot%40testrun.org&g=chatmail%20cookbook%20support&x=Z1oIMyytnazhEY9iZaj2YV_0&i=hnaCYJj6VGMDRu7CHi29Nmaz&s=xDCT_RglgrKaGUJM6-adzZeG) to discuss the cookbook and this [channel](https://i.delta.chat/#2308C221F5B7403CE990C06F240C7E0EA369B0D5&x=08cwNj4oLcqA9dnhSPuASc1r&j=FZR4fez3oDQadfMFtyd9BbAA&s=j_h7vuRzsHsBFqgks-ckF5sr&a=x2lfrbwxg%40chat.feld.me&n=Mark&b=Chatmail+Cookbook+Updates) for update announcements.
