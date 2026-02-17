@@ -15,6 +15,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Suppress cron emails
 - Filtermail: Update to 0.3.0
 - Postfix: allow specifying IPv4 and IPv6 bind addresses in case you need to control binds of source addresses
+- Postfix: accept self-signed certificates for IP-only relays
 
 ## 0.2.5
 
