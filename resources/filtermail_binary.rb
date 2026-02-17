@@ -14,13 +14,10 @@ property :arch_name, String, default: lazy {
     'x86_64'
   when 'aarch64', 'arm64'
     'aarch64'
-  when 'i386'
-    '386'
   else
-    node['kernel']['machine']
+    raise 'filtermail only distributes aarch64 and x86_64 binaries for Linux'
   end
 }
-property :use_musl, [true, false], default: false
 property :checksums, Hash, default: lazy { node['filtermail']['checksums'] }
 
 action :install do
@@ -33,12 +30,10 @@ action :install do
     filtermail_version = new_resource.version
     install_path = new_resource.install_path
     arch_name = new_resource.arch_name
-    use_musl = new_resource.use_musl
     checksums = new_resource.checksums
 
-    # Determine the binary name based on architecture and musl flag
-    binary_suffix = use_musl ? "#{arch_name}-musl" : arch_name
-    binary_name = "filtermail-#{binary_suffix}"
+    # Determine the binary name based on architecture
+    binary_name = "filtermail-#{arch_name}"
     download_url = "https://github.com/chatmail/filtermail/releases/download/#{filtermail_version}/#{binary_name}"
 
     # Get the expected checksum

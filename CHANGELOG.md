@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Mtail: sync with upstream config which exposes separate metrics for incoming and outgoing messages now
 - Debian: Replace the Python filtermail with the new Rust version
 - Suppress cron emails
+- Filtermail: Update to 0.3.0
 
 ## 0.2.5
 
