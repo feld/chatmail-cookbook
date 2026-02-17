@@ -1,6 +1,6 @@
 # Don't forget to update the attributes.json.example if attributes are changed/added
-default['chatmail']['addr_v4'] = null
-default['chatmail']['addr_v6'] = null
+default['chatmail']['addr_v4'] = nil
+default['chatmail']['addr_v6'] = nil
 default['chatmail']['debug'] = false
 default['chatmail']['delete_inactive_users_after'] = 90
 default['chatmail']['delete_large_after'] = 7
