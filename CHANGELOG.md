@@ -14,6 +14,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Debian: Replace the Python filtermail with the new Rust version
 - Suppress cron emails
 - Filtermail: Update to 0.3.0
+- Postfix: allow specifying IPv4 and IPv6 bind addresses in case you need to control binds of source addresses
 
 ## 0.2.5
 
