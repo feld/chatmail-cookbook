@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## HEAD
+
+### Changes
+
+- Strip Received headers before LMTP delivery
+
 ## 0.2.6
 
 ### Changes
