@@ -4,6 +4,10 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 ## HEAD
 
+### BREAKING
+
+- DKIM validation is disabled by default. Two new settings exist: dkim_signing and dkim_validation.
+
 ### Changes
 
 - Strip Received headers before LMTP delivery

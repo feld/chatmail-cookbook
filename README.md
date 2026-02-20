@@ -56,6 +56,8 @@ The HTML templates have had a few tweaks. The QR code is generated with a differ
 
 It does not validate DNS records, but it does print out a sample zone file which should be accurate for your deployment. This file can also be found at **/tmp/chatmail.zone** on the server.
 
+DKIM validation is disabled by default, but signing is still enabled. Validation provides no security benefits when we enforce only PGP signed mails, and you can still spam unreadable PGP mails from a server with DKIM signing configured correctly.
+
 ### Debian
 
 We still use cron to execute the housekeeping instead of a systemd timer as cron is cross-platform
