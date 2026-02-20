@@ -7,6 +7,8 @@
     "disable_ipv6": false,
     "disable_registration": false,
     "dkim_selector": "opendkim",
+    "dkim_signing": true,
+    "dkim_validation": false,
     "domain": "example.com",
     "filtermail_smtp_port": 10080,
     "imap_rawlog": false,
