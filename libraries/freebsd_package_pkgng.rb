@@ -130,27 +130,21 @@ class Chef
                 repo_option = ['-r', new_resource.repository]
                 # Apply repository update options
                 effective_options = determine_repo_update_options([*repo_option, *options])
-                if version
-                  shell_out!('pkg', 'install', '-y', '-f', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
-                else
-                  shell_out!('pkg', 'install', '-y', '-f', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
-                end
+                # Use install -f when switching repositories to force reinstall from new repo
+                shell_out!('pkg', 'install', '-y', '-f', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
               elsif new_resource.repository
-                # Upgrade specific package
+                # Upgrade specific package from repository
+                # Don't specify version - let pkg upgrade to latest available in the repository
                 repo_option = ['-r', new_resource.repository]
                 # Apply repository update options
                 effective_options = determine_repo_update_options([*repo_option, *options])
-                logger.trace("#{new_resource} upgrading package #{name}#{version ? ' to version ' + version : ''} from repository #{new_resource.repository}")
-                if version
-                  shell_out!('pkg', 'install', '-y', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
-                else
-                  shell_out!('pkg', 'upgrade', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
-                end
+                logger.trace("#{new_resource} upgrading package #{name} from repository #{new_resource.repository}")
+                shell_out!('pkg', 'upgrade', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
               elsif version
                 # Apply repository update options
                 effective_options = determine_repo_update_options(options)
                 logger.trace("#{new_resource} upgrading package #{name} to version #{version}")
-                shell_out!('pkg', 'install', '-y', *effective_options, "#{name}-#{version}", env: { 'LC_ALL' => nil }, returns: [0, 78])
+                shell_out!('pkg', 'upgrade', '-y', *effective_options, name, env: { 'LC_ALL' => nil }, returns: [0, 78])
               else
                 # Apply repository update options
                 effective_options = determine_repo_update_options(options)

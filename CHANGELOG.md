@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - Strip Received headers before LMTP delivery
+- FreeBSD: improve pkg upgrade behavior
 
 ## 0.2.6
 
