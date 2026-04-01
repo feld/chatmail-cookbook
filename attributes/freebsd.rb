@@ -17,7 +17,6 @@ if platform?('freebsd')
                                         dovecot
                                         opendkim-devel
                                         postfix
-                                        iroh-relay
                                         mtail
                                         nginx
                                         fcgiwrap

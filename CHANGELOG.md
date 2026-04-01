@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Strip Received headers before LMTP delivery
 - FreeBSD: improve pkg upgrade behavior
 - Debian: pin dovecot packages to the custom repo
+- Remove the unused iroh relay service
 
 ## 0.2.6
 

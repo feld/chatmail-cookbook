@@ -10,16 +10,16 @@ oldfiles = node['chatmail']['oldfiles']
 olddirs = node['chatmail']['olddirs']
 oldusers = node['chatmail']['oldusers']
 
+oldservices.each do |x|
+  service x do
+    action [:stop, :disable]
+  end
+end
+
 oldpackages.each do |x|
   package x do
     action :remove
     ignore_failure true
-  end
-end
-
-oldservices.each do |x|
-  service x do
-    action [:stop, :disable]
   end
 end
 
