@@ -21,6 +21,18 @@ if platform?('debian')
     options ['signed-by=/etc/apt/keyrings/obs-home-deltachat.gpg']
     action :add
   end
+
+  directory '/etc/apt/preferences.d' do
+    recursive true
+  end
+
+  file '/etc/apt/preferences.d/pin-dovecot' do
+  content <<~EOU
+Package: dovecot-*
+Pin: origin download.opensuse.org
+Pin-Priority: 1000
+EOU
+  end
 end
 
 if platform?('freebsd')
