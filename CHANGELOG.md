@@ -14,6 +14,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: improve pkg upgrade behavior
 - Debian: pin dovecot packages to the custom repo
 - Remove the unused iroh relay service
+- FreeBSD: deltachat-rpc-server package is no longer needed on the server
 
 ## 0.2.6
 

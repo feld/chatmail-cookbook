@@ -13,7 +13,6 @@ if platform?('freebsd')
                                         python
                                         devel/py-virtualenv
                                         databases/py-sqlite3
-                                        deltachat-rpc-server
                                         dovecot
                                         opendkim-devel
                                         postfix

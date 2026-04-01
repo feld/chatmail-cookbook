@@ -1,5 +1,5 @@
 if platform?('freebsd')
-  default['chatmail']['oldpackages'] = %w( iroh-relay )
+  default['chatmail']['oldpackages'] = %w( iroh-relay deltachat-rpc-server )
   default['chatmail']['oldservices'] = %w( iroh-relay )
 end
 if platform?('debian')
