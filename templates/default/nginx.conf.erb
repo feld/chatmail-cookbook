@@ -108,26 +108,6 @@ http {
 			include <%= @nginx_config_dir %>/fastcgi_params;
 			fastcgi_param SCRIPT_FILENAME /usr/lib/cgi-bin/newemail.py;
 		}
-
-                # Proxy to iroh-relay service.
-                location /relay {
-                        proxy_pass http://127.0.0.1:3340;
-                        proxy_http_version 1.1;
-
-                        # Upgrade header is normally set to "iroh derp http" or "websocket".
-                        proxy_set_header Upgrade $http_upgrade;
-                        proxy_set_header Connection "upgrade";
-                }
-
-		location /relay/probe {
-                        proxy_pass http://127.0.0.1:3340;
-                        proxy_http_version 1.1;
-		}
-
-		location /generate_204 {
-                        proxy_pass http://127.0.0.1:3340;
-                        proxy_http_version 1.1;
-		}
 	}
 
 	# Redirect www. to non-www
