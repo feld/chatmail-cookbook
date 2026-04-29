@@ -12,7 +12,7 @@ unified_mode true
 property :repo_name, String, name_property: true
 property :cookbook, String, default: 'chatmail'
 property :enabled, [true, false], default: true
-property :mirror_type, String, default: 'http'
+property :mirror_type, String, default: 'nomirror'
 property :url, String, required: true
 property :signature_type, String
 property :pubkey_source, String
