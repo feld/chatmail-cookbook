@@ -58,6 +58,8 @@ It does not validate DNS records, but it does print out a sample zone file which
 
 DKIM validation is disabled by default, but signing is still enabled. Validation provides no security benefits when we enforce only PGP signed mails, and you can still spam unreadable PGP mails from a server with DKIM signing configured correctly.
 
+If you need custom transport maps, create a file called **custom_transport_maps** in the postfix config directory and it will be included in the templated Postfix `main.cf` file.
+
 ### Debian
 
 We still use cron to execute the housekeeping instead of a systemd timer as cron is cross-platform
