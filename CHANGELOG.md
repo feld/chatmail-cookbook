@@ -23,6 +23,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Postfix: prefer IPv4 in SMTP client
 - Nginx: Prepare for permitting message delivery over HTTP via Filtermail
 - Dovecot: disable fsync for LMTP and IMAP services
+- Postfix: do not bind SMTP client sockets to public addresses
 
 ## 0.2.6
 
