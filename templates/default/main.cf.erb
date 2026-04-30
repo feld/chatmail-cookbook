@@ -102,3 +102,7 @@ smtpd_sender_login_maps = regexp:<%= @postfix_config_dir %>/login_map
 # Do not lookup SMTP client hostnames to reduce delays
 # and avoid unnecessary DNS requests.
 smtpd_peername_lookup = no
+
+<% if File.exists?(@postfix_config_dir + '/custom_transport_maps') -%>
+transport_maps = hash:<%= @postfix_config_dir %>/custom_transport_maps
+<% end %>

@@ -16,6 +16,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Remove the unused iroh relay service
 - FreeBSD: deltachat-rpc-server package is no longer needed on the server
 - FreeBSD: pkg repo is now configured to use SRV for mirror redundancy
+- Postfix: the file `custom_transport_maps` will be autodetected in the Postfix config directory and activated in the main.cf file
 
 ## 0.2.6
 
