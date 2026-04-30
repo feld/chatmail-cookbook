@@ -69,15 +69,6 @@ mynetworks = 127.0.0.0/8
 <% else %>
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 <% end %>
-<% if @config['addr_v4'] %>
-smtp_bind_address = <%= @config['addr_v4'] %>
-<% end %>
-<% if @config['addr_v6'] %>
-smtp_bind_address6 = <%= @config['addr_v6'] %>
-<% end %>
-<% if @config['addr_v4'] or @config['addr_v6'] %>
-smtp_bind_address_enforce = yes
-<% end %>
 mailbox_size_limit = 0
 message_size_limit = <%= @config['max_message_size'] %>
 recipient_delimiter = +
@@ -87,6 +78,22 @@ inet_protocols = ipv4
 <% else %>
 inet_protocols = all
 <% end %>
+
+# Postfix does not try IPv4 and IPv6 connections
+# concurrently as of version 3.7.11.
+#
+# When relay has both A (IPv4) and AAAA (IPv6) records,
+# but broken IPv6 connectivity,
+# every second message is delayed by the connection timeout
+# <https://www.postfix.org/postconf.5.html#smtp_connect_timeout>
+# which defaults to 30 seconds. Reducing timeouts is not a solution
+# as this will result in a failure to connect to slow servers.
+#
+# As a workaround we always prefer IPv4 when it is available.
+# 
+# The setting is documented at
+# <https://www.postfix.org/postconf.5.html#smtp_address_preference>
+smtp_address_preference=ipv4
 
 virtual_transport = lmtp:unix:private/dovecot-lmtp
 virtual_mailbox_domains = <%= @config['domain'] %>

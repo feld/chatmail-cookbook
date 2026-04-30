@@ -2,7 +2,7 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
-## HEAD
+## 0.2.7
 
 ### BREAKING
 
@@ -17,6 +17,13 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: deltachat-rpc-server package is no longer needed on the server
 - FreeBSD: pkg repo is now configured to use SRV for mirror redundancy
 - Postfix: the file `custom_transport_maps` will be autodetected in the Postfix config directory and activated in the main.cf file
+- Postfix: allow SMTP encryption to relays with self-signed certificates
+- Nginx: Add rate limiting to the new account endpoint
+- Nginx: Remove TLS <1.2
+- Postfix: prefer IPv4 in SMTP client
+- Nginx: Prepare for permitting message delivery over HTTP via Filtermail
+- Dovecot: disable fsync for LMTP and IMAP services
+- Postfix: do not bind SMTP client sockets to public addresses
 
 ## 0.2.6
 

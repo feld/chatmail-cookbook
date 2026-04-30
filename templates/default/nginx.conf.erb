@@ -43,6 +43,7 @@ stream {
 }
 
 http {
+	limit_req_zone $binary_remote_addr zone=newaccount:10m rate=2r/s;
 	sendfile on;
 	tcp_nopush on;
 
@@ -52,7 +53,7 @@ http {
 	include <%= @nginx_config_dir %>/mime.types;
 	default_type application/octet-stream;
 
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+	ssl_protocols TLSv1.2 TLSv1.3;
 	ssl_prefer_server_ciphers on;
 	ssl_certificate <%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem;
 	ssl_certificate_key <%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem.key;
@@ -71,6 +72,10 @@ http {
 
 		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
 
+		location /mxdeliv/ {
+		    proxy_pass http://127.0.0.1:<%= @filtermail['http_port_incoming'] %>;
+		}
+
 		location / {
 			# First attempt to serve request as file, then
 			# as directory, then fall back to displaying a 404.
@@ -87,6 +92,7 @@ http {
 				# which will in turn do a POST request.
 				return 301 dcaccount:https://<%= @config['domain'] %>/new;
 			}
+			limit_req zone=newaccount burst=5 nodelay;
 
 			fastcgi_pass unix:<%= @fcgiwrap_sock %>;
 			include <%= @nginx_config_dir %>/fastcgi_params;
