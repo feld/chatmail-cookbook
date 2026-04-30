@@ -25,7 +25,8 @@ template "#{platform_etc}/nginx/nginx.conf" do
     'pid_file' => pid_file,
     'platform_www' => platform_www,
     'fcgiwrap_sock' => fcgiwrap_sock,
-    'syslog_sock' => syslog_sock
+    'syslog_sock' => syslog_sock,
+    'filtermail' => node['filtermail']
   )
   notifies :restart, 'service[nginx]', :delayed
 end

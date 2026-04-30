@@ -73,7 +73,7 @@ http {
 		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
 
 		location /mxdeliv/ {
-		    proxy_pass http://127.0.0.1:<%= @config['filtermail']['http_port_incoming'] %>;
+		    proxy_pass http://127.0.0.1:<%= @filtermail['http_port_incoming'] %>;
 		}
 
 		location / {
