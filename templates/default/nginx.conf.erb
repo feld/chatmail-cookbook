@@ -53,7 +53,7 @@ http {
 	include <%= @nginx_config_dir %>/mime.types;
 	default_type application/octet-stream;
 
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2 TLSv1.3;
+	ssl_protocols TLSv1.2 TLSv1.3;
 	ssl_prefer_server_ciphers on;
 	ssl_certificate <%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem;
 	ssl_certificate_key <%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem.key;
