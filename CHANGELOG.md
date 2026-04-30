@@ -21,6 +21,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Nginx: Add rate limiting to the new account endpoint
 - Nginx: Remove TLS <1.2
 - Postfix: prefer IPv4 in SMTP client
+- Nginx: Prepare for permitting message delivery over HTTP via Filtermail
 
 ## 0.2.6
 
