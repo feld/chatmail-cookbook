@@ -18,6 +18,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: pkg repo is now configured to use SRV for mirror redundancy
 - Postfix: the file `custom_transport_maps` will be autodetected in the Postfix config directory and activated in the main.cf file
 - Postfix: allow SMTP encryption to relays with self-signed certificates
+- Nginx: Add rate limiting to the new account endpoint
 
 ## 0.2.6
 

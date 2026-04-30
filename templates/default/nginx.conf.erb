@@ -43,6 +43,7 @@ stream {
 }
 
 http {
+	limit_req_zone $binary_remote_addr zone=newaccount:10m rate=2r/s;
 	sendfile on;
 	tcp_nopush on;
 
@@ -87,6 +88,7 @@ http {
 				# which will in turn do a POST request.
 				return 301 dcaccount:https://<%= @config['domain'] %>/new;
 			}
+			limit_req zone=newaccount burst=5 nodelay;
 
 			fastcgi_pass unix:<%= @fcgiwrap_sock %>;
 			include <%= @nginx_config_dir %>/fastcgi_params;
