@@ -110,6 +110,12 @@ smtpd_sender_login_maps = regexp:<%= @postfix_config_dir %>/login_map
 # and avoid unnecessary DNS requests.
 smtpd_peername_lookup = no
 
+# DKIM-sign locally generated mail (bounces, DSNs).
+# These bypass smtpd, so they need explicit milter configuration.
+non_smtpd_milters = unix:opendkim/opendkim.sock
+internal_mail_filter_classes = bounce
+milter_macro_daemon_name = ORIGINATING
+
 <% if File.exists?(@postfix_config_dir + '/custom_transport_maps') -%>
 transport_maps = hash:<%= @postfix_config_dir %>/custom_transport_maps
 <% end %>
