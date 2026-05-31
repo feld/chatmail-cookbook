@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Nginx: be explicit with the server_name virtualhost config
 - Nginx: define one global syslog setting
 - DKIM: sign bounce messages
+- Postfix: set relay restrictions per smtpd service with default reject
 
 ## 0.2.7
 
