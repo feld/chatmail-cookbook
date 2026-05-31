@@ -7,6 +7,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - Update chatmail-turn to 0.4
+- Fix Nginx reverse proxy path for HTTP delivery (currently unused)
 
 ## 0.2.7
 
