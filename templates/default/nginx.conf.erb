@@ -68,7 +68,7 @@ http {
 
 		index index.html index.htm;
 
-		server_name _;
+		server_name <%= @config['domain'] %> mta-sts.<%= @config['domain'] %>;
 
 		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
 
