@@ -111,6 +111,9 @@ smtpd_sender_login_maps = regexp:<%= @postfix_config_dir %>/login_map
 # and avoid unnecessary DNS requests.
 smtpd_peername_lookup = no
 
+# Do not try to deliver messages for more than 2 days.
+maximal_queue_lifetime = 2d
+
 # DKIM-sign locally generated mail (bounces, DSNs).
 # These bypass smtpd, so they need explicit milter configuration.
 non_smtpd_milters = unix:opendkim/opendkim.sock

@@ -12,6 +12,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Nginx: define one global syslog setting
 - DKIM: sign bounce messages
 - Postfix: set relay restrictions per smtpd service with default reject
+- Postfix: reduce maximal_queue_lifetime from 5d to 2d
 
 ## 0.2.7
 
