@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - DKIM: sign bounce messages
 - Postfix: set relay restrictions per smtpd service with default reject
 - Postfix: reduce maximal_queue_lifetime from 5d to 2d
+- Chatmaild: Update to latest
 
 ## 0.2.7
 
