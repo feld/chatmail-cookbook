@@ -8,8 +8,8 @@ service_name = node['chatmail']['turnservice']
 turn_path = '/usr/local/bin/chatmail-turn'
 
 if platform_family?('debian')
-  turn_url = 'https://github.com/chatmail/chatmail-turn/releases/download/v0.3/chatmail-turn-x86_64-linux'
-  turn_hash = '841e527c15fdc2940b0469e206188ea8f0af48533be12ecb8098520f813d41e4'
+  turn_url = 'https://github.com/chatmail/chatmail-turn/releases/download/v0.4/chatmail-turn-x86_64-linux'
+  turn_hash = '1ec1f5c50122165e858a5a91bcba9037a28aa8cb8b64b8db570aa457c6141a8a'
 
   directory '/usr/local/bin'
 

@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## HEAD
+
+### Changes
+
+- Update chatmail-turn to 0.4
+
 ## 0.2.7
 
 ### BREAKING
