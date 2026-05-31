@@ -28,6 +28,7 @@ if platform?('debian')
   default['chatmail']['metadata_sock'] = '/run/chatmail-metadata/metadata.socket'
   default['chatmail']['lastlogin_sock'] = '/run/chatmail-lastlogin/lastlogin.socket'
   default['chatmail']['doveauth_sock'] = '/run/doveauth/doveauth.socket'
+  default['chatmail']['turn_sock'] = '/run/chatmail-turn/turn.socket'
   default['fcgiwrap_sock'] = '/run/fcgiwrap.socket'
   default['stream_module_path'] = 'modules/ngx_stream_module.so'
   default['nginx_user'] = 'www-data'
