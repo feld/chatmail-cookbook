@@ -2,6 +2,13 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## 0.3.1
+
+### Changes
+
+- Fix version in cookbook metadata.rb which was not being updated (sorry!)
+- Add /etc/chatmail-release for ease of checking the version deployed
+
 ## 0.3.0
 
 ### Changes
