@@ -14,7 +14,7 @@ module ChatmailCookbook
       match = str.to_s.strip.match(/^(\d+(?:\.\d+)?)\s*([BKMGTPE])$/i)
       raise ArgumentError, "unrecognized format: #{str}" unless match
 
-      value = match[1].to_f
+      value = match[1].to_i
       unit  = match[2].upcase
 
       (value * UNITS_IN_MB.fetch(unit)).round(2)
