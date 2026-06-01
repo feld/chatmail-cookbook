@@ -14,7 +14,6 @@ default['chatmail']['domain'] = 'example.com'
 default['chatmail']['imap_rawlog'] = false
 default['chatmail']['imap_compress'] = false
 default['chatmail']['log_retention'] = '3d'
-default['chatmail']['mailboxes_dir'] = lazy { "#{node['chatmail']['vmail_home']}/mail" }
 default['chatmail']['max_mailbox_size'] = '500M'
 default['chatmail']['max_message_size'] = 31457280
 default['chatmail']['max_user_send_per_minute'] = 60

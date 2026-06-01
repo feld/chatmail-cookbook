@@ -16,6 +16,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Chatmaild: Update to latest
 - Mtail: add statistics for quota expiration events
 - Dovecot: Increase default max mailbox size to 500M
+- Dovecot: Add automatic message expiration/cleanup when quota is being approached
 
 ## 0.2.7
 
