@@ -39,6 +39,9 @@ execute 'generate dhparams' do
   not_if { ::File.exist?(dh_params_file) }
 end
 
+max_mailbox_size_mb = to_megabytes(node['chatmail']['max_mailbox_size'])
+quota_warning_mb = max_mailbox_size_mb * 70 / 100
+
 template "#{platform_etc}/dovecot/dovecot.conf" do
   owner 0
   group 0
@@ -48,7 +51,9 @@ template "#{platform_etc}/dovecot/dovecot.conf" do
     'ssl_dh_path' => "<#{dh_params_file}",
     'dovecot_config_dir' => "#{platform_etc}/dovecot",
     'chatmail_metadata_sock' => chatmail_metadata_sock,
-    'chatmail_lastlogin_sock' => chatmail_lastlogin_sock
+    'chatmail_lastlogin_sock' => chatmail_lastlogin_sock,
+    'max_mailbox_size_mb' => max_mailbox_size_mb,
+    'quota_warning_mb' => quota_warning_mb
   )
   notifies :restart, 'service[dovecot]', :delayed
 end

@@ -53,7 +53,8 @@ smtpd_tls_exclude_ciphers = aNULL, RC4, MD5, DES
 # See <https://www.postfix.org/FORWARD_SECRECY_README.html#server_fs>.
 tls_preempt_cipherlist = yes
 
-smtpd_relay_restrictions = permit_mynetworks permit_sasl_authenticated defer_unauth_destination
+# Reject by default, override per smtpd in master.cf
+smtpd_relay_restrictions = reject
 myhostname = <%= @config['domain'] %>
 alias_maps = hash:/etc/aliases
 alias_database = hash:/etc/aliases
@@ -110,6 +111,17 @@ smtpd_sender_login_maps = regexp:<%= @postfix_config_dir %>/login_map
 # and avoid unnecessary DNS requests.
 smtpd_peername_lookup = no
 
+# Do not try to deliver messages for more than 2 days.
+maximal_queue_lifetime = 2d
+
+# DKIM-sign locally generated mail (bounces, DSNs).
+# These bypass smtpd, so they need explicit milter configuration.
+non_smtpd_milters = unix:opendkim/opendkim.sock
+internal_mail_filter_classes = bounce
+milter_macro_daemon_name = ORIGINATING
+
+# This is for users who want to override transports to specific hosts
+# for reasons such as delivering over Yggdrasil, etc
 <% if File.exists?(@postfix_config_dir + '/custom_transport_maps') -%>
 transport_maps = hash:<%= @postfix_config_dir %>/custom_transport_maps
 <% end %>

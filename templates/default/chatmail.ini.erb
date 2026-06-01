@@ -15,6 +15,7 @@ mail_domain = <%= @config['domain'] %>
 max_user_send_per_minute = <%= @config['max_user_send_per_minute'] %>
 
 # maximum mailbox size of a chatmail address
+# Oldest messages will be removed automatically, so mailboxes never run full.
 max_mailbox_size = <%= @config['max_mailbox_size'] %>
 
 # maximum message size for an e-mail in bytes
@@ -35,12 +36,7 @@ username_max_length = <%= @config['username_max_length'] %>
 # minimum length a password must have
 password_min_length = <%= @config['password_min_length'] %>
 
-# list of chatmail addresses which can send outbound un-encrypted mail
-passthrough_senders = <%= @config['passthrough_senders'] %>
-
-# list of e-mail recipients for which to accept outbound un-encrypted mails
-# (space-separated)
-passthrough_recipients = <%= @config['passthrough_recipients'] %>
+turn_socket_path = <%= @config['turn_sock'] %>
 
 #
 # Deployment Details

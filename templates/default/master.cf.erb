@@ -16,7 +16,9 @@ smtp      inet  n       -       y       -       -       smtpd
 <% end %>
   -o smtpd_tls_security_level=encrypt
 # Sends through filtermail-incoming for checking PGP
-  -o smtpd_proxy_filter=127.0.0.1:10081
+  -o smtpd_tls_mandatory_protocols=>=TLSv1.2
+  -o smtpd_proxy_filter=127.0.0.1:<%= @filtermail['smtp_port_incoming'] %>
+  -o smtpd_relay_restrictions=reject_unauth_destination
 submission inet n       -       y       -       5000    smtpd
   -o syslog_name=postfix/submission
   -o smtpd_tls_security_level=encrypt
@@ -34,7 +36,7 @@ submission inet n       -       y       -       5000    smtpd
   -o smtpd_client_connection_count_limit=1000
   -o smtpd_proxy_options=speed_adjust
 # Sends through filtermail-outgoing for checking PGP
-  -o smtpd_proxy_filter=127.0.0.1:10080
+  -o smtpd_proxy_filter=127.0.0.1:<%= @filtermail['smtp_port'] %>
 smtps     inet  n       -       y       -       5000    smtpd
   -o syslog_name=postfix/smtps
   -o smtpd_tls_wrappermode=yes
@@ -51,7 +53,7 @@ smtps     inet  n       -       y       -       5000    smtpd
   -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
   -o smtpd_client_connection_count_limit=1000
   -o smtpd_proxy_options=speed_adjust
-  -o smtpd_proxy_filter=127.0.0.1:10080
+  -o smtpd_proxy_filter=127.0.0.1:<%= @filtermail['smtp_port'] %>
 #628       inet  n       -       y       -       -       qmqpd
 pickup    unix  n       -       y       60      1       pickup
 cleanup   unix  n       -       y       -       0       cleanup
@@ -80,16 +82,18 @@ scache    unix  -       -       y       -       1       scache
 postlog   unix-dgram n  -       n       -       1       postlogd
 filter    unix -        n       n       -       -       lmtp
 # Local SMTP server for reinjecting after passing through filtermail-outgoing
-127.0.0.1:10025 inet  n       -       n       -       100      smtpd
+127.0.0.1:<%= @postfix['reinject_port'] %> inet  n       -       n       -       100      smtpd
   -o syslog_name=postfix/reinject
 <% if @config['dkim_signing'] %>
   -o smtpd_milters=unix:opendkim/opendkim.sock
   -o milter_macro_daemon_name=ORIGINATING
 <% end %>
   -o cleanup_service_name=authclean
+  -o smtpd_relay_restrictions=permit_mynetworks,reject
 # Local SMTP server for reinjecting after passing through filtermail-incoming
-127.0.0.1:10026 inet  n       -       n       -       100      smtpd
+127.0.0.1:<%= @postfix['reinject_port_incoming'] %> inet  n       -       n       -       100      smtpd
    -o syslog_name=postfix/reinject_incoming
+   -o smtpd_relay_restrictions=reject_unauth_destination
 <% if @config['dkim_validation'] %>
    -o smtpd_milters=unix:opendkim/opendkim.sock
 <% end %>

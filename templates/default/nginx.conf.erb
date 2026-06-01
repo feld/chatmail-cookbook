@@ -43,6 +43,9 @@ stream {
 }
 
 http {
+	# access_log setting is inherited by all server sections
+	access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
+
 	limit_req_zone $binary_remote_addr zone=newaccount:10m rate=2r/s;
 	sendfile on;
 	tcp_nopush on;
@@ -68,11 +71,9 @@ http {
 
 		index index.html index.htm;
 
-		server_name _;
+		server_name <%= @config['domain'] %> mta-sts.<%= @config['domain'] %>;
 
-		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
-
-		location /mxdeliv/ {
+		location /mxdeliv {
 		    proxy_pass http://127.0.0.1:<%= @filtermail['http_port_incoming'] %>;
 		}
 
@@ -121,6 +122,5 @@ http {
 		listen 127.0.0.1:8443 ssl;
 		server_name www.<%= @config['domain'] %>;
 		return 301 $scheme://<%= @config['domain'] %>$request_uri;
-		access_log syslog:server=unix:<%= @syslog_sock %>,facility=local7;
 	}
 }

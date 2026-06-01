@@ -2,11 +2,16 @@
 # but don't need to be customized per OS
 # Usually these don't need to change
 default['chatmaild']['release'] = '0.3'
-default['chatmaild']['githash'] = 'c2acbad802a71406fe58892a5a233750382b916d'
+default['chatmaild']['githash'] = 'a47bb941434d6b7c222c20de2921ac38956c8f1e'
 default['chatmail']['cgi-bin'] = '/usr/lib/cgi-bin'
 default['chatmail']['base_dir'] = '/usr/local/lib/chatmaild'
 default['chatmail']['venv_dir'] = lazy { "#{node['chatmail']['base_dir']}/venv" }
 default['chatmail']['bin_dir'] = lazy { "#{node['chatmail']['venv_dir']}/bin" }
 default['chatmail']['config_path'] = lazy { "#{node['chatmail']['base_dir']}/chatmail.ini" }
 default['chatmail']['vmail_home'] = '/home/vmail'
+default['chatmail']['mailboxes_dir'] = lazy { "#{node['chatmail']['vmail_home']}/mail/#{node['chatmail']['domain']}" }
+default['filtermail']['smtp_port'] = '10080'
+default['filtermail']['smtp_port_incoming'] = '10081'
 default['filtermail']['http_port_incoming'] = '10082'
+default['postfix']['reinject_port'] = '10025'
+default['postfix']['reinject_port_incoming'] = '10026'

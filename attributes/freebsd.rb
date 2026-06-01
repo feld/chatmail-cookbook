@@ -30,6 +30,7 @@ if platform?('freebsd')
   default['chatmail']['metadata_sock'] = '/var/run/chatmail_metadata/metadata.sock'
   default['chatmail']['lastlogin_sock'] = '/var/run/lastlogin/lastlogin.sock'
   default['chatmail']['doveauth_sock'] = '/var/run/doveauth/doveauth.sock'
+  default['chatmail']['turn_sock'] = '/var/run/chatmail-turn/turn.socket'
   default['fcgiwrap_sock'] = '/var/run/fcgiwrap/fcgiwrap.sock'
   default['stream_module_path'] = '/usr/local/libexec/nginx/ngx_stream_module.so'
   default['nginx_user'] = 'www'
