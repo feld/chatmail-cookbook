@@ -67,7 +67,9 @@ template "#{platform_etc}/postfix/master.cf" do
   mode '0644'
   variables(
     'config' => node['chatmail'],
-    'postfix_config_dir' => "#{platform_etc}/postfix"
+    'postfix_config_dir' => "#{platform_etc}/postfix",
+    'postfix' => node['postfix'],
+    'filtermail' => node['filtermail']
   )
   notifies :restart, 'service[postfix]', :delayed
 end
