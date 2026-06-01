@@ -1,4 +1,4 @@
-Synced with [upstream](https://github.com/chatmail/relay) as of [this commit](https://github.com/chatmail/relay/commit/91df11015ee660db29fabf25d18a8cf8074ec8c2)
+Synced with [upstream](https://github.com/chatmail/relay) as of [this commit](https://github.com/chatmail/relay/commit/4b04aae83b5545e551aa80c62d1e4399706271dd) except as noted in the Divergences section
 
 # Chatmail
 
@@ -52,13 +52,15 @@ This should successfully deploy and configure Chatmail. The full list of DNS rec
 
 ## Divergences
 
-The HTML templates have had a few tweaks. The QR code is generated with a different tool and doesn't embed the Deltachat logo. Otherwise it's mostly the same.
+The HTML templates have had a few tweaks. The QR code is generated with a different tool and doesn't embed the Deltachat logo. Otherwise it's functionally identical.
 
 It does not validate DNS records, but it does print out a sample zone file which should be accurate for your deployment. This file can also be found at **/tmp/chatmail.zone** on the server.
 
 DKIM validation is disabled by default, but signing is still enabled. Validation provides no security benefits when we enforce only PGP signed mails, and you can still spam unreadable PGP mails from a server with DKIM signing configured correctly.
 
-If you need custom transport maps, create a file called **custom_transport_maps** in the postfix config directory and it will be included in the templated Postfix `main.cf` file.
+If you need custom transport maps, create a file called **custom_transport_maps** in the postfix config directory and it will be included in the templated Postfix `main.cf` file. This is not available upstream at this time.
+
+Filtermail is not used for sending or receiving over HTTP yet.
 
 ### Debian
 
