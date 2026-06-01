@@ -7,7 +7,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - Update chatmail-turn to 0.4
-- Nginx: reverse proxy path for HTTP delivery (currently unused)
+- Nginx: fix reverse proxy path for HTTP delivery (currently unused)
 - Nginx: be explicit with the server_name virtualhost config
 - Nginx: define one global syslog setting
 - DKIM: sign bounce messages
