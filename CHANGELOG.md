@@ -15,6 +15,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Postfix: reduce maximal_queue_lifetime from 5d to 2d
 - Chatmaild: Update to latest
 - Mtail: add statistics for quota expiration events
+- Dovecot: Increase default max mailbox size to 500M
 
 ## 0.2.7
 

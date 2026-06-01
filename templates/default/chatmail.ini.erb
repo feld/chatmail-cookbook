@@ -15,6 +15,7 @@ mail_domain = <%= @config['domain'] %>
 max_user_send_per_minute = <%= @config['max_user_send_per_minute'] %>
 
 # maximum mailbox size of a chatmail address
+# Oldest messages will be removed automatically, so mailboxes never run full.
 max_mailbox_size = <%= @config['max_mailbox_size'] %>
 
 # maximum message size for an e-mail in bytes
