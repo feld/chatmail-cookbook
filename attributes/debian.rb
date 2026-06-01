@@ -43,9 +43,9 @@ if platform?('debian')
   default['unbound']['anchor_bin'] = '/sbin/unbound-anchor'
   default['unbound']['config_dir'] = lazy { "#{node['etcdir']}/unbound" }
   default['unbound']['config_file'] = lazy { "#{node['unbound']['config_dir']}/unbound.conf.d/unbound.conf" }
-  default['filtermail']['release'] = 'v0.3.0'
+  default['filtermail']['release'] = 'v0.7.0'
   default['filtermail']['checksums'] = {
-    'x86_64' => 'f14a31323ae2dad3b59d3fdafcde507521da2f951a9478cd1f2fe2b4463df71d',
-    'aarch64' => '933770d75046c4fd7084ce8d43f905f8748333426ad839154f0fc654755ef09f'
+    'x86_64' => '451f295a85b3b12dbb0f89e18ec319f742ee46dec218f20f7923bfb017a248bd',
+    'aarch64' => '6833061b2a2028264fdeb32f0a6123e1ff73de57dace125364016300b748452e'
 }
 end

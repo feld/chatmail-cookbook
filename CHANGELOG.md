@@ -6,7 +6,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 ### Changes
 
-- Update chatmail-turn to 0.4
+- chatmail-turn: Update to 0.4
 - Nginx: fix reverse proxy path for HTTP delivery (currently unused)
 - Nginx: be explicit with the server_name virtualhost config
 - Nginx: define one global syslog setting
@@ -17,6 +17,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Mtail: add statistics for quota expiration events
 - Dovecot: Increase default max mailbox size to 500M
 - Dovecot: Add automatic message expiration/cleanup when quota is being approached
+- Filtermail: Update to 0.7.0
 
 ## 0.2.7
 
