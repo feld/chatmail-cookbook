@@ -2,6 +2,12 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+## HEAD
+
+### Changes
+
+- Dovecot: additional metadata reduction via aggressive header stripping before delivery
+
 ## 0.3.1
 
 ### Changes
