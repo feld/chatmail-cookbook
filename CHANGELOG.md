@@ -7,6 +7,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - Dovecot: additional metadata reduction via aggressive header stripping before delivery
+- Chatmaild: Update to latest
 
 ## 0.3.1
 
