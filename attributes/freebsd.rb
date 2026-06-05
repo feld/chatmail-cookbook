@@ -39,7 +39,9 @@ if platform?('freebsd')
   default['opendkim']['user'] = 'mailnull'
   default['opendkim']['group'] = 'mail'
   default['opendkim']['config_dir'] = lazy { "#{node['etcdir']}/mail" }
+  default['opendkim']['config_file'] = lazy { "#{node['opendkim']['config_dir']}/opendkim.conf" }
   default['opendkim']['pidfile'] = '/var/run/milteropendkim/pid'
+  default['opendkim']['genkey_bin'] = '/usr/local/sbin/opendkim-genkey'
   default['chatmail']['turnservice'] = 'chatmail_turn'
   default['unbound']['trust_anchor'] = lazy { "#{node['etcdir']}/unbound/root.key" }
   default['unbound']['anchor_bin'] = '/usr/local/sbin/unbound-anchor'

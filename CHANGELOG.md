@@ -8,6 +8,8 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 - Dovecot: additional metadata reduction via aggressive header stripping before delivery
 - Chatmaild: Update to latest
+- OpenDKIM: Use absolute path to opendkim-genkey
+- Debian: Fix deployment path of OpenDKIM config file
 
 ## 0.3.1
 

@@ -37,7 +37,9 @@ if platform?('debian')
   default['opendkim']['user'] = 'opendkim'
   default['opendkim']['group'] = 'opendkim'
   default['opendkim']['config_dir'] = lazy { "#{node['etcdir']}/opendkim" }
+  default['opendkim']['config_file'] = lazy { "#{node['etcdir']}/opendkim.conf" }
   default['opendkim']['pidfile'] = '/run/opendkim/opendkim.pid'
+  default['opendkim']['genkey_bin'] = '/usr/sbin/opendkim-genkey'
   default['chatmail']['turnservice'] = 'turnserver'
   default['unbound']['trust_anchor'] = '/usr/share/dns/root.key'
   default['unbound']['anchor_bin'] = '/sbin/unbound-anchor'

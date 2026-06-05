@@ -10,8 +10,9 @@ opendkim_user = node['opendkim']['user']
 opendkim_group = node['opendkim']['group']
 selector = node['chatmail']['dkim_selector']
 opendkim_config_dir = node['opendkim']['config_dir']
-config_file = "#{opendkim_config_dir}/opendkim.conf"
+config_file = node['opendkim']['config_file']
 dkim_keys_dir = "#{platform_etc}/dkimkeys"
+opendkim_genkey_bin = node['opendkim']['genkey_bin']
 
 key_file_path = "#{dkim_keys_dir}/#{selector}.private"
 key_table_path = "#{dkim_keys_dir}/KeyTable"
@@ -65,8 +66,10 @@ template "#{dkim_keys_dir}/SigningTable" do
   notifies :restart, "service[#{service_name}]", :delayed
 end
 
+genkey =
+
 execute 'Generate OpenDKIM domain keys' do
-  command "opendkim-genkey --bits=2048 -D #{dkim_keys_dir} -d #{node['chatmail']['domain']} -s #{selector}"
+  command "#{opendkim_genkey_bin} --bits=2048 -D #{dkim_keys_dir} -d #{node['chatmail']['domain']} -s #{selector}"
   not_if { ::File.exist?(key_file_path.to_s) }
   notifies :restart, "service[#{service_name}]", :delayed
 end
