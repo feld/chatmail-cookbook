@@ -242,6 +242,8 @@ service imap-login {
     process_min_avail = 10
 }
 
+<%# Somehow this causes issues on Debian 13 when it should just be disabling anvil %>
+<% unless node['platform'] == 'debian' and node['platform_version'].to_i == 13 %>
 service anvil {
     # We are disabling anvil penalty on failed login attempts
     # because it can only detect brute forcing by IP address
@@ -252,6 +254,7 @@ service anvil {
         mode = 0
     }
 }
+<% end %>
 
 ssl = required
 ssl_cert = <<%= @config['certificates_dir'] %>/<%= @config['domain'] %>.pem
