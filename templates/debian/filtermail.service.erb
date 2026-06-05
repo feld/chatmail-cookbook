@@ -2,6 +2,9 @@
 Description=Outgoing Chatmail Postfix before queue filter
 
 [Service]
+<% unless @dkim_enable %>
+Environment="FILTERMAIL_SKIP_DKIM=1"
+<% end %>
 ExecStart=<%= @execpath %> <%= @config_path %> outgoing
 Restart=always
 RestartSec=30

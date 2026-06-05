@@ -2,6 +2,14 @@
 
 This file is used to list changes made in each version of the chatmail cookbook.
 
+!!! Developer note: don't forget to update metadata.rb when making releases !!!
+
+## 0.3.3
+
+### Changes
+
+- Filtermail: disable DKIM validation by default
+
 ## 0.3.2
 
 ### Changes
