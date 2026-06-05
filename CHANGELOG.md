@@ -10,6 +10,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Chatmaild: Update to latest
 - OpenDKIM: Use absolute path to opendkim-genkey
 - Debian: Fix deployment path of OpenDKIM config file
+- Support Chef/CINC 19 (Ruby 3.2+)
 
 ## 0.3.1
 
