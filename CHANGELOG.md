@@ -13,6 +13,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Support Chef/CINC 19 (Ruby 3.2+)
 - Debian: Fix deployment of the Lego binary
 - Remove hardcoded Python version string
+- Debian: Custom install Dovecot packages like upstream (apt repo is deprecated)
 
 ## 0.3.1
 
