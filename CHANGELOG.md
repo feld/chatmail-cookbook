@@ -12,6 +12,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Debian: Fix deployment path of OpenDKIM config file
 - Support Chef/CINC 19 (Ruby 3.2+)
 - Debian: Fix deployment of the Lego binary
+- Remove hardcoded Python version string
 
 ## 0.3.1
 

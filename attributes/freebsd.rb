@@ -8,7 +8,6 @@ if platform?('freebsd')
   default['filtermail']['bin'] = '/usr/local/bin/filtermail'
   default['chatmail']['certificates_dir'] = lazy { "#{node['lego']['path']}/certificates" }
   default['virtualenv'] = '/usr/local/bin/virtualenv'
-  default['chatmail']['python_version_string'] = '3.11'
   default['chatmail']['packages'] = %w( python3
                                         python
                                         devel/py-virtualenv
