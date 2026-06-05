@@ -84,6 +84,16 @@ The webpages are deployed from the following template files:
 
 However, Chef allows you to override files and templates by providing a more specific match which can be done using your system's hostname. You must create a directory named like: `templates/default/host-$(hostname)/` and put the modified files in there. This is not necessarily your relay's hostname, but the actual local system (or FreeBSD jail) hostname. These are automatically excluded with the .gitignore so it should not cause conflicts in the future.
 
+The actual order of preference on a real server looks something like this:
+
+```
+  templates/host-trixiechat.d.feld.me/master.cf.erb
+  templates/debian-13/master.cf.erb
+  templates/debian/master.cf.erb
+  templates/default/master.cf.erb
+  templates/master.cf.erb
+```
+
 ## Warranty
 
 There is none. :)
