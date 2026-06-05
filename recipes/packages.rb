@@ -33,6 +33,8 @@ Pin: origin download.opensuse.org
 Pin-Priority: 1000
 EOU
   end
+
+lego_binary 'Install Lego binary from Github release'
 end
 
 if platform?('freebsd')

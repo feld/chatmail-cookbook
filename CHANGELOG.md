@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - OpenDKIM: Use absolute path to opendkim-genkey
 - Debian: Fix deployment path of OpenDKIM config file
 - Support Chef/CINC 19 (Ruby 3.2+)
+- Debian: Fix deployment of the Lego binary
 
 ## 0.3.1
 
