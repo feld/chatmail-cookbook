@@ -40,6 +40,13 @@ template '/usr/local/etc/rc.d/filtermail' do
   notifies :restart, 'service[filtermail]', :delayed
 end
 
+skip_bool = !node['chatmail']['dkim_validation']
+
+freebsd_sysrc 'filtermail_incoming_env' do
+  value "FILTERMAIL_SKIP_DKIM=#{skip_bool}"
+  notifies :restart, 'service[filtermail-incoming]', :delayed
+end
+
 template '/usr/local/etc/rc.d/filtermail-incoming' do
   owner 0
   group 0

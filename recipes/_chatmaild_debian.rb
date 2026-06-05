@@ -7,6 +7,7 @@
 chatmail_bin = node['chatmail']['bin_dir']
 filtermail_bin = node['filtermail']['bin']
 config_path = node['chatmail']['config_path']
+dkim_enable_bool = node['chatmail']['dkim_validation']
 
 template '/etc/systemd/system/doveauth.service' do
   source 'doveauth.service.erb'
@@ -41,7 +42,8 @@ template '/etc/systemd/system/filtermail.service' do
   mode '0644'
   variables(
     execpath: filtermail_bin,
-    config_path: config_path
+    config_path: config_path,
+    dkim_enable: dkim_enable_bool
   )
   notifies :run, 'execute[systemctl daemon-reload]', :immediately
   notifies :restart, 'service[filtermail]', :delayed
