@@ -52,16 +52,16 @@ if platform?('debian')
   case node['platform_version'].to_i
   when 12
     default['dovecot']['checksums']['core'] = {
-      'x86_64' => 'dd060706f52a306fa863d874717210b9fe10536c824afe1790eec247ded5b27d',
-      'aarch64' => 'e7548e8a82929722e973629ecc40fcfa886894cef3db88f23535149e7f730dc9',
+      'x86_64' => 'd631fe5ec5574d2d38e889b141cf8ffaab1e949fb2af306669584c3e37e37cc8',
+      'aarch64' => '658813382a86aac6d92179fd1bb78454139211e09dda150a43e177a60d838ece',
     }
     default['dovecot']['checksums']['imapd'] = {
-      'x86_64' => '8d8dc6fc00bbb6cdb25d345844f41ce2f1c53f764b79a838eb2a03103eebfa86',
-      'aarch64' => '178fa877ddd5df9930e8308b518f4b07df10e759050725f8217a0c1fb3fd707f',
+      'x86_64' => '834d014e8a91989f19b276cde9ae932cbda0c5461e89b506ab37ef31681e0c53',
+      'aarch64' => 'ddf4cb5db3f3f557edd9579cd5652f59201ac34009a12c92129a10b3f959ef6f',
     }
     default['dovecot']['checksums']['lmtpd'] = {
-      'x86_64' => '2f69ba5e35363de50962d42cccbfe4ed8495265044e244007d7ccddad77513ab',
-      'aarch64' => '89f52fb36524f5877a177dff4a713ba771fd3f91f22ed0af7238d495e143b38f',
+      'x86_64' => '12ebaa88ccfd46e63f0f0496cf180eb8c01cbd3b16f98d8ac2bc02cdcc033036',
+      'aarch64' => 'faf50c04f202093d7de621b4b85210c41b4e5550deed1ddbcf5830c7d4d6ca76',
     }
 
   when 13
