@@ -14,6 +14,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - Debian: Fix deployment of the Lego binary
 - Remove hardcoded Python version string
 - Debian: Custom install Dovecot packages like upstream (apt repo is deprecated)
+- Debian 13 (Trixie) support
 
 ## 0.3.1
 

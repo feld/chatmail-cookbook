@@ -82,7 +82,7 @@ Also storing your OAuth token or whatever for your DNS provider in the node attr
 
 ## OS Support
 
-* Debian 12 (bookworm) as we need Dovecot 2.3
+* Debian 12 (bookworm) and Debian 13 (trixie)
 * FreeBSD 14/15
 
 ## Ongoing Maintenance
