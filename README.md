@@ -82,7 +82,7 @@ The webpages are deployed from the following template files:
 - templates/default/info.md.erb
 - templates/default/privacy.md.erb
 
-However, Chef allows you to override files and templates by providing a more specific match which can be done using your system's hostname. You must create a directory named like: `templates/host-$(hostname)/` and put the modified files in there. This is not necessarily your relay's hostname, but the actual local system (or FreeBSD jail) hostname. These are automatically excluded with the .gitignore so it should not cause conflicts in the future.
+However, Chef allows you to override `files/` and `templates/` by providing a more specific match which can be done using your system's hostname. You must create a directory named like: `templates/host-$(hostname)/` and put the modified files in there. This is not necessarily your relay's hostname, but the actual local system (or FreeBSD jail) hostname. These are automatically excluded with the .gitignore so it should not cause conflicts in the future.
 
 The actual order of preference on a real server looks something like this:
 
