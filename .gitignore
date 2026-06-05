@@ -26,3 +26,7 @@ Policyfile.lock.json
 files/*/lego
 
 attributes.json
+
+# For local overrides
+files/host-*
+templates/host-*

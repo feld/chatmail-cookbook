@@ -74,6 +74,16 @@ If you use ZFS on FreeBSD and declare `['freebsd']['zfs']['enable'] = true`, we 
 
 We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot and Lua support enabled, iroh-relay, chatmail-turn, and mtail. The chatmaild Python services may also be packaged in the future.
 
+## Customizing the Webpages
+
+The webpages are deployed from the following template files:
+
+- templates/default/index.md.erb
+- templates/default/info.md.erb
+- templates/default/privacy.md.erb
+
+However, Chef allows you to override files and templates by providing a more specific match which can be done using your system's hostname. You must create a directory named like: `templates/default/host-$(hostname)/` and put the modified files in there. This is not necessarily your relay's hostname, but the actual local system (or FreeBSD jail) hostname. These are automatically excluded with the .gitignore so it should not cause conflicts in the future.
+
 ## Warranty
 
 There is none. :)
