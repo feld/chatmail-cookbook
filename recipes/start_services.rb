@@ -84,7 +84,8 @@ end
 
 service 'dovecot' do
   action :start
-  subscribes :stop, 'package[dovecot]', :before
+  subscribes :stop, 'debian_dovecot_packages[dovecot]', :before if platform?('debian')
+  subscribes :stop, 'package[dovecot]', :before unless platform?('debian')
   retries 2
 end
 

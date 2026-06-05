@@ -107,10 +107,13 @@ directory cgi_bin_path do
   recursive true
 end
 
-pyver = node['chatmail']['python_version_string']
-
 remote_file "#{cgi_bin_path}/newemail.py" do
-  source "file://#{venv_dir}/lib/python#{pyver}/site-packages/chatmaild/newemail.py"
+  source lazy {
+    candidates = Dir.glob("#{venv_dir}/lib/python*/site-packages/chatmaild/newemail.py").sort
+    raise "Could not find chatmaild/newemail.py in #{venv_dir}/lib/python*/site-packages" if candidates.empty?
+
+    "file://#{candidates.last}"
+  }
   owner 0
   group 0
   mode '0555'

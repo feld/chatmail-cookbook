@@ -122,6 +122,6 @@ milter_macro_daemon_name = ORIGINATING
 
 # This is for users who want to override transports to specific hosts
 # for reasons such as delivering over Yggdrasil, etc
-<% if File.exists?(@postfix_config_dir + '/custom_transport_maps') -%>
+<% if File.exist?(@postfix_config_dir + '/custom_transport_maps') -%>
 transport_maps = hash:<%= @postfix_config_dir %>/custom_transport_maps
 <% end %>

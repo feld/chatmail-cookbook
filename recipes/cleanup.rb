@@ -45,6 +45,14 @@ end
 # Just in case on Debian
 if platform_family?('debian')
   execute 'systemctl daemon-reload'
+
+  apt_repository 'DeltaChat_OBS' do
+    action :remove
+  end
+
+  file '/etc/apt/keyrings/obs-home-deltachat.gpg' do
+    action :delete
+  end
 end
 
 # Used crontab, was problematic parsing

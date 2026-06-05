@@ -5,34 +5,21 @@
 # Copyright:: 2023, The Authors, All Rights Reserved.
 
 if platform?('debian')
-  package 'gpg'
-
-  cookbook_file '/etc/apt/keyrings/obs-home-deltachat.gpg' do
-    owner 0
-    group 0
-    mode '0444'
-  end
-
-  # Custom pkg repo required for patched Dovecot
-  apt_repository 'DeltaChat_OBS' do
-    components ['./']
-    distribution ''
-    uri 'https://download.opensuse.org/repositories/home:/deltachat/Debian_12/'
-    options ['signed-by=/etc/apt/keyrings/obs-home-deltachat.gpg']
-    action :add
-  end
-
   directory '/etc/apt/preferences.d' do
     recursive true
   end
 
   file '/etc/apt/preferences.d/pin-dovecot' do
-  content <<~EOU
+    content <<~EOU
 Package: dovecot-*
-Pin: origin download.opensuse.org
-Pin-Priority: 1000
+Pin: release *
+Pin-Priority: -1
 EOU
+    mode '0644'
   end
+
+debian_dovecot_packages 'Install Dovecot Packages'
+lego_binary 'Install Lego binary from Github release'
 end
 
 if platform?('freebsd')

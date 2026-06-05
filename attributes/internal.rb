@@ -2,7 +2,7 @@
 # but don't need to be customized per OS
 # Usually these don't need to change
 default['chatmaild']['release'] = '0.3'
-default['chatmaild']['githash'] = 'a47bb941434d6b7c222c20de2921ac38956c8f1e'
+default['chatmaild']['githash'] = 'aa846c3478fed5cee14ce8e7b68775f2a9a22dc1'
 default['chatmail']['cgi-bin'] = '/usr/lib/cgi-bin'
 default['chatmail']['base_dir'] = '/usr/local/lib/chatmaild'
 default['chatmail']['venv_dir'] = lazy { "#{node['chatmail']['base_dir']}/venv" }
