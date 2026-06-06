@@ -35,28 +35,75 @@ action :install do
     'dovecot-lmtpd' => 'lmtpd',
   }
 
-  package_paths = []
+  package_repo_base = "http://pkg.radiks.org/debian/#{debian_major}/#{deb_arch}"
 
-  package_map.each do |package_name, checksum_key|
+  package_specs = package_map.map do |package_name, checksum_key|
     package_filename = "#{package_name}_#{version}_#{deb_arch}.deb"
     package_path = "#{Chef::Config[:file_cache_path]}/#{package_filename}"
-    package_url = "http://pkg.radiks.org/debian/#{debian_major}/#{deb_arch}/#{package_filename}"
+    package_url = "#{package_repo_base}/#{package_filename}"
     package_checksum = node['dovecot']['checksums'][checksum_key][checksum_arch]
 
     if package_checksum.nil? || package_checksum == 'xxx'
       raise "Missing checksum for #{package_name} on #{checksum_arch} (Debian #{debian_major})"
     end
 
-    remote_file package_path do
-      source package_url
-      checksum package_checksum
+    {
+      name: package_name,
+      filename: package_filename,
+      path: package_path,
+      url: package_url,
+      checksum: package_checksum,
+    }
+  end.sort_by { |spec| spec[:name] }
+
+  installed_version_matches = lambda do |package_name|
+    cmd = Mixlib::ShellOut.new("dpkg-query -W -f='${Version}' #{package_name}")
+    cmd.run_command
+    cmd.error!
+
+    installed_version = cmd.stdout.to_s.strip
+    !installed_version.empty? && installed_version.end_with?(version)
+  rescue Mixlib::ShellOut::ShellCommandFailed
+    false
+  end
+
+  marker_path = "#{Chef::Config[:file_cache_path]}/dovecot_#{deb_arch}_install.marker"
+  marker_lines = [
+    "version=#{version}",
+    "debian_major=#{debian_major}",
+    "deb_arch=#{deb_arch}",
+    "checksum_arch=#{checksum_arch}",
+    "repo_base=#{package_repo_base}",
+  ]
+  package_specs.each do |spec|
+    marker_lines << "package=#{spec[:name]}|filename=#{spec[:filename]}|checksum=#{spec[:checksum]}|url=#{spec[:url]}"
+  end
+  marker_contents = "#{marker_lines.join("\n")}\n"
+
+  marker_matches = begin
+    ::File.exist?(marker_path) && ::File.read(marker_path) == marker_contents
+  rescue
+    false
+  end
+
+  versions_match = package_map.keys.all? { |package_name| installed_version_matches.call(package_name) }
+
+  if versions_match && marker_matches
+    Chef::Log.info("Correct dovecot package version (#{version}) already installed for Debian #{debian_major}/#{deb_arch}, skipping download/install")
+    return
+  end
+
+  package_paths = package_specs.map { |spec| spec[:path] }
+
+  package_specs.each do |spec|
+    remote_file spec[:path] do
+      source spec[:url]
+      checksum spec[:checksum]
       owner 0
       group 0
       mode '0644'
-      action :create_if_missing
+      action :create
     end
-
-    package_paths << package_path
   end
 
   apt_update 'update package cache for dovecot dependencies' do
@@ -66,11 +113,16 @@ action :install do
   execute 'install custom dovecot packages with dependency resolution' do
     command "apt-get install -y #{package_paths.join(' ')}"
     environment({ 'DEBIAN_FRONTEND' => 'noninteractive' })
-    not_if <<~EOH
-      dpkg-query -W -f='${Version}' dovecot-core 2>/dev/null | grep -E '#{Regexp.escape(version)}$' && \
-      dpkg-query -W -f='${Version}' dovecot-imapd 2>/dev/null | grep -E '#{Regexp.escape(version)}$' && \
-      dpkg-query -W -f='${Version}' dovecot-lmtpd 2>/dev/null | grep -E '#{Regexp.escape(version)}$'
-    EOH
+    not_if { package_map.keys.all? { |package_name| installed_version_matches.call(package_name) } && marker_matches }
     notifies :update, 'apt_update[update package cache for dovecot dependencies]', :before
+  end
+
+  file marker_path do
+    content marker_contents
+    owner 0
+    group 0
+    mode '0644'
+    action :create
+    only_if { package_map.keys.all? { |package_name| installed_version_matches.call(package_name) } }
   end
 end
