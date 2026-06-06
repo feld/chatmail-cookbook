@@ -32,7 +32,6 @@ default['chatmail']['webdev'] = false
 default['lego']['email'] = 'you@example.com'
 default['lego']['envs'] = { 'DNSIMPLE_OAUTH_TOKEN' => 'abcd1234' }
 default['lego']['provider'] = 'dnsimple'
-default['lego']['release'] = 'v4.28.1'
 
 default['freebsd']['zfs']['enable'] = false
 # The ZFS dataset name, but by default it will use the mailboxes_dir

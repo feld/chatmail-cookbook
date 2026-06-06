@@ -4,6 +4,12 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## HEAD
+
+## Changes
+
+- Lego: Update to v5.2.2
+
 ## 0.3.3
 
 ### Changes
