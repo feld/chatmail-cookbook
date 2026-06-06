@@ -83,7 +83,7 @@ else
 end
 
 execute 'Lego v5.0 Account Migration' do
-  command "#{lego_bin_path} migrate --path #{lego_path}"
+  command "printf 'Y\\n' | #{lego_bin_path} migrate --path #{lego_path}"
   live_stream true
   only_if "#{lego_bin_path} --version | grep -Eq '(^| )v?5\\.'"
   only_if { ::Dir.glob("#{lego_path}/accounts/*/#{lego_email}/keys").any? }
