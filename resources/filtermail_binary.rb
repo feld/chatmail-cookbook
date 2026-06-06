@@ -25,23 +25,29 @@ action :install do
   if platform_family?('freebsd')
     # On FreeBSD, install the filtermail package from custom repo
     package 'filtermail'
+    return
+  end
+
+  # On Linux, continue with the download approach
+  filtermail_version = new_resource.version
+  install_path = new_resource.install_path
+  arch_name = new_resource.arch_name
+  checksums = new_resource.checksums
+
+  # Determine the binary name based on architecture
+  binary_name = "filtermail-#{arch_name}"
+  download_url = "https://github.com/chatmail/filtermail/releases/download/#{filtermail_version}/#{binary_name}"
+  downloaded_path = "#{Chef::Config[:file_cache_path]}/#{binary_name}-#{filtermail_version}"
+
+  # Get the expected checksum
+  expected_checksum = checksums[arch_name]
+
+  if checksum_match?(install_path, expected_checksum)
+    Chef::Log.info("Correct filtermail checksum already installed at #{install_path}, skipping download/install")
   else
-    # On Linux, continue with the download approach
-    filtermail_version = new_resource.version
-    install_path = new_resource.install_path
-    arch_name = new_resource.arch_name
-    checksums = new_resource.checksums
-
-    # Determine the binary name based on architecture
-    binary_name = "filtermail-#{arch_name}"
-    download_url = "https://github.com/chatmail/filtermail/releases/download/#{filtermail_version}/#{binary_name}"
-
-    # Get the expected checksum
-    expected_checksum = checksums[arch_name]
-
-    # Check if the correct version is already installed
+    # If checksum is not available, fall back to version check for idempotence
     correct_version_installed = false
-    if ::File.exist?(install_path)
+    if expected_checksum.nil? && ::File.exist?(install_path)
       begin
         current_version_cmd = Mixlib::ShellOut.new("#{install_path} --version")
         current_version_cmd.run_command
@@ -55,10 +61,8 @@ action :install do
       end
     end
 
-    # Only proceed with download/verification if correct version isn't installed
     unless correct_version_installed
-      # Download the filtermail binary
-      remote_file "/tmp/#{binary_name}" do
+      remote_file downloaded_path do
         source download_url
         owner 0
         group 0
@@ -66,23 +70,16 @@ action :install do
         action :create_if_missing
       end
 
-      # Verify checksum and install the binary
-      execute 'verify_and_install_filtermail' do
-        command <<-CMD
-          echo "#{expected_checksum}  /tmp/#{binary_name}" | sha256sum -c - && \\
-          mv /tmp/#{binary_name} #{install_path} && \\
-          chmod 0555 #{install_path}
-        CMD
-        only_if { ::File.exist?("/tmp/#{binary_name}") && !expected_checksum.nil? }
-      end
+      ruby_block 'verify_and_install_filtermail' do
+        block do
+          if !expected_checksum.nil? && !checksum_match?(downloaded_path, expected_checksum)
+            actual_checksum = sha256_for_file(downloaded_path)
+            raise "Checksum mismatch for #{binary_name}: expected #{expected_checksum}, got #{actual_checksum}"
+          end
 
-      # If no checksum is provided, just install without verification
-      execute 'install_filtermail_without_checksum' do
-        command <<-CMD
-          mv /tmp/#{binary_name} #{install_path} && \\
-          chmod 0555 #{install_path}
-        CMD
-        only_if { ::File.exist?("/tmp/#{binary_name}") && expected_checksum.nil? }
+          install_binary(downloaded_path, install_path)
+        end
+        only_if { ::File.exist?(downloaded_path) }
       end
     end
   end

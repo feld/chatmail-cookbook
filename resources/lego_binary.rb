@@ -112,9 +112,8 @@ action :install do
       install -m 0555 #{Chef::Config[:file_cache_path]}/lego #{install_path}
     CMD
     not_if do
-      ::File.exist?(install_path) &&
-        ::File.executable?(install_path) &&
-        Digest::SHA256.file(install_path).hexdigest == node.run_state["lego_binary_checksum_#{tarball_name}"]
+      ::File.executable?(install_path) &&
+        checksum_match?(install_path, node.run_state["lego_binary_checksum_#{tarball_name}"])
     end
   end
 end
