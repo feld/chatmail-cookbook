@@ -6,13 +6,13 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 ## 0.3.5
 
-## Changes
+### Changes
 
 - Lego: auto accept ToS (lost during the refactor, only affects clean deploys)
 
 ## 0.3.4
 
-## Changes
+### Changes
 
 - Debian: Dovecot package fetching and installation refactoring to improve handling when
   upgrading a relay from Debian 12 to 13
