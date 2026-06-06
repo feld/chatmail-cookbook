@@ -64,10 +64,11 @@ action :install do
     unless correct_version_installed
       remote_file downloaded_path do
         source download_url
+        checksum expected_checksum unless expected_checksum.nil?
         owner 0
         group 0
         mode '0644'
-        action :create_if_missing
+        action :create
       end
 
       ruby_block 'verify_and_install_filtermail' do
