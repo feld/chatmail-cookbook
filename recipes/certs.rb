@@ -6,7 +6,7 @@
 
 platform_etc = node['etcdir']
 lego_bin_path = node['lego']['bin']
-lego_path = platform_etc + '/lego'
+lego_path = node['lego']['path']
 certdir = node['chatmail']['certificates_dir']
 
 directory lego_path do
@@ -38,7 +38,7 @@ if platform_family?('freebsd')
   cron_d 'lego_renewal' do
     minute '30'
     hour '2'
-    command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew --renew-hook=#{platform_etc}/lego/renew_hook.sh"
+    command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew --deploy-hook=#{platform_etc}/lego/renew_hook.sh"
     user 'root'
     environment lego_dns_envs
   end
@@ -82,8 +82,15 @@ else
   end
 end
 
+execute 'Lego v5.0 Account Migration' do
+  command "printf 'Y\\n' | #{lego_bin_path} migrate --path #{lego_path}"
+  live_stream true
+  only_if "#{lego_bin_path} --version | grep -Eq '(^| )v?5\\.'"
+  only_if { ::Dir.glob("#{lego_path}/accounts/*/#{lego_email}/keys").any? }
+end
+
 execute 'issue_cert' do
-  command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} run"
+  command "#{lego_bin_path} run -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider}"
   environment(lego_dns_envs)
   live_stream true
   not_if { ::File.exist?(certdir + '/' + lego_domain + '.key') }
