@@ -8,7 +8,12 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 ## Changes
 
-- Lego: Update to v5.2.2
+- Debian: Dovecot package fetching and installation refactoring to improve handling when
+  upgrading a relay from Debian 12 to 13
+- Debian: Filtermail binary fetching and installation refactoring to prevent unnecessary
+  downloads each run and improve resiliency if file corruption happens
+- Lego: refactored binary fetching and installation for resiliency if file corruption happens
+- Lego: Update to v5.2.2 and automatically migrate the account data from v4 to v5
 
 ## 0.3.3
 
