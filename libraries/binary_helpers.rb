@@ -18,6 +18,24 @@ module ChatmailCookbook
       actual_checksum.casecmp?(expected_checksum.to_s)
     end
 
+    def checksum_from_release_file(checksums_file, artifact_name)
+      line = ::File.readlines(checksums_file).find do |l|
+        l.end_with?(" #{artifact_name}\n") || l.end_with?("  #{artifact_name}\n")
+      end
+      raise "Could not find checksum for #{artifact_name} in #{checksums_file}" if line.nil?
+
+      checksum = line.split.first
+      raise "Invalid checksum format for #{artifact_name}" unless checksum.match?(/\A[a-fA-F0-9]{64}\z/)
+
+      checksum
+    end
+
+    def read_checksum_file(path)
+      return nil unless ::File.exist?(path)
+
+      ::File.read(path).strip
+    end
+
     def install_binary(downloaded_path, install_path)
       FileUtils.mv(downloaded_path, install_path)
       FileUtils.chmod(0o555, install_path)

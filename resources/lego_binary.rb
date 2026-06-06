@@ -55,32 +55,35 @@ action :install do
     owner 0
     group 0
     mode '0644'
-    action :create_if_missing
+    action :create
   end
 
-  ruby_block "extract checksum for #{tarball_name}" do
+  checksum_cache_file = "#{Chef::Config[:file_cache_path]}/#{tarball_name}.sha256"
+
+  ruby_block "cache checksum for #{tarball_name}" do
     block do
-      line = ::File.readlines(checksums_file).find { |l| l.end_with?(" #{tarball_name}\n") || l.end_with?("  #{tarball_name}\n") }
-      raise "Could not find checksum for #{tarball_name} in #{checksums_file}" if line.nil?
-
-      checksum = line.split.first
-      raise "Invalid checksum format for #{tarball_name}" unless checksum.match?(/\A[a-fA-F0-9]{64}\z/)
-
-      node.run_state["lego_checksum_#{tarball_name}"] = checksum
+      checksum = checksum_from_release_file(checksums_file, tarball_name)
+      ::File.write(checksum_cache_file, "#{checksum}\n")
     end
     action :run
+    not_if do
+      cached_checksum = read_checksum_file(checksum_cache_file)
+      next false if cached_checksum.nil?
+
+      cached_checksum.casecmp?(checksum_from_release_file(checksums_file, tarball_name))
+    end
   end
 
   remote_file tarball_path do
     source download_url
-    checksum lazy { node.run_state["lego_checksum_#{tarball_name}"] }
+    checksum lazy { read_checksum_file(checksum_cache_file) }
     owner 0
     group 0
     mode '0644'
-    action :create_if_missing
+    action :create
   end
 
-  ruby_block "extract binary checksum from #{tarball_name}" do
+  ruby_block "cache lego binary checksum for #{tarball_name}" do
     block do
       require 'digest'
       require 'zlib'
@@ -101,19 +104,46 @@ action :install do
 
       raise "Could not find lego binary in #{tarball_path}" if binary_checksum.nil?
 
-      node.run_state["lego_binary_checksum_#{tarball_name}"] = binary_checksum
+      ::File.write("#{checksum_cache_file}.binary", "#{binary_checksum}\n")
     end
     action :run
+    not_if do
+      expected_binary_checksum = read_checksum_file("#{checksum_cache_file}.binary")
+      next false if expected_binary_checksum.nil?
+
+      ::File.executable?(install_path) && checksum_match?(install_path, expected_binary_checksum)
+    end
   end
 
-  execute 'install lego binary' do
-    command <<~CMD
-      tar -xzf #{tarball_path} -C #{Chef::Config[:file_cache_path]} && \
-      install -m 0555 #{Chef::Config[:file_cache_path]}/lego #{install_path}
-    CMD
+  ruby_block 'install lego binary' do
+    block do
+      require 'zlib'
+      require 'rubygems/package'
+
+      extracted_binary_path = "#{Chef::Config[:file_cache_path]}/lego-#{lego_version}-#{arch_name}"
+      extracted = false
+
+      Zlib::GzipReader.open(tarball_path) do |gzip_stream|
+        Gem::Package::TarReader.new(gzip_stream) do |tar|
+          tar.each do |entry|
+            next unless entry.file? && entry.full_name == 'lego'
+
+            ::File.open(extracted_binary_path, 'wb') { |f| f.write(entry.read) }
+            extracted = true
+            break
+          end
+        end
+      end
+
+      raise "Could not find lego binary in #{tarball_path}" unless extracted
+
+      install_binary(extracted_binary_path, install_path)
+    end
     not_if do
+      expected_binary_checksum = read_checksum_file("#{checksum_cache_file}.binary")
       ::File.executable?(install_path) &&
-        checksum_match?(install_path, node.run_state["lego_binary_checksum_#{tarball_name}"])
+        !expected_binary_checksum.nil? &&
+        checksum_match?(install_path, expected_binary_checksum)
     end
   end
 end
