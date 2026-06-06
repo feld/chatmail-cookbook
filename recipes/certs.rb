@@ -6,7 +6,7 @@
 
 platform_etc = node['etcdir']
 lego_bin_path = node['lego']['bin']
-lego_path = platform_etc + '/lego'
+lego_path = node['lego']['path']
 certdir = node['chatmail']['certificates_dir']
 
 directory lego_path do
@@ -80,6 +80,13 @@ else
     command 'systemctl daemon-reload'
     action :nothing
   end
+end
+
+execute 'Lego v5.0 Account Migration' do
+  command "#{lego_bin_path} --path #{lego_path} migrate"
+  live_stream true
+  only_if "#{lego_bin_path} --version | grep -Eq '(^| )v?5\\.'"
+  only_if { ::Dir.glob("#{lego_path}/accounts/*/#{lego_email}/keys").any? }
 end
 
 execute 'issue_cert' do
