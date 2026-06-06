@@ -49,6 +49,14 @@ action :install do
 
   checksums_file = "#{Chef::Config[:file_cache_path]}/lego_#{lego_version_for_checksums}_checksums.txt"
   tarball_path = "#{Chef::Config[:file_cache_path]}/#{tarball_name}"
+  checksum_cache_file = "#{Chef::Config[:file_cache_path]}/#{tarball_name}.sha256"
+  binary_checksum_cache_file = "#{checksum_cache_file}.binary"
+
+  cached_binary_checksum = read_checksum_file(binary_checksum_cache_file)
+  if ::File.executable?(install_path) && !cached_binary_checksum.nil? && checksum_match?(install_path, cached_binary_checksum)
+    Chef::Log.info("Correct lego binary already installed at #{install_path}, skipping download/install")
+    return
+  end
 
   remote_file checksums_file do
     source checksums_url
@@ -57,8 +65,6 @@ action :install do
     mode '0644'
     action :create
   end
-
-  checksum_cache_file = "#{Chef::Config[:file_cache_path]}/#{tarball_name}.sha256"
 
   ruby_block "cache checksum for #{tarball_name}" do
     block do
@@ -104,11 +110,11 @@ action :install do
 
       raise "Could not find lego binary in #{tarball_path}" if binary_checksum.nil?
 
-      ::File.write("#{checksum_cache_file}.binary", "#{binary_checksum}\n")
+      ::File.write(binary_checksum_cache_file, "#{binary_checksum}\n")
     end
     action :run
     not_if do
-      expected_binary_checksum = read_checksum_file("#{checksum_cache_file}.binary")
+      expected_binary_checksum = read_checksum_file(binary_checksum_cache_file)
       next false if expected_binary_checksum.nil?
 
       ::File.executable?(install_path) && checksum_match?(install_path, expected_binary_checksum)
@@ -140,7 +146,7 @@ action :install do
       install_binary(extracted_binary_path, install_path)
     end
     not_if do
-      expected_binary_checksum = read_checksum_file("#{checksum_cache_file}.binary")
+      expected_binary_checksum = read_checksum_file(binary_checksum_cache_file)
       ::File.executable?(install_path) &&
         !expected_binary_checksum.nil? &&
         checksum_match?(install_path, expected_binary_checksum)
