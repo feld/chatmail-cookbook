@@ -21,14 +21,6 @@ property :arch_name, String, default: lazy {
 property :checksums, Hash, default: lazy { node['filtermail']['checksums'] }
 
 action :install do
-  # Handle based on platform
-  if platform_family?('freebsd')
-    # On FreeBSD, install the filtermail package from custom repo
-    package 'filtermail'
-    return
-  end
-
-  # On Linux, continue with the download approach
   filtermail_version = new_resource.version
   install_path = new_resource.install_path
   arch_name = new_resource.arch_name
