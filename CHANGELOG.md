@@ -4,6 +4,12 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## 0.3.5
+
+## Changes
+
+- Lego: auto accept ToS (lost during the refactor, only affects clean deploys)
+
 ## 0.3.4
 
 ## Changes

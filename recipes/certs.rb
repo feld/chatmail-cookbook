@@ -38,7 +38,7 @@ if platform_family?('freebsd')
   cron_d 'lego_renewal' do
     minute '30'
     hour '2'
-    command "#{lego_bin_path} -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} renew --deploy-hook=#{platform_etc}/lego/renew_hook.sh"
+    command "#{lego_bin_path} run -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} --deploy-hook=#{platform_etc}/lego/renew_hook.sh"
     user 'root'
     environment lego_dns_envs
   end
@@ -90,7 +90,7 @@ execute 'Lego v5.0 Account Migration' do
 end
 
 execute 'issue_cert' do
-  command "#{lego_bin_path} run -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider}"
+  command "#{lego_bin_path} run -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider}"
   environment(lego_dns_envs)
   live_stream true
   not_if { ::File.exist?(certdir + '/' + lego_domain + '.key') }
