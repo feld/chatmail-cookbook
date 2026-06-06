@@ -80,11 +80,41 @@ action :install do
     action :create_if_missing
   end
 
+  ruby_block "extract binary checksum from #{tarball_name}" do
+    block do
+      require 'digest'
+      require 'zlib'
+      require 'rubygems/package'
+
+      binary_checksum = nil
+
+      Zlib::GzipReader.open(tarball_path) do |gzip_stream|
+        Gem::Package::TarReader.new(gzip_stream) do |tar|
+          tar.each do |entry|
+            next unless entry.file? && entry.full_name == 'lego'
+
+            binary_checksum = Digest::SHA256.hexdigest(entry.read)
+            break
+          end
+        end
+      end
+
+      raise "Could not find lego binary in #{tarball_path}" if binary_checksum.nil?
+
+      node.run_state["lego_binary_checksum_#{tarball_name}"] = binary_checksum
+    end
+    action :run
+  end
+
   execute 'install lego binary' do
     command <<~CMD
       tar -xzf #{tarball_path} -C #{Chef::Config[:file_cache_path]} && \
       install -m 0555 #{Chef::Config[:file_cache_path]}/lego #{install_path}
     CMD
-    not_if "#{install_path} --version | grep -F '#{lego_version_for_checksums}'"
+    not_if do
+      ::File.exist?(install_path) &&
+        ::File.executable?(install_path) &&
+        Digest::SHA256.file(install_path).hexdigest == node.run_state["lego_binary_checksum_#{tarball_name}"]
+    end
   end
 end
