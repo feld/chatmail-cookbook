@@ -38,6 +38,7 @@
     }
   },
   "lego": {
+    "server": "letsencrypt",
     "provider": "dnsimple",
     "envs": {
       "DNSIMPLE_OAUTH_TOKEN": "abcd134"

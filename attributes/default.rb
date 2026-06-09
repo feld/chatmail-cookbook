@@ -32,6 +32,9 @@ default['chatmail']['webdev'] = false
 default['lego']['email'] = 'you@example.com'
 default['lego']['envs'] = { 'DNSIMPLE_OAUTH_TOKEN' => 'abcd1234' }
 default['lego']['provider'] = 'dnsimple'
+# Can be a URL or a shortcode
+# https://go-acme.github.io/lego/advanced/caservers/index.html#ca-server-short-codes
+default['lego']['server'] = 'letsencrypt'
 
 default['freebsd']['zfs']['enable'] = false
 # The ZFS dataset name, but by default it will use the mailboxes_dir

@@ -33,12 +33,17 @@ lego_email = node['lego']['email']
 lego_domain = node['chatmail']['domain']
 lego_dns_provider = node['lego']['provider']
 lego_dns_envs = node['lego']['envs']
+lego_server = node['lego']['server']
+
+lego_issuance_command = "#{lego_bin_path} run -a -s #{lego_server} -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider}"
+
+lego_deploy_hook = "#{platform_etc}/lego/renew_hook.sh"
 
 if platform_family?('freebsd')
   cron_d 'lego_renewal' do
     minute '30'
     hour '2'
-    command "#{lego_bin_path} run -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider} --deploy-hook=#{platform_etc}/lego/renew_hook.sh"
+    command "#{lego_issuance_command} --deploy-hook=#{lego_deploy_hook}"
     user 'root'
     environment lego_dns_envs
   end
@@ -49,11 +54,9 @@ else
     group 0
     mode '0644'
     variables(
-      lego_email: lego_email,
-      lego_domain: lego_domain,
-      lego_path: lego_path,
-      lego_dns_provider: lego_dns_provider,
-      lego_dns_envs: lego_dns_envs
+      lego_dns_envs: lego_dns_envs,
+      lego_issuance_command: lego_issuance_command,
+      lego_deploy_hook: lego_deploy_hook
     )
     notifies :run, 'execute[systemctl daemon-reload]', :immediately
     notifies :restart, 'service[lego-renewal]', :delayed
@@ -90,7 +93,7 @@ execute 'Lego v5.0 Account Migration' do
 end
 
 execute 'issue_cert' do
-  command "#{lego_bin_path} run -a -d #{lego_domain} -d www.#{lego_domain} -d mta-sts.#{lego_domain} -m #{lego_email} --path #{lego_path} --dns #{lego_dns_provider}"
+  command lego_issuance_command
   environment(lego_dns_envs)
   live_stream true
   not_if { ::File.exist?(certdir + '/' + lego_domain + '.key') }
