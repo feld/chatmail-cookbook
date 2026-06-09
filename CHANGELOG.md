@@ -4,6 +4,13 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## HEAD
+
+### Changes
+
+- Lego: you can now define the ACME server used for certificate issuance
+
+
 ## 0.3.5
 
 ### Changes
