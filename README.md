@@ -74,6 +74,8 @@ If you use ZFS on FreeBSD and declare `['freebsd']['zfs']['enable'] = true`, we 
 
 We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot and Lua support enabled, iroh-relay, chatmail-turn, and mtail. The chatmaild Python services may also be packaged in the future.
 
+The custom FreeBSD ports/packages are documented [here](/feld/freebsd-chatmail-overlay)
+
 ## Customizing the Webpages
 
 The webpages are deployed from the following template files:
