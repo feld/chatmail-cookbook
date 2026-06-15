@@ -28,7 +28,7 @@ class Chef
                 logger.info("#{new_resource} package #{new_resource.package_name} already installed but from different repository (#{current_repository(new_resource.package_name)}), switching to #{new_resource.repository}")
                 install_from_repository
               end
-            elsif current_resource.version.nil? || (candidate_version && candidate_version != current_resource.version)
+            elsif current_resource.version.nil?
               converge_by("install package #{new_resource.package_name}") do
                 install_from_repository
               end
