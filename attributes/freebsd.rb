@@ -13,7 +13,7 @@ if platform?('freebsd')
                                         devel/py-virtualenv
                                         databases/py-sqlite3
                                         dovecot
-                                        opendkim-devel
+                                        mail/opendkim-devel
                                         postfix
                                         mtail
                                         nginx
