@@ -4,7 +4,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
-## HEAD
+## 0.3.6
 
 ### Changes
 
