@@ -9,6 +9,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - Lego: you can now define the ACME server used for certificate issuance
+- Fix the path to the killswitch file when disable_registration is activated
 
 
 ## 0.3.5
