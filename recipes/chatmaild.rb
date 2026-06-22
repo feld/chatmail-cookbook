@@ -97,7 +97,7 @@ nocreate_action = if node['chatmail']['disable_registration']
                     :delete
                   end
 
-file "#{platform_etc}/chatmail-nocreate" do
+file "/etc/chatmail-nocreate" do
   action nocreate_action
 end
 
