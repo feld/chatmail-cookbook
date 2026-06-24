@@ -70,9 +70,9 @@ We still use cron to execute the housekeeping instead of a systemd timer as cron
 
 We do not have journald to use as a circular buffer for memory-backed logging, so instead we enforce a strict newsyslog configuration to rotate logs and not keep archives based on the configured retention interval.
 
-If you use ZFS on FreeBSD and declare `['freebsd']['zfs']['enable'] = true`, we leverage ZFS instead of Dovecot to compress the mails. Also, you can define a quota for the ZFS dataset the mails are stored on to protect your server from running out of disk space from abuse of thestorage.
+If you use ZFS on FreeBSD and declare `['freebsd']['zfs']['enable'] = true`, we leverage ZFS instead of Dovecot to compress the mails. Also, you can define a quota for the ZFS dataset the mails are stored on to protect your server from running out of disk space from abuse of the storage.
 
-We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot and Lua support enabled, iroh-relay, chatmail-turn, and mtail. The chatmaild Python services may also be packaged in the future.
+We require a custom package repo for a few packages that are not in the ports tree at this time: patched Dovecot and Lua support enabled, chatmail-turn, and mtail. The chatmaild Python services may also be packaged in the future.
 
 The custom FreeBSD ports/packages are documented [here](https://github.com/feld/freebsd-chatmail-overlay)
 
