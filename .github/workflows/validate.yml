@@ -1,0 +1,46 @@
+name: Cookbook Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+
+      - name: Cache gems
+        uses: actions/cache@v4
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+            ${{ runner.os }}-gems-
+
+      - name: Install cookstyle
+        run: |
+          gem install cookstyle --install-dir vendor/bundle
+          echo "$(pwd)/vendor/bundle/bin" >> $GITHUB_PATH
+
+      - name: Run cookstyle
+        run: cookstyle
+
+      - name: Validate ERB templates
+        run: |
+          echo "Validating ERB template syntax..."
+          find templates -name '*.erb' -type f | while read -r template; do
+            echo "Checking $template..."
+            erb -P -x -T '-' "$template" | ruby -c
+          done
+          echo "All ERB templates are valid!"
