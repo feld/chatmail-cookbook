@@ -4,6 +4,12 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## HEAD
+
+### Changes
+
+- FreeBSD: detect and upgrade renamed packages (e.g. py311-virtualenv -> py312-virtualenv) where the version is unchanged
+
 ## 0.3.6
 
 ### Changes
