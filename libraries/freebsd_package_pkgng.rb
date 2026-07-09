@@ -32,6 +32,15 @@ class Chef
               converge_by("install package #{new_resource.package_name}") do
                 install_from_repository
               end
+            elsif name_mismatch?
+              # The installed package name differs from the candidate package name
+              # (e.g. a port's default flavor changed: py311-virtualenv -> py312-virtualenv).
+              # The version is identical so Chef's version comparison would skip it, but the
+              # package must be replaced. Force a reinstall of the new package name so pkg
+              # removes the obsolete one.
+              converge_by("package #{new_resource.package_name} renamed from #{current_installed_name} to #{candidate_name}, reinstalling") do
+                reinstall_for_name_change
+              end
             else
               logger.trace("#{new_resource} is already installed - nothing to do")
               # Call super to ensure proper state management in why-run mode
@@ -50,6 +59,12 @@ class Chef
                 logger.info("#{new_resource} package #{new_resource.package_name} already installed but from different repository (#{current_repository(new_resource.package_name)}), switching to #{new_resource.repository}")
                 install_from_repository
               end
+            elsif current_resource.version && name_mismatch?
+              # See action_install: a renamed package (same version, different name)
+              # is invisible to Chef's version comparison and must be replaced.
+              converge_by("package #{new_resource.package_name} renamed from #{current_installed_name} to #{candidate_name}, upgrading") do
+                reinstall_for_name_change
+              end
             else
               super
             end
@@ -63,6 +78,64 @@ class Chef
           def repository_mismatch?(name)
             current_repo = current_repository(name)
             !current_repo.nil? && new_resource.repository != current_repo
+          end
+
+          # The currently installed package name for new_resource.package_name
+          # (which may be an origin like "devel/py-virtualenv"). Returns nil when
+          # the package is not installed.
+          def current_installed_name
+            return @current_installed_name if defined?(@current_installed_name)
+
+            pkg_query = shell_out('pkg', 'query', '%n', new_resource.package_name, env: nil, returns: [0, 1, 70])
+            @current_installed_name = if pkg_query.exitstatus == 0
+                                        pkg_query.stdout.strip
+                                      else
+                                        nil
+                                      end
+            logger.trace("#{new_resource} current installed package name is #{@current_installed_name.inspect}") if @current_installed_name
+            @current_installed_name
+          end
+
+          # The package name available in the repository for new_resource.package_name.
+          # Returns nil when no candidate exists.
+          def candidate_name
+            return @candidate_name if defined?(@candidate_name)
+
+            if new_resource.repository
+              repo_option = ['-r', new_resource.repository]
+              effective_options = determine_repo_update_options([*repo_option, *options])
+              pkg_query = shell_out('pkg', 'rquery', *effective_options, '%n', new_resource.package_name, env: nil, returns: [0, 1])
+            else
+              effective_options = determine_repo_update_options(options)
+              pkg_query = shell_out('pkg', 'rquery', *effective_options, '%n', new_resource.package_name, env: nil, returns: [0, 1])
+            end
+            @candidate_name = if pkg_query.exitstatus == 0
+                                pkg_query.stdout.strip.split("\n").last
+                              else
+                                nil
+                              end
+            logger.trace("#{new_resource} candidate package name is #{@candidate_name.inspect}") if @candidate_name
+            @candidate_name
+          end
+
+          # True when the package is installed but the installed package name differs
+          # from the candidate package name (e.g. default flavor/version changed while
+          # the version number stayed the same).
+          def name_mismatch?
+            return false if current_installed_name.nil? || candidate_name.nil?
+
+            current_installed_name != candidate_name
+          end
+
+          # Replace a renamed package by installing the new package name. pkg removes the
+          # obsolete package providing the same origin.
+          def reinstall_for_name_change
+            effective_options = if new_resource.repository
+                                  determine_repo_update_options(['-r', new_resource.repository])
+                                else
+                                  determine_repo_update_options(options)
+                                end
+            shell_out!('pkg', 'install', '-y', *effective_options, candidate_name, env: { 'LC_ALL' => nil }, returns: [0, 78])
           end
 
           def install_from_repository
@@ -276,7 +349,7 @@ class Chef
               # Determine if we should update the repository based on the update_repository property
               effective_options = determine_repo_update_options([*repo_option, *options])
               logger.trace("#{new_resource} querying candidate version from repository #{new_resource.repository}")
-              pkg_query = shell_out!('pkg', 'rquery', *effective_options, '%v', new_resource.package_name, env: nil)
+              pkg_query = shell_out('pkg', 'rquery', *effective_options, '%v', new_resource.package_name, env: nil, returns: [0, 1])
               pkg_query.exitstatus == 0 ? pkg_query.stdout.strip.split("\n").last : nil
             else
               # Handle repository specified in options
@@ -286,7 +359,7 @@ class Chef
                                     determine_repo_update_options([])
                                   end
 
-              pkg_query = shell_out!('pkg', 'rquery', *effective_options, '%v', new_resource.package_name, env: nil)
+              pkg_query = shell_out('pkg', 'rquery', *effective_options, '%v', new_resource.package_name, env: nil, returns: [0, 1])
               pkg_query.exitstatus == 0 ? pkg_query.stdout.strip.split("\n").last : nil
             end
           end
