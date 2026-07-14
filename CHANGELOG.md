@@ -10,6 +10,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 - FreeBSD: detect and upgrade renamed packages (e.g. py311-virtualenv -> py312-virtualenv) where the version is unchanged
 - FreeBSD: alter automated service restarts to stop/start instead of using restart.
+- Postfix: Do not apply header checks to MIME headers and other headers that are actually part of the message body.
 
 ## 0.3.6
 
