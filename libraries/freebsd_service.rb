@@ -48,7 +48,9 @@ class Chef
           if new_resource.restart_command
             super
           else
-            shell_out!("/usr/sbin/service #{new_resource.service_name} restart", default_env: false)
+            #shell_out!("/usr/sbin/service #{new_resource.service_name} restart", default_env: false)
+            shell_out!("/usr/sbin/service #{new_resource.service_name} stop", default_env: false)
+            shell_out!("/usr/sbin/service #{new_resource.service_name} start", default_env: false)
 
             determine_current_status!
             unless current_resource.running
