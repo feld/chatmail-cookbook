@@ -48,34 +48,37 @@ if platform?('debian')
     'aarch64' => '6833061b2a2028264fdeb32f0a6123e1ff73de57dace125364016300b748452e',
   }
 
-  default['dovecot']['archive_version'] = '2.3.21+dfsg1-3'
+
+  # dovecot-core_2.3.21+dfsg1-3+chatmail2+deb12u1_amd64.deb
+  # We will append the _arch.deb suffix in the recipe
+  default['dovecot']['archive_version'] = "2.3.21+dfsg1-3+chatmail2+deb#{node['platform_version'].to_i}u1"
   case node['platform_version'].to_i
   when 12
     default['dovecot']['checksums']['core'] = {
-      'x86_64' => 'd631fe5ec5574d2d38e889b141cf8ffaab1e949fb2af306669584c3e37e37cc8',
-      'aarch64' => '658813382a86aac6d92179fd1bb78454139211e09dda150a43e177a60d838ece',
+      'x86_64' => 'ac3977264d9b9a6fcec53fd3f5cdd2a79ca8aa0324de530c07e535008540826e',
+      'aarch64' => '21626c9c9b52cbdcf1a17b5c09e3c4043e69aa371bf83cc2fcb3b7ddaecdc109',
     }
     default['dovecot']['checksums']['imapd'] = {
-      'x86_64' => '834d014e8a91989f19b276cde9ae932cbda0c5461e89b506ab37ef31681e0c53',
-      'aarch64' => 'ddf4cb5db3f3f557edd9579cd5652f59201ac34009a12c92129a10b3f959ef6f',
+      'x86_64' => '92a7ab5fc7dc32886a0c34404f919f1335d397b48c467e0c1ef77e56978f60ea',
+      'aarch64' => '9369fd566fec4df109ef23debf34ea0417ae85beb29cbe7de619d4d1f31b120c',
     }
     default['dovecot']['checksums']['lmtpd'] = {
-      'x86_64' => '12ebaa88ccfd46e63f0f0496cf180eb8c01cbd3b16f98d8ac2bc02cdcc033036',
-      'aarch64' => 'faf50c04f202093d7de621b4b85210c41b4e5550deed1ddbcf5830c7d4d6ca76',
+      'x86_64' => 'dc3de473789969f7dd3504ac8783da5e42a446d2d7a305a4e9d7081a6dfe71ab',
+      'aarch64' => 'ae2cbd6c5c43f6d8e2172997b055448f4c79238e2f99cd9ab9200a7d9f548908',
     }
 
   when 13
     default['dovecot']['checksums']['core'] = {
-      'x86_64' => '65834713de5e4b27d035b0307b008bad922e3b3375c285d66bb0e3c81130c015',
-      'aarch64' => 'xxx',
+      'x86_64' => '47c242ef23c17e700ac19d52d82c9fdb2ebd757d8beb3a7f6781d2de59f87bd0',
+      'aarch64' => 'c14c53f112c875f698c4cb6e5870c605cd0a9dd98d35a66e94ceb1827f8020a3',
     }
     default['dovecot']['checksums']['imapd'] = {
-      'x86_64' => 'fddb77c2669ab3ba6eb18f2525b129cef527c1b8b52f6018e7d25d06f1f325ec',
-      'aarch64' => 'xxx',
+      'x86_64' => 'e38cc1266455f937ed62f971ea859c47e1a99247841ed0ad946963b524cfdbc5',
+      'aarch64' => '11d97dabf23171b37f8b1335dfdb81d408f8b95391aea6d4066aecc9fde01dfe',
     }
     default['dovecot']['checksums']['lmtpd'] = {
-      'x86_64' => '58d91a235b939008c22a715e4938515c598f2b496e8525581bce731bfb70aaed',
-      'aarch64' => 'xxx',
+      'x86_64' => '833b243e28c7baff141ecf37456e310f5d836e7944a3b9f2fe5074adf0d6a418',
+      'aarch64' => '55af47a121ba7e23966b20ddaab2dff7feba4b34677864e045e31a702afa180d',
     }
   end
 end
