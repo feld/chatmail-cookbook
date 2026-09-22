@@ -13,6 +13,7 @@ default['chatmail']['dkim_validation'] = false
 default['chatmail']['domain'] = 'example.com'
 default['chatmail']['imap_rawlog'] = false
 default['chatmail']['imap_compress'] = false
+default['chatmail']['iroh_relay'] = false
 default['chatmail']['log_retention'] = '3d'
 default['chatmail']['max_mailbox_size'] = '500M'
 default['chatmail']['max_message_size'] = 31457280
