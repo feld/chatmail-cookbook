@@ -1,13 +1,13 @@
 if platform?('freebsd')
-  default['chatmail']['oldpackages'] = %w( iroh-relay deltachat-rpc-server )
-  default['chatmail']['oldservices'] = %w( iroh-relay )
+  default['chatmail']['oldpackages'] = %w( deltachat-rpc-server )
+  default['chatmail']['oldservices'] = %w( )
 end
 if platform?('debian')
   default['chatmail']['oldpackages'] = %w( postfix-mta-sts-resolver )
-  default['chatmail']['oldservices'] = %w( echobot postfix-mta-sts-resolver iroh-relay )
+  default['chatmail']['oldservices'] = %w( echobot postfix-mta-sts-resolver )
 end
 
-default['chatmail']['oldusers'] = %w( echobot iroh )
+default['chatmail']['oldusers'] = %w( echobot )
 default['chatmail']['oldfiles'] = [
   "#{node['etcdir']}/mta-sts-daemon.yml",
   '/etc/cron.d/chatmail-metrics',
@@ -15,7 +15,5 @@ default['chatmail']['oldfiles'] = [
   "#{node['wwwdir']}/html/metrics",
   '/etc/systemd/system/echobot.service',
   '/etc/newsyslog.conf.d/chatmail.conf',
-  "#{node['etcdir']}/iroh-relay.toml",
-  "/etc/systemd/system/iroh-relay.service",
 ]
 default['chatmail']['olddirs'] = []
