@@ -4,6 +4,12 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## HEAD
+
+### Changes
+
+- Iroh relay returns as it will be utilized
+
 ## 0.3.7
 
 ### Changes
