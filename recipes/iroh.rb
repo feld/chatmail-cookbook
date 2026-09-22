@@ -82,6 +82,5 @@ else
 end
 
 service 'iroh-relay' do
-  action :enable
-  only_if { node['chatmail']['iroh_relay'] }
+  action [:enable, :start]
 end
