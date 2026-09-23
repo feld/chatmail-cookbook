@@ -68,5 +68,8 @@ end
 
 # Clean up legacy iroh_user from rc.conf which might still be lurking
 if platform_family?('freebsd')
-    execute 'sysrc -x iroh_user'
+    execute 'sysrc -x iroh_user' do
+      action :run
+      ignore_failure true
+    end
 end
