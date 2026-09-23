@@ -4,6 +4,13 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## HEAD
+
+### Changes
+
+- FreeBSD: set sysctl net.inet6.ip6.v6only=0 to ensure iroh-relay binds to IPv4 and IPv6
+- FreeBSD: clean up legacy iroh_user value from /etc/rc.conf
+
 ## 0.3.8
 
 ### Changes

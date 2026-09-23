@@ -22,4 +22,15 @@ if platform_family?('debian')
   end
 end
 
-# FreeBSD specific settings can be added here if needed
+if platform_family?('debian')
+  freebsd_sysctl 'net.inet6.ip6.v6only' do
+    value '0'
+    action :set
+    notifies :restart, 'service[iroh-relay]', :delayed
+  end
+
+  # Otherwise binds to tcp6 only
+  service 'iroh-relay' do
+    action :nothing
+  end
+end
