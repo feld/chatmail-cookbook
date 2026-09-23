@@ -65,3 +65,8 @@ end
 execute 'rm -f /var/log/maillog*bz2 /var/log/messages*bz2 /var/log/daemon.log*bz2' do
   only_if { platform_family?('freebsd') }
 end
+
+# Clean up legacy iroh_user from rc.conf which might still be lurking
+if platform_family?('freebsd')
+    execute 'sysrc -x iroh_user'
+end
