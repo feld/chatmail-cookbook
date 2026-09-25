@@ -16,7 +16,9 @@ default['chatmail']['imap_compress'] = false
 default['chatmail']['log_retention'] = '3d'
 default['chatmail']['max_mailbox_size'] = '500M'
 default['chatmail']['max_load_1m'] = '5'
-default['chatmail']['min_available_memory'] = '200M'
+# Currently set to zero as on FreeBSD the measurement is wrong
+# and free memory is not the best indicator of system health
+default['chatmail']['min_available_memory'] = '0M'
 default['chatmail']['min_free_disk_space'] = '1G'
 default['chatmail']['max_imap_connections'] = '10000'
 default['chatmail']['max_smtp_connections'] = '1000'
