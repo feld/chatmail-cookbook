@@ -22,7 +22,7 @@ if platform_family?('debian')
   end
 end
 
-if platform_family?('debian')
+if platform_family?('freebsd')
   freebsd_sysctl 'net.inet6.ip6.v6only' do
     value '0'
     action :set
