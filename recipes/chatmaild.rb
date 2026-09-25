@@ -31,7 +31,7 @@ execute 'remove old chatmaild' do
   command "rm -rf #{venv_dir}"
   action :nothing
   notifies :run, 'execute[virtualenv]', :immediately
-  subscribes :run, 'package[devel/py-virtualenv]', :immediately if platform_family?('freebsd')
+  subscribes :run, 'package[devel/py-virtualenv]', :delayed if platform_family?('freebsd')
 end
 
 execute 'virtualenv' do

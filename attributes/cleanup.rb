@@ -15,5 +15,6 @@ default['chatmail']['oldfiles'] = [
   "#{node['wwwdir']}/html/metrics",
   '/etc/systemd/system/echobot.service',
   '/etc/newsyslog.conf.d/chatmail.conf',
+  "#{node['etcdir']}/dovecot/auth.conf",
 ]
 default['chatmail']['olddirs'] = []

@@ -10,6 +10,7 @@ default['chatmail']['bin_dir'] = lazy { "#{node['chatmail']['venv_dir']}/bin" }
 default['chatmail']['config_path'] = lazy { "#{node['chatmail']['base_dir']}/chatmail.ini" }
 default['chatmail']['vmail_home'] = '/home/vmail'
 default['chatmail']['mailboxes_dir'] = lazy { "#{node['chatmail']['vmail_home']}/mail/#{node['chatmail']['domain']}" }
+default['chatmail']['doveauth_http_port'] = '10084'
 default['filtermail']['smtp_port'] = '10080'
 default['filtermail']['smtp_port_incoming'] = '10081'
 default['filtermail']['http_port_incoming'] = '10082'

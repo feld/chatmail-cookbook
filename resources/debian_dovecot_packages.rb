@@ -33,6 +33,7 @@ action :install do
     'dovecot-core' => 'core',
     'dovecot-imapd' => 'imapd',
     'dovecot-lmtpd' => 'lmtpd',
+    'dovecot-auth-lua' => 'auth-lua',
   }
 
   package_repo_base = "http://pkg.radiks.org/debian/#{debian_major}/#{deb_arch}"

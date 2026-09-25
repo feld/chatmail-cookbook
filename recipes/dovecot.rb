@@ -7,7 +7,6 @@
 platform_etc = node['etcdir']
 chatmail_metadata_sock = node['chatmail']['metadata_sock']
 chatmail_lastlogin_sock = node['chatmail']['lastlogin_sock']
-doveauth_sock = node['chatmail']['doveauth_sock']
 
 cookbook_file "#{platform_etc}/dovecot/push_notification.lua" do
   owner 0
@@ -58,12 +57,12 @@ template "#{platform_etc}/dovecot/dovecot.conf" do
   notifies :restart, 'service[dovecot]', :delayed
 end
 
-template "#{platform_etc}/dovecot/auth.conf" do
+template "#{platform_etc}/dovecot/auth.lua" do
   owner 0
   group 0
   mode '0644'
   variables(
-    'doveauth_sock' => doveauth_sock
+    'config' => node['chatmail']
   )
   notifies :restart, 'service[dovecot]', :delayed
 end

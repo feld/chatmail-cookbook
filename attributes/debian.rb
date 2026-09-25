@@ -24,7 +24,6 @@ if platform?('debian')
 )
   default['chatmail']['metadata_sock'] = '/run/chatmail-metadata/metadata.socket'
   default['chatmail']['lastlogin_sock'] = '/run/chatmail-lastlogin/lastlogin.socket'
-  default['chatmail']['doveauth_sock'] = '/run/doveauth/doveauth.socket'
   default['chatmail']['turn_sock'] = '/run/chatmail-turn/turn.socket'
   default['fcgiwrap_sock'] = '/run/fcgiwrap.socket'
   default['stream_module_path'] = 'modules/ngx_stream_module.so'
@@ -54,6 +53,10 @@ if platform?('debian')
   default['dovecot']['archive_version'] = "2.3.21+dfsg1-3+chatmail2+deb#{node['platform_version'].to_i}u1"
   case node['platform_version'].to_i
   when 12
+    default['dovecot']['checksums']['auth-lua'] = {
+      'x86_64' => 'ef1b8e1db45147a74b48d63125bd61b2cc2f250e1006656ba1c58b9c12f5cde6',
+      'aarch64' => 'c1a06ee9374439893e397ba3b0cacf532a733290c184f4f30ea39df8699be329',
+    }
     default['dovecot']['checksums']['core'] = {
       'x86_64' => 'ac3977264d9b9a6fcec53fd3f5cdd2a79ca8aa0324de530c07e535008540826e',
       'aarch64' => '21626c9c9b52cbdcf1a17b5c09e3c4043e69aa371bf83cc2fcb3b7ddaecdc109',
@@ -68,6 +71,10 @@ if platform?('debian')
     }
 
   when 13
+    default['dovecot']['checksums']['auth-lua'] = {
+      'x86_64' => '6c0946d2516efcbcaa09a27df9b8ea701861cce270d71941056b3c69831a5ea2',
+      'aarch64' => '5e6c9cfe47f7f3b8aa0d68a3e607161b6abaee1ad696cb1419e997b3099b2985',
+    }
     default['dovecot']['checksums']['core'] = {
       'x86_64' => '47c242ef23c17e700ac19d52d82c9fdb2ebd757d8beb3a7f6781d2de59f87bd0',
       'aarch64' => 'c14c53f112c875f698c4cb6e5870c605cd0a9dd98d35a66e94ceb1827f8020a3',
