@@ -57,12 +57,12 @@ imap_capability = +XDELTAPUSH XCHATMAIL
 
 # Authentication for system users.
 passdb {
-  driver = dict
-  args = <%= @dovecot_config_dir %>/auth.conf
+  driver = lua
+  args = <%= @dovecot_config_dir %>/auth.lua blocking=yes
 }
 userdb {
-  driver = dict
-  args = <%= @dovecot_config_dir %>/auth.conf
+  driver = lua
+  args = <%= @dovecot_config_dir %>/auth.lua blocking=yes
 }
 ##
 ## Mailbox locations and namespaces

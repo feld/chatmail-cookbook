@@ -58,12 +58,12 @@ template "#{platform_etc}/dovecot/dovecot.conf" do
   notifies :restart, 'service[dovecot]', :delayed
 end
 
-template "#{platform_etc}/dovecot/auth.conf" do
+template "#{platform_etc}/dovecot/auth.lua" do
   owner 0
   group 0
   mode '0644'
   variables(
-    'doveauth_sock' => doveauth_sock
+    'config' => node['chatmail']
   )
   notifies :restart, 'service[dovecot]', :delayed
 end
