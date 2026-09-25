@@ -9,7 +9,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - chatmaild: Update to latest release; doveauth rewritten
-- Dovecot: not uses a Lua auth method to talk to doveauth
+- Dovecot: now uses a Lua auth method to talk to doveauth
 - chatmaild: IMAP metadata requests proxied to chatmail-metadata can now inform about DeltaChat client version updates
 
 ## 0.3.9
