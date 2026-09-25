@@ -23,14 +23,19 @@ if platform_family?('debian')
 end
 
 if platform_family?('freebsd')
-  freebsd_sysctl 'net.inet6.ip6.v6only' do
-    value '0'
-    action :set
-    notifies :restart, 'service[iroh-relay]', :delayed
-  end
+  jailed = `sysctl -n security.jail.jailed `.strip!
 
-  # Otherwise binds to tcp6 only
-  service 'iroh-relay' do
-    action :nothing
+  # In a jail we cannot set this
+  if jailed == '0'
+    freebsd_sysctl 'net.inet6.ip6.v6only' do
+      value '0'
+      action :set
+      notifies :restart, 'service[iroh-relay]', :delayed
+    end
+
+    # Otherwise binds to tcp6 only
+    service 'iroh-relay' do
+      action :nothing
+    end
   end
 end

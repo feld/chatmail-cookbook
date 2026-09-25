@@ -12,7 +12,10 @@ instead of a thin jail as the Chef/CINC client does not obey hier(7) and
 will attempt to write into readonly locations.
 
 When running in a jail you will need to enable `allow.raw_sockets;` for
-the Chatmail TURN server to work.
+the Chatmail TURN server to work. You should also set sysctl `net.inet6.ip6.v6only=0`
+so Iroh Proxy binds to both IPv4 and IPv6 addresses if you have a
+dual-stack deployment. This sysctl is not managed if the Cookbook
+detects you are running in a jail.
 
 If you are not running in a VNET jail you should set
 `ip6 = inherit;` or some other ip6 related value to ensure there is some
