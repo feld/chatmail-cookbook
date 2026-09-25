@@ -7,7 +7,6 @@
 platform_etc = node['etcdir']
 chatmail_metadata_sock = node['chatmail']['metadata_sock']
 chatmail_lastlogin_sock = node['chatmail']['lastlogin_sock']
-doveauth_sock = node['chatmail']['doveauth_sock']
 
 cookbook_file "#{platform_etc}/dovecot/push_notification.lua" do
   owner 0
