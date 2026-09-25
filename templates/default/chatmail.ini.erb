@@ -39,6 +39,33 @@ password_min_length = <%= @config['password_min_length'] %>
 turn_socket_path = <%= @config['turn_sock'] %>
 
 #
+# System resource limits
+#
+
+# The following three limits refuse creation of new addresses
+# while existing addresses keep working.
+# Rejections are logged by the doveauth service.
+
+# Maximum 1-minute load average, as reported by "uptime";
+# it counts processes waiting for disk I/O as well as for CPU.
+max_load_1m = <%= @config['max_load_1m'] %>
+
+# Minimum memory available without swapping.
+min_available_memory = <%= @config['min_available_memory'] %>
+
+# Minimum free disk space on the file system holding the mailboxes.
+min_free_disk_space = <%= @config['min_free_disk_space'] %>
+
+# Maximum number of concurrent IMAP connections
+# (the Dovecot imap process limit).
+max_imap_connections = <%= @config['max_imap_connections'] %>
+
+# Maximum number of concurrent SMTP connections
+# on each of the submission and smtps ports (the Postfix process limit).
+# A single client IP may use up to a fifth of this.
+max_smtp_connections = <%= @config['max_smtp_connections'] %>
+
+#
 # Deployment Details
 #
 
