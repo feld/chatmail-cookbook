@@ -33,7 +33,7 @@ submission inet n       -       y       -       <%= @config['max_smtp_connection
   -o smtpd_sender_restrictions=$mua_sender_restrictions
   -o smtpd_recipient_restrictions=
   -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
-  -o smtpd_client_connection_count_limit=<%= @config['max_smtp_connections'] / 5 %>
+  -o smtpd_client_connection_count_limit=<%= @config['max_smtp_connections'].to_i / 5 %>
   -o smtpd_proxy_options=speed_adjust
 # Sends through filtermail-outgoing for checking PGP
   -o smtpd_proxy_filter=127.0.0.1:<%= @filtermail['smtp_port'] %>
@@ -51,7 +51,7 @@ smtps     inet  n       -       y       -       <%= @config['max_smtp_connection
   -o smtpd_sender_restrictions=$mua_sender_restrictions
   -o smtpd_recipient_restrictions=
   -o smtpd_relay_restrictions=permit_sasl_authenticated,reject
-  -o smtpd_client_connection_count_limit=<%= @config['max_smtp_connections'] / 5 %>
+  -o smtpd_client_connection_count_limit=<%= @config['max_smtp_connections'].to_i / 5 %>
   -o smtpd_proxy_options=speed_adjust
   -o smtpd_proxy_filter=127.0.0.1:<%= @filtermail['smtp_port'] %>
 #628       inet  n       -       y       -       -       qmqpd
