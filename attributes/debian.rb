@@ -65,6 +65,10 @@ if platform?('debian')
       'x86_64' => 'dc3de473789969f7dd3504ac8783da5e42a446d2d7a305a4e9d7081a6dfe71ab',
       'aarch64' => 'ae2cbd6c5c43f6d8e2172997b055448f4c79238e2f99cd9ab9200a7d9f548908',
     }
+    default['dovecot']['checksums']['auth-lua'] = {
+      'x86_64' => 'ad34679d1615d85221e89db4bf56f31a2c29885aa6892c77e0722c89985345ef',
+      'aarch64' => 'ddebabac1c1fab2ce9c0fffdd67957fb1cbc4a83cafb9360ef2e7bb4977b5ad8',
+    }
 
   when 13
     default['dovecot']['checksums']['core'] = {
@@ -78,6 +82,10 @@ if platform?('debian')
     default['dovecot']['checksums']['lmtpd'] = {
       'x86_64' => '833b243e28c7baff141ecf37456e310f5d836e7944a3b9f2fe5074adf0d6a418',
       'aarch64' => '55af47a121ba7e23966b20ddaab2dff7feba4b34677864e045e31a702afa180d',
+    }
+    default['dovecot']['checksums']['auth-lua'] = {
+      'x86_64' => '313a444d7277587fd12d16b3cd5b9e8b66f44f1bad4693d2f53bd11966821750',
+      'aarch64' => nil,
     }
   end
 end
