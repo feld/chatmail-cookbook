@@ -53,6 +53,10 @@ if platform?('debian')
   default['dovecot']['archive_version'] = "2.3.21+dfsg1-3+chatmail2+deb#{node['platform_version'].to_i}u1"
   case node['platform_version'].to_i
   when 12
+    default['dovecot']['checksums']['auth-lua'] = {
+      'x86_64' => 'ef1b8e1db45147a74b48d63125bd61b2cc2f250e1006656ba1c58b9c12f5cde6',
+      'aarch64' => 'c1a06ee9374439893e397ba3b0cacf532a733290c184f4f30ea39df8699be329',
+    }
     default['dovecot']['checksums']['core'] = {
       'x86_64' => 'ac3977264d9b9a6fcec53fd3f5cdd2a79ca8aa0324de530c07e535008540826e',
       'aarch64' => '21626c9c9b52cbdcf1a17b5c09e3c4043e69aa371bf83cc2fcb3b7ddaecdc109',
@@ -65,12 +69,12 @@ if platform?('debian')
       'x86_64' => 'dc3de473789969f7dd3504ac8783da5e42a446d2d7a305a4e9d7081a6dfe71ab',
       'aarch64' => 'ae2cbd6c5c43f6d8e2172997b055448f4c79238e2f99cd9ab9200a7d9f548908',
     }
-    default['dovecot']['checksums']['auth-lua'] = {
-      'x86_64' => 'ad34679d1615d85221e89db4bf56f31a2c29885aa6892c77e0722c89985345ef',
-      'aarch64' => 'ddebabac1c1fab2ce9c0fffdd67957fb1cbc4a83cafb9360ef2e7bb4977b5ad8',
-    }
 
   when 13
+    default['dovecot']['checksums']['auth-lua'] = {
+      'x86_64' => '6c0946d2516efcbcaa09a27df9b8ea701861cce270d71941056b3c69831a5ea2',
+      'aarch64' => '5e6c9cfe47f7f3b8aa0d68a3e607161b6abaee1ad696cb1419e997b3099b2985',
+    }
     default['dovecot']['checksums']['core'] = {
       'x86_64' => '47c242ef23c17e700ac19d52d82c9fdb2ebd757d8beb3a7f6781d2de59f87bd0',
       'aarch64' => 'c14c53f112c875f698c4cb6e5870c605cd0a9dd98d35a66e94ceb1827f8020a3',
@@ -82,10 +86,6 @@ if platform?('debian')
     default['dovecot']['checksums']['lmtpd'] = {
       'x86_64' => '833b243e28c7baff141ecf37456e310f5d836e7944a3b9f2fe5074adf0d6a418',
       'aarch64' => '55af47a121ba7e23966b20ddaab2dff7feba4b34677864e045e31a702afa180d',
-    }
-    default['dovecot']['checksums']['auth-lua'] = {
-      'x86_64' => '313a444d7277587fd12d16b3cd5b9e8b66f44f1bad4693d2f53bd11966821750',
-      'aarch64' => nil,
     }
   end
 end
