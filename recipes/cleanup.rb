@@ -70,6 +70,6 @@ end
 if platform_family?('freebsd')
     execute 'sysrc -x iroh_user' do
       action :run
-      ignore_failure true
+      returns [0, 1]
     end
 end
