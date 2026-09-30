@@ -4,6 +4,12 @@ This file is used to list changes made in each version of the chatmail cookbook.
 
 !!! Developer note: don't forget to update metadata.rb when making releases !!!
 
+## HEAD
+
+### Changes
+
+- FreeBSD: services run under daemon(8) should auto-restart if they crash/terminate unexpectedly
+
 ## 0.4.1
 
 ### Changes
