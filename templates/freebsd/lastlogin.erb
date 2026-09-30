@@ -16,7 +16,6 @@ load_rc_config $name
 : ${chatmail_config:="<%= @config_path %>"}
 
 required_files="${chatmail_config}"
-procname="*python*"
 pidfile="/var/run/${name}.pid"
 command="/usr/sbin/daemon"
 command_args=" -r -T ${name} -P ${pidfile} -u ${lastlogin_svc_user} -f <%= @execpath %> /var/run/${name}/lastlogin.sock ${chatmail_config}"
