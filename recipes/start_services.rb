@@ -21,21 +21,38 @@ service 'unbound' do
 end
 
 # Chatmaild services
-%w(chatmail-metadata doveauth lastlogin).each do |s|
-  service s do
-    action :start
-    subscribes :stop, 'execute[install chatmaild]', :before
-    retries 2
-  end
+service 'chatmail-metadata' do
+  action :start
+  subscribes :stop, 'execute[install chatmaild]', :before
+  subscribes :stop, 'template[/usr/local/etc/rc.d/chatmail-metadata]', :before
+  retries 2
+end
+
+service 'doveauth' do
+  action :start
+  subscribes :stop, 'execute[install chatmaild]', :before
+  subscribes :stop, 'template[/usr/local/etc/rc.d/doveauth]', :before
+  retries 2
+end
+
+service 'lastlogin' do
+  action :start
+  subscribes :stop, 'execute[install chatmaild]', :before
+  subscribes :stop, 'template[/usr/local/etc/rc.d/lastlogin]', :before
+  retries 2
 end
 
 # Filtermail specific when packages update
-%w(filtermail filtermail-incoming).each do |s|
-  service s do
-    action :start
-    subscribes :stop, 'package[filtermail]', :before if platform_family?('freebsd')
-    retries 2
-  end
+service 'filtermail' do
+  action :start
+  subscribes :stop, 'package[filtermail]', :before if platform_family?('freebsd')
+  retries 2
+end
+
+service 'filtermail-incoming' do
+  action :start
+  subscribes :stop, 'package[filtermail]', :before if platform_family?('freebsd')
+  retries 2
 end
 
 if platform_family?('debian')
