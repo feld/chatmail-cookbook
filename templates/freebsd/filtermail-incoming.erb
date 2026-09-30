@@ -19,7 +19,7 @@ load_rc_config $name
 required_files="${chatmail_config}"
 pidfile="/var/run/${name}.pid"
 command="/usr/sbin/daemon"
-command_args=" -r -T ${name} -p ${pidfile} -u ${filtermail_svc_user} -f <%= @execpath %> ${chatmail_config} incoming"
+command_args=" -r -T ${name} -P ${pidfile} -u ${filtermail_svc_user} -f <%= @execpath %> ${chatmail_config} incoming"
 
 # Override /etc/rc.subr variant because we do not
 # care about procname matching and we want to be
