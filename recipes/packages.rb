@@ -24,9 +24,10 @@ end
 
 if platform?('freebsd')
   # Custom pkg repo required for patched Dovecot, filtermail, and chatmail-turn
+  pkg_mirror = node['pkg_mirror']
   pkg_repository 'chatmail' do
     priority 10
-    url 'http://pkg.radiks.org/${ABI}-chatmail'
+    url "http://#{pkg_mirror}/${ABI}-chatmail"
     mirror_type 'srv'
   end
 

@@ -36,7 +36,8 @@ action :install do
     'dovecot-auth-lua' => 'auth-lua',
   }
 
-  package_repo_base = "http://pkg.radiks.org/debian/#{debian_major}/#{deb_arch}"
+  pkg_mirror = node['pkg_mirror']
+  package_repo_base = "http://#{pkg_mirror}/debian/#{debian_major}/#{deb_arch}"
 
   package_specs = package_map.map do |package_name, checksum_key|
     package_filename = "#{package_name}_#{version}_#{deb_arch}.deb"
