@@ -11,6 +11,7 @@ if platform?('freebsd')
   default['chatmail']['packages'] = %w( python3
                                         python
                                         devel/py-virtualenv
+                                        devel/py-packaging
                                         databases/py-sqlite3
                                         dovecot
                                         mail/opendkim-devel

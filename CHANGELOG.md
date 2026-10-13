@@ -9,6 +9,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 ### Changes
 
 - FreeBSD: services run under daemon(8) should auto-restart if they crash/terminate unexpectedly
+- FreeBSD: add devel/py-packaging as a requirement
 
 ## 0.4.1
 
