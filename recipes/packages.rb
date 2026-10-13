@@ -28,7 +28,6 @@ if platform?('freebsd')
   pkg_repository 'chatmail' do
     priority 10
     url "http://#{pkg_mirror}/${ABI}-chatmail"
-    mirror_type 'srv'
   end
 
   # Update the repo once as we won't do it later
