@@ -12,6 +12,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: add devel/py-packaging as a requirement
 - Nginx: fix some internal redirects leaking port
 - Debian: DKIM validation was not correctly disabled by default on filtermail-incoming
+- Debian: Update filtermail to 0.7.7
 
 ## 0.4.1
 
