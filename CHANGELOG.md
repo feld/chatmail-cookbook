@@ -11,6 +11,7 @@ This file is used to list changes made in each version of the chatmail cookbook.
 - FreeBSD: services run under daemon(8) should auto-restart if they crash/terminate unexpectedly
 - FreeBSD: add devel/py-packaging as a requirement
 - Nginx: fix some internal redirects leaking port
+- Debian: DKIM validation was not correctly disabled by default on filtermail-incoming
 
 ## 0.4.1
 
