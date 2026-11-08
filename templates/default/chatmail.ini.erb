@@ -11,11 +11,15 @@ mail_domain = <%= @config['domain'] %>
 # Restrictions on user addresses
 #
 
-# how many mails a user can send out per minute
+# email sending rate per user and minute
 max_user_send_per_minute = <%= @config['max_user_send_per_minute'] %>
 
+# NOTE: UNUSED BY COOKBOOK DEPLOY
+# per-user max burst size for sending rate limiting (GCRA bucket capacity)
+#max_user_send_burst_size = 10
+
 # maximum mailbox size of a chatmail address
-# Oldest messages will be removed automatically, so mailboxes never run full.
+# (Oldest messages will be removed automatically, so mailboxes never run full)
 max_mailbox_size = <%= @config['max_mailbox_size'] %>
 
 # maximum message size for an e-mail in bytes
@@ -23,6 +27,9 @@ max_message_size = <%= @config['max_message_size'] %>
 
 # days after which mails are unconditionally deleted
 delete_mails_after = <%= @config['delete_mails_after'] %>
+
+# days after which large messages (>200k) are unconditionally deleted
+delete_large_after = <%= @config['delete_large_after'] %>
 
 # days after which users without a successful login are deleted (database and mails)
 delete_inactive_users_after = <%= @config['delete_inactive_users_after'] %>
@@ -65,6 +72,18 @@ max_imap_connections = <%= @config['max_imap_connections'] %>
 # A single client IP may use up to a fifth of this.
 max_smtp_connections = <%= @config['max_smtp_connections'] %>
 
+# NOTE: UNUSED BY COOKBOOK DEPLOY
+# Use externally managed TLS certificates instead of built-in acmetool.
+# Paths refer to files on the deployment server (not the build machine).
+# Both files must already exist before running cmdeploy.
+# Certificate renewal is your responsibility; changed files are
+# picked up automatically by all relay services.
+# tls_external_cert_and_key = /path/to/fullchain.pem /path/to/privkey.pem
+
+# NOTE: UNUSED BY COOKBOOK DEPLOY
+# path to www directory - documented here: https://chatmail.at/doc/relay/getting_started.html#custom-web-pages
+#www_folder = www
+
 #
 # Deployment Details
 #
@@ -79,6 +98,10 @@ postfix_reinject_port_incoming = 10026
 
 # if set to "True" IPv6 is disabled
 disable_ipv6 = <%= @config['disable_ipv6'] %>
+
+# NOTE: UNUSED BY COOKBOOK DEPLOY
+# Your email adress, which will be used in acmetool to manage Let's Encrypt SSL certificates
+#acme_email =
 
 # Defaults to https://iroh.<%= @config['domain'] %> and running `iroh-relay` on the chatmail
 # service.
@@ -113,6 +136,12 @@ mtail_address = <%= @config['mtail']['address'] %>
 # so use this option with caution on production servers. 
 imap_rawlog = <%= @config['imap_rawlog'] %>
 
+# COOBOOK: you don't want this on ZFS, and hibernate doesn't work on FreeBSD
+# set to true if you want to enable the IMAP COMPRESS Extension,
+# which allows IMAP connections to be efficiently compressed.
+# WARNING: Enabling this makes it impossible to hibernate IMAP
+# processes which will result in much higher memory/RAM usage.
+imap_compress = <%= @config['imap_compress'] %>
 
 #
 # Privacy Policy
